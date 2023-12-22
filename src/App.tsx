@@ -1,10 +1,7 @@
 import React from 'react'
-import { scheduler } from './lib/scheduler'
+import { executePolyrhythm } from './lib/polyrhythm'
 function App() {
-  const soundOn = () => {
-    scheduler()
-  }
-  return <button onClick={soundOn}>click me!!</button>
+  return <button onClick={() => executePolyrhythm()}>click me!!</button>
 }
 
 export default App
