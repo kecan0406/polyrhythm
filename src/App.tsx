@@ -1,29 +1,16 @@
 import React, { useState } from 'react'
-import { PolyrhythmGenerator } from './lib/polyrhythm'
-import { PolyrhythmNote, polyrhythmNotes } from './lib/sample'
-function App() {
-  const [isClicked, setIsClicked] = useState<boolean>(false)
-  const polyrhythmGenerator = new PolyrhythmGenerator()
+import './App.scss'
+import Polyrhythm from './components/Polyrhythm'
+import Starter from './components/Starter'
 
-  const executePolyrhythm = async (polyrhythmNote: PolyrhythmNote) => {
-    if (isClicked) {
-      polyrhythmGenerator.generateSynth(polyrhythmNote)
-    } else {
-      setIsClicked(true)
-      await polyrhythmGenerator.readyPolyrhythm()
-      polyrhythmGenerator.generateSynth(polyrhythmNote)
-    }
-  }
+function App() {
+  const [isShow, setIsShow] = useState(false)
+
+  const handleIsShow = () => setIsShow(true)
+
   return (
-    <div>
-      {polyrhythmNotes.map((polyrhythmNote) => (
-        <button
-          key={polyrhythmNote.note}
-          onClick={() => executePolyrhythm(polyrhythmNote)}
-        >
-          {polyrhythmNote.note}
-        </button>
-      ))}
+    <div className="Main">
+      {isShow ? <Polyrhythm /> : <Starter onClick={handleIsShow} />}
     </div>
   )
 }

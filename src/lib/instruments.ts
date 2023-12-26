@@ -1,6 +1,6 @@
 import { Synth } from 'tone'
 
-export const getBeepSynth = () => {
+export const getBeepSynth = (): Synth => {
   return new Synth({
     envelope: {
       attack: 0.01,
