@@ -9,6 +9,7 @@ export class PolyrhythmGenerator {
   private readonly transport: Transport
   private readonly polyrhythmNotes: PolyrhythmNote[] = polyrhythmNotes
   private ids: number[] = []
+
   constructor() {
     Tone.setContext(new Tone.Context({ latencyHint: 'interactive' }))
     this.volume = new Tone.Volume(-20).toDestination()

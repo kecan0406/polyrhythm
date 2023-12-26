@@ -6,4 +6,5 @@ export const polyrhythmNotes: PolyrhythmNote[] = [
   { note: 'C6', interval: '2n' },
   { note: 'G5', interval: '3n' },
   { note: 'C5', interval: '4n' },
+  { note: 'E5', interval: '5n' },
 ]
