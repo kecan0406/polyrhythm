@@ -5,7 +5,6 @@ export const useCanvas = (
   canvasHeight: number,
   animate: (ctx: CanvasRenderingContext2D) => void,
 ) => {
-  console.log(canvasWidth, canvasHeight)
   const canvasRef: RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null)
 
@@ -17,9 +16,8 @@ export const useCanvas = (
       const devicePixelRatio = window.devicePixelRatio ?? 1
       canvas.style.width = `${canvasWidth}px`
       canvas.style.height = `${canvasHeight}px`
-
-      canvas.width = canvasWidth * devicePixelRatio
-      canvas.height = canvasHeight * devicePixelRatio
+      canvas.width = Math.floor(canvasWidth * devicePixelRatio)
+      canvas.height = Math.floor(canvasHeight * devicePixelRatio)
 
       ctx.scale(devicePixelRatio, devicePixelRatio)
     }
