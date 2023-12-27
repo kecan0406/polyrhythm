@@ -1,6 +1,11 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 
-export const useCanvas = (canvasWidth: number, canvasHeight: number) => {
+export const useCanvas = (
+  canvasWidth: number,
+  canvasHeight: number,
+  animate: (ctx: CanvasRenderingContext2D) => void,
+) => {
+  console.log(canvasWidth, canvasHeight)
   const canvasRef: RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null)
 
@@ -19,6 +24,7 @@ export const useCanvas = (canvasWidth: number, canvasHeight: number) => {
       ctx.scale(devicePixelRatio, devicePixelRatio)
     }
     setCanvas()
+    animate(ctx)
   }, [canvasWidth, canvasHeight])
 
   return canvasRef
@@ -29,10 +35,9 @@ export const useClientWidthHeight = (ref: RefObject<HTMLElement>) => {
   const [height, setHeight] = useState<number>(0)
   useEffect(() => {
     const setClientWidthHeight = () => {
-      if (ref.current) {
-        setWidth(ref.current.clientWidth)
-        setHeight(ref.current.clientHeight)
-      }
+      const clientEl = ref.current!
+      setWidth(clientEl.clientWidth)
+      setHeight(clientEl.clientHeight)
     }
     setClientWidthHeight()
 

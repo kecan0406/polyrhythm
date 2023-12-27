@@ -5,7 +5,7 @@ import PolyrhythmStarter from './components/PolyrhythmStarter'
 import { useClientWidthHeight } from './hooks/canvas-hook'
 
 function App() {
-  const mainRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null)
+  const mainRef: RefObject<HTMLElement> = useRef<HTMLElement>(null)
   const { width: clientWidth, height: clientHeight } =
     useClientWidthHeight(mainRef)
 
@@ -13,13 +13,13 @@ function App() {
   const handleLoadPolyrhythm = () => setIsLoadPolyrhythm(true)
 
   return (
-    <div className="Main" ref={mainRef}>
+    <main className="Main" ref={mainRef}>
       {isLoadPolyrhythm ? (
         <PolyrhythmCanvas width={clientWidth} height={clientHeight} />
       ) : (
         <PolyrhythmStarter onClick={handleLoadPolyrhythm} />
       )}
-    </div>
+    </main>
   )
 }
 
