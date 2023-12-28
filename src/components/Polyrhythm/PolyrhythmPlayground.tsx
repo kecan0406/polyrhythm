@@ -1,6 +1,6 @@
 import React, { RefObject, useRef } from 'react'
 import { useCanvas, useClientWidthHeight } from '../../hooks/canvas-hook'
-import { Light, LightSource } from '../../lib/lightsource'
+import { Polygon, Visualization } from '../../lib/visualization'
 
 const PolyrhythmPlayground = () => {
   const mainRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null)
@@ -16,12 +16,8 @@ export default PolyrhythmPlayground
 
 type PolyrhythmCanvasProps = { width: number; height: number }
 const PolyrhythmCanvas = ({ width, height }: PolyrhythmCanvasProps) => {
-  const lightSource: LightSource = new Light(width, height)
-
   const animate = (ctx: CanvasRenderingContext2D) => {
     fillBackGround(ctx)
-    lightSource.drawRadialGradientBehindLightSource(ctx)
-    lightSource.drawLightSource(ctx)
   }
 
   const fillBackGround = (ctx: CanvasRenderingContext2D) => {
@@ -29,6 +25,13 @@ const PolyrhythmCanvas = ({ width, height }: PolyrhythmCanvasProps) => {
     ctx.fillRect(0, 0, width, height)
   }
 
+  const handleDrawPolygon = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current!
+    const ctx = canvas.getContext('2d')!
+    const polygon: Visualization = new Polygon(e.clientX - canvas.getBoundingClientRect().x, e.clientY)
+    polygon.draw(ctx)
+  }
+
   const canvasRef: RefObject<HTMLCanvasElement> = useCanvas(width, height, animate)
-  return <canvas className="Visualization" ref={canvasRef} />
+  return <canvas className="Visualization" ref={canvasRef} onClick={handleDrawPolygon} />
 }
