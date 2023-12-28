@@ -1,21 +1,16 @@
-import React, { RefObject, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import './App.scss'
-import PolyrhythmCanvas from './components/PolyrhythmCanvas'
+import Polyrhythm from './components/Polyrhythm'
 import PolyrhythmStarter from './components/PolyrhythmStarter'
-import { useClientWidthHeight } from './hooks/canvas-hook'
 
 function App() {
-  const mainRef: RefObject<HTMLElement> = useRef<HTMLElement>(null)
-  const { width: clientWidth, height: clientHeight } =
-    useClientWidthHeight(mainRef)
-
   const [isLoadPolyrhythm, setIsLoadPolyrhythm] = useState(false)
   const handleLoadPolyrhythm = () => setIsLoadPolyrhythm(true)
 
   return (
-    <main className="Main" ref={mainRef}>
+    <main className="Main">
       {isLoadPolyrhythm ? (
-        <PolyrhythmCanvas width={clientWidth} height={clientHeight} />
+        <Polyrhythm />
       ) : (
         <PolyrhythmStarter onClick={handleLoadPolyrhythm} />
       )}

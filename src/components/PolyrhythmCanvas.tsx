@@ -1,6 +1,19 @@
-import React, { RefObject } from 'react'
-import { useCanvas } from '../hooks/canvas-hook'
+import React, { RefObject, useRef } from 'react'
+import { useCanvas, useClientWidthHeight } from '../hooks/canvas-hook'
 import { Light, LightSource } from '../lib/lightsource'
+
+function PolyrhythmPlayground() {
+  const mainRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null)
+
+  const { width: clientWidth, height: clientHeight } =
+    useClientWidthHeight(mainRef)
+
+  return (
+    <div className="Playground" ref={mainRef}>
+      <PolyrhythmCanvas width={clientWidth} height={clientHeight} />
+    </div>
+  )
+}
 
 type PolyrhythmCanvasProps = { width: number; height: number }
 function PolyrhythmCanvas({ width, height }: PolyrhythmCanvasProps) {
@@ -22,6 +35,7 @@ function PolyrhythmCanvas({ width, height }: PolyrhythmCanvasProps) {
     height,
     animate,
   )
-  return <canvas ref={canvasRef} />
+  return <canvas className="Visualization" ref={canvasRef} />
 }
-export default PolyrhythmCanvas
+
+export default PolyrhythmPlayground
