@@ -1,7 +1,8 @@
 import React from 'react'
-import PolyrhythmPlayground from './PolyrhythmCanvas'
+import PolyrhythmController from './PolyrhythmController'
+import PolyrhythmPlayground from './PolyrhythmPlayground'
 
-function Polyrhythm() {
+const Polyrhythm = () => {
   return (
     <div className="Polyrhythm">
       <PolyrhythmController />
@@ -10,7 +11,4 @@ function Polyrhythm() {
   )
 }
 
-function PolyrhythmController() {
-  return <div className="Controller" />
-}
 export default Polyrhythm

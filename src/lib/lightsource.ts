@@ -3,11 +3,7 @@ import { PI2 } from './utils/Math'
 export interface LightSource {
   drawRadialGradientBehindLightSource: (ctx: CanvasRenderingContext2D) => void
   drawLightSource: (ctx: CanvasRenderingContext2D) => void
-  drawLightLines: (
-    ctx: CanvasRenderingContext2D,
-    pointCenterX: number,
-    pointCenterY: number,
-  ) => void
+  drawLightLines: (ctx: CanvasRenderingContext2D, pointCenterX: number, pointCenterY: number) => void
 }
 export class Light implements LightSource {
   private readonly centerX: number
@@ -22,14 +18,7 @@ export class Light implements LightSource {
 
   drawRadialGradientBehindLightSource(ctx: CanvasRenderingContext2D) {
     const gradientRadius = this.radius * 16
-    const gradient = ctx.createRadialGradient(
-      this.centerX,
-      this.centerY,
-      0,
-      this.centerX,
-      this.centerY,
-      gradientRadius,
-    )
+    const gradient = ctx.createRadialGradient(this.centerX, this.centerY, 0, this.centerX, this.centerY, gradientRadius)
     gradient.addColorStop(0, 'rgb(102,103,171,0.2)')
     gradient.addColorStop(1, 'rgb(31,31,36,0.1)')
     ctx.fillStyle = gradient
@@ -44,11 +33,7 @@ export class Light implements LightSource {
     ctx.fill()
   }
 
-  drawLightLines(
-    ctx: CanvasRenderingContext2D,
-    pointCenterX: number,
-    pointCenterY: number,
-  ) {
+  drawLightLines(ctx: CanvasRenderingContext2D, pointCenterX: number, pointCenterY: number) {
     ctx.strokeStyle = 'rgb(176,176,212,0.24)'
     ctx.lineWidth = 1
     ctx.moveTo(this.centerX, this.centerY - this.radius)

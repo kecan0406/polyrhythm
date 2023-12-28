@@ -1,12 +1,10 @@
 import React, { RefObject, useRef } from 'react'
-import { useCanvas, useClientWidthHeight } from '../hooks/canvas-hook'
-import { Light, LightSource } from '../lib/lightsource'
+import { useCanvas, useClientWidthHeight } from '../../hooks/canvas-hook'
+import { Light, LightSource } from '../../lib/lightsource'
 
-function PolyrhythmPlayground() {
+const PolyrhythmPlayground = () => {
   const mainRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null)
-
-  const { width: clientWidth, height: clientHeight } =
-    useClientWidthHeight(mainRef)
+  const { width: clientWidth, height: clientHeight } = useClientWidthHeight(mainRef)
 
   return (
     <div className="Playground" ref={mainRef}>
@@ -14,14 +12,10 @@ function PolyrhythmPlayground() {
     </div>
   )
 }
+export default PolyrhythmPlayground
 
 type PolyrhythmCanvasProps = { width: number; height: number }
-function PolyrhythmCanvas({ width, height }: PolyrhythmCanvasProps) {
-  const fillBackGround = (ctx: CanvasRenderingContext2D) => {
-    ctx.fillStyle = 'rgb(31,31,36)'
-    ctx.fillRect(0, 0, width, height)
-  }
-
+const PolyrhythmCanvas = ({ width, height }: PolyrhythmCanvasProps) => {
   const lightSource: LightSource = new Light(width, height)
 
   const animate = (ctx: CanvasRenderingContext2D) => {
@@ -30,12 +24,11 @@ function PolyrhythmCanvas({ width, height }: PolyrhythmCanvasProps) {
     lightSource.drawLightSource(ctx)
   }
 
-  const canvasRef: RefObject<HTMLCanvasElement> = useCanvas(
-    width,
-    height,
-    animate,
-  )
+  const fillBackGround = (ctx: CanvasRenderingContext2D) => {
+    ctx.fillStyle = 'rgb(31,31,36)'
+    ctx.fillRect(0, 0, width, height)
+  }
+
+  const canvasRef: RefObject<HTMLCanvasElement> = useCanvas(width, height, animate)
   return <canvas className="Visualization" ref={canvasRef} />
 }
-
-export default PolyrhythmPlayground

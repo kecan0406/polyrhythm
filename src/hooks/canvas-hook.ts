@@ -5,8 +5,7 @@ export const useCanvas = (
   canvasHeight: number,
   animate: (ctx: CanvasRenderingContext2D) => void,
 ) => {
-  const canvasRef: RefObject<HTMLCanvasElement> =
-    useRef<HTMLCanvasElement>(null)
+  const canvasRef: RefObject<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current!

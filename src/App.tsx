@@ -1,21 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './App.scss'
-import Polyrhythm from './components/Polyrhythm'
-import PolyrhythmStarter from './components/PolyrhythmStarter'
+import Polyrhythm from './components/Polyrhythm/Polyrhythm'
 
-function App() {
-  const [isLoadPolyrhythm, setIsLoadPolyrhythm] = useState(false)
-  const handleLoadPolyrhythm = () => setIsLoadPolyrhythm(true)
-
+const App = () => {
   return (
     <main className="Main">
-      {isLoadPolyrhythm ? (
-        <Polyrhythm />
-      ) : (
-        <PolyrhythmStarter onClick={handleLoadPolyrhythm} />
-      )}
+      <Polyrhythm />
     </main>
   )
 }
-
 export default App
