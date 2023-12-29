@@ -1,10 +1,7 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
+import { CanvasSize } from '../types/canvas-types'
 
-export const useCanvas = (
-  canvasWidth: number,
-  canvasHeight: number,
-  animate: (ctx: CanvasRenderingContext2D) => void,
-) => {
+export const useCanvas = (canvasSize: CanvasSize, animate: (ctx: CanvasRenderingContext2D) => void) => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -12,29 +9,28 @@ export const useCanvas = (
     const ctx = canvas.getContext('2d')!
 
     const setCanvas = () => {
+      const { width, height } = canvasSize
       const devicePixelRatio = window.devicePixelRatio ?? 1
-      canvas.style.width = `${canvasWidth}px`
-      canvas.style.height = `${canvasHeight}px`
-      canvas.width = Math.floor(canvasWidth * devicePixelRatio)
-      canvas.height = Math.floor(canvasHeight * devicePixelRatio)
+      canvas.style.width = `${width}px`
+      canvas.style.height = `${height}px`
+      canvas.width = Math.floor(width * devicePixelRatio)
+      canvas.height = Math.floor(height * devicePixelRatio)
 
       ctx.scale(devicePixelRatio, devicePixelRatio)
     }
     setCanvas()
     animate(ctx)
-  }, [canvasWidth, canvasHeight])
+  }, [canvasSize])
 
   return canvasRef
 }
 
-export const useClientWidthHeight = (ref: RefObject<HTMLElement>) => {
-  const [width, setWidth] = useState<number>(0)
-  const [height, setHeight] = useState<number>(0)
+export const useClientWidthHeight = (ref: RefObject<HTMLElement>): CanvasSize => {
+  const [widthHeight, setWidthHeight] = useState<CanvasSize>({ width: 0, height: 0 })
   useEffect(() => {
     const setClientWidthHeight = () => {
-      const clientEl = ref.current!
-      setWidth(clientEl.clientWidth)
-      setHeight(clientEl.clientHeight)
+      const { clientWidth, clientHeight } = ref.current!
+      setWidthHeight({ width: clientWidth, height: clientHeight })
     }
     setClientWidthHeight()
 
@@ -43,5 +39,5 @@ export const useClientWidthHeight = (ref: RefObject<HTMLElement>) => {
     return () => window.removeEventListener('resize', setClientWidthHeight)
   }, [])
 
-  return { width, height }
+  return widthHeight
 }
