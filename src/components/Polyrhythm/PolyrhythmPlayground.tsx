@@ -1,6 +1,6 @@
-import React, { RefObject, useRef } from 'react'
-import { useCanvas, useClientWidthHeight } from '../../hooks/canvas-hook'
-import { Polygon, Visualization } from '../../lib/visualization'
+import React, { RefObject, useRef, useState } from 'react'
+import { useCanvas, useCanvasAnimate, useClientWidthHeight } from '../../hooks/canvas-hook'
+import { Polygon } from '../../lib/visualization'
 import { CanvasSize } from '../../types/canvas-types'
 
 const PolyrhythmPlayground = () => {
@@ -17,22 +17,14 @@ export default PolyrhythmPlayground
 
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
-  const animate = (ctx: CanvasRenderingContext2D) => {
-    fillBackGround(ctx)
-  }
+  const [polygonList, setPolygonList] = useState<Polygon[]>([])
 
-  const fillBackGround = (ctx: CanvasRenderingContext2D) => {
-    ctx.fillStyle = 'rgb(31,31,36)'
-    ctx.fillRect(0, 0, canvasSize.width, canvasSize.height)
-  }
+  const { canvasRef, canvasPoint } = useCanvas(canvasSize)
+  useCanvasAnimate(canvasRef, canvasSize, polygonList)
 
-  const handleDrawPolygon = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current!
-    const ctx = canvas.getContext('2d')!
-    const polygon: Visualization = new Polygon(e.clientX - canvas.getBoundingClientRect().x, e.clientY)
-    polygon.draw(ctx)
+  const handlePolygon = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const polygon = new Polygon(e.clientX - canvasPoint.x, e.clientY - canvasPoint.y)
+    setPolygonList(polygonList.concat(polygon))
   }
-
-  const canvasRef: RefObject<HTMLCanvasElement> = useCanvas(canvasSize, animate)
-  return <canvas className="Visualization" ref={canvasRef} onClick={handleDrawPolygon} />
+  return <canvas className="Visualization" ref={canvasRef} onClick={handlePolygon} onContextMenu={handlePolygon} />
 }

@@ -1,8 +1,10 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
-import { CanvasSize } from '../types/canvas-types'
+import { Polygon } from '../lib/visualization'
+import { CanvasPoint, CanvasSize } from '../types/canvas-types'
 
-export const useCanvas = (canvasSize: CanvasSize, animate: (ctx: CanvasRenderingContext2D) => void) => {
+export const useCanvas = (canvasSize: CanvasSize) => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null)
+  const [canvasPoint, setCanvasPoint] = useState<CanvasPoint>({ x: 0, y: 0 })
 
   useEffect(() => {
     const canvas = canvasRef.current!
@@ -19,10 +21,35 @@ export const useCanvas = (canvasSize: CanvasSize, animate: (ctx: CanvasRendering
       ctx.scale(devicePixelRatio, devicePixelRatio)
     }
     setCanvas()
-    animate(ctx)
+    setCanvasPoint(() => {
+      const { x, y } = canvas.getBoundingClientRect()
+      return { x, y }
+    })
   }, [canvasSize])
 
-  return canvasRef
+  return { canvasRef, canvasPoint }
+}
+
+export const useCanvasAnimate = (
+  canvasRef: RefObject<HTMLCanvasElement>,
+  canvasSize: CanvasSize,
+  polygonList: Polygon[],
+) => {
+  useEffect(() => {
+    const canvas = canvasRef.current!
+    const ctx = canvas.getContext('2d')!
+
+    const animate = (ctx: CanvasRenderingContext2D) => {
+      fillBackGround(ctx)
+      polygonList.forEach((polygon) => polygon.draw(ctx))
+    }
+    const fillBackGround = (ctx: CanvasRenderingContext2D) => {
+      ctx.fillStyle = 'rgb(31,31,36)'
+      ctx.fillRect(0, 0, canvasSize.width, canvasSize.height)
+    }
+
+    animate(ctx)
+  }, [canvasSize, polygonList])
 }
 
 export const useClientWidthHeight = (ref: RefObject<HTMLElement>): CanvasSize => {
