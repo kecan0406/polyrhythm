@@ -15,7 +15,8 @@
   display: flex;
 
   .Controller {
-    flex-shrink: 0;
+    background-color: white;
+    position: absolute;
 
     width: 260px;
     height: 100%;
@@ -23,8 +24,6 @@
 
   .Playground {
     overflow: hidden;
-
-    position: relative;
     display: flex;
 
     width: 100%;

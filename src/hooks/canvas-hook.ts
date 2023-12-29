@@ -1,10 +1,9 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { Polygon } from '../lib/visualization'
-import { CanvasPoint, CanvasSize } from '../types/canvas-types'
+import { CanvasSize } from '../types/canvas-types'
 
 export const useCanvas = (canvasSize: CanvasSize) => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null)
-  const [canvasPoint, setCanvasPoint] = useState<CanvasPoint>({ x: 0, y: 0 })
 
   useEffect(() => {
     const canvas = canvasRef.current!
@@ -21,13 +20,9 @@ export const useCanvas = (canvasSize: CanvasSize) => {
       ctx.scale(devicePixelRatio, devicePixelRatio)
     }
     setCanvas()
-    setCanvasPoint(() => {
-      const { x, y } = canvas.getBoundingClientRect()
-      return { x, y }
-    })
   }, [canvasSize])
 
-  return { canvasRef, canvasPoint }
+  return canvasRef
 }
 
 export const useCanvasAnimate = (

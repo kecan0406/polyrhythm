@@ -19,11 +19,11 @@ type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   const [polygonList, setPolygonList] = useState<Polygon[]>([])
 
-  const { canvasRef, canvasPoint } = useCanvas(canvasSize)
+  const canvasRef = useCanvas(canvasSize)
   useCanvasAnimate(canvasRef, canvasSize, polygonList)
 
   const handlePolygon = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const polygon = new Polygon(e.clientX - canvasPoint.x, e.clientY - canvasPoint.y)
+    const polygon = new Polygon(e.clientX, e.clientY)
     setPolygonList(polygonList.concat(polygon))
   }
   return <canvas className="Visualization" ref={canvasRef} onClick={handlePolygon} onContextMenu={handlePolygon} />
