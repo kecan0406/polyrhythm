@@ -4,11 +4,10 @@ import { CanvasSize } from '../../types/canvas-types'
 
 const PolyrhythmPlayground = () => {
   const mainRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null)
-  const canvasSize = useClientWidthHeight(mainRef)
-  const mounted = !!canvasSize.width
+  const playgroundSize = useClientWidthHeight(mainRef)
   return (
     <div className="Playground" ref={mainRef}>
-      {mounted && <PolyrhythmCanvas canvasSize={canvasSize} />}
+      <PolyrhythmCanvas canvasSize={playgroundSize} />
     </div>
   )
 }

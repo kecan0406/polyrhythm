@@ -1,8 +1,8 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { Visualization } from '../lib/visualization'
-import { CanvasSize, ClickInteraction, Interaction, WheelInteraction } from '../types/canvas-types'
+import { CanvasSize, ClickInteraction, Interaction, Size, WheelInteraction } from '../types/canvas-types'
 
-export const useCanvas = (canvasSize: CanvasSize): RefObject<HTMLCanvasElement> => {
+export const useCanvas = ({ width, height }: CanvasSize): RefObject<HTMLCanvasElement> => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null)
   const interaction = useInteraction(canvasRef)
   const animate = useVisualization(interaction)
@@ -10,7 +10,6 @@ export const useCanvas = (canvasSize: CanvasSize): RefObject<HTMLCanvasElement> 
   useEffect(() => {
     const canvas = canvasRef.current!
     const ctx = canvas.getContext('2d')!
-    const { width, height } = canvasSize
 
     const setCanvas = () => {
       const devicePixelRatio = window.devicePixelRatio ?? 1
@@ -30,7 +29,7 @@ export const useCanvas = (canvasSize: CanvasSize): RefObject<HTMLCanvasElement> 
     }
     requestAnimation()
     return () => window.cancelAnimationFrame(requestId)
-  }, [canvasSize, animate])
+  }, [width, height, animate])
 
   return canvasRef
 }
@@ -79,7 +78,7 @@ const useVisualization = (interaction: Interaction) => {
     drawVisual(ctx)
   }
 
-  const fillBackground = (ctx: CanvasRenderingContext2D, { width, height }: CanvasSize) => {
+  const fillBackground = (ctx: CanvasRenderingContext2D, { width, height }: Size) => {
     ctx.clearRect(0, 0, width, height)
     ctx.fillStyle = 'rgb(31,31,36)'
     ctx.fillRect(0, 0, width, height)
@@ -92,8 +91,8 @@ const useVisualization = (interaction: Interaction) => {
   return animate
 }
 
-export const useClientWidthHeight = (ref: RefObject<HTMLElement>): CanvasSize => {
-  const [widthHeight, setWidthHeight] = useState<CanvasSize>({ width: 0, height: 0 })
+export const useClientWidthHeight = (ref: RefObject<HTMLElement>): Size => {
+  const [widthHeight, setWidthHeight] = useState<Size>({ width: 0, height: 0 })
   useEffect(() => {
     const setClientWidthHeight = () => {
       const { clientWidth, clientHeight } = ref.current!
