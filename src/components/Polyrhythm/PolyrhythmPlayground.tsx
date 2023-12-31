@@ -1,6 +1,6 @@
-import React, { RefObject, useRef } from 'react'
-import { useCanvas, useClientWidthHeight } from '../../hooks/canvas-hook'
-import { CanvasSize } from '../../types/canvas-types'
+import React, { RefObject, useRef, useState } from 'react'
+import { useCanvas, useClientWidthHeight, useVisualization } from '../../hooks/canvas-hook'
+import { CanvasSize, ClickInteraction, Interaction, WheelInteraction } from '../../types/canvas-types'
 
 const PolyrhythmPlayground = () => {
   const mainRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null)
@@ -15,6 +15,29 @@ export default PolyrhythmPlayground
 
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
-  const canvasRef = useCanvas(canvasSize)
-  return <canvas className="Visualization" ref={canvasRef} onContextMenu={(e) => e.preventDefault()} />
+  const [interaction, setInteraction] = useState<Interaction>(null)
+
+  const animate = useVisualization(interaction)
+
+  const handleClickInteraction = ({ type, clientX: x, clientY: y }: React.MouseEvent) => {
+    setInteraction({ type, value: { x, y } } as ClickInteraction)
+  }
+  const handleWheelInteraction = ({ ctrlKey, deltaY, clientX: x, clientY: y }: React.WheelEvent) => {
+    const type = deltaY ? 'wheelUp' : 'wheelDown'
+    !ctrlKey && setInteraction({ type, value: { x, y } } as WheelInteraction)
+  }
+
+  const canvasRef = useCanvas(canvasSize, animate)
+  return (
+    <canvas
+      className="Visualization"
+      ref={canvasRef}
+      onClick={handleClickInteraction}
+      onContextMenu={(e) => {
+        e.preventDefault()
+        handleClickInteraction(e)
+      }}
+      onWheel={handleWheelInteraction}
+    />
+  )
 }

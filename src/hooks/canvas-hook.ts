@@ -1,11 +1,12 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { Visualization } from '../lib/visualization'
-import { CanvasSize, ClickInteraction, Interaction, Size, WheelInteraction } from '../types/canvas-types'
+import { CanvasSize, Interaction, Size } from '../types/canvas-types'
 
-export const useCanvas = ({ width, height }: CanvasSize): RefObject<HTMLCanvasElement> => {
+export const useCanvas = (
+  { width, height }: CanvasSize,
+  animate: (canvas: HTMLCanvasElement) => void,
+): RefObject<HTMLCanvasElement> => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null)
-  const interaction = useInteraction(canvasRef)
-  const animate = useVisualization(interaction)
 
   useEffect(() => {
     const canvas = canvasRef.current!
@@ -35,33 +36,7 @@ export const useCanvas = ({ width, height }: CanvasSize): RefObject<HTMLCanvasEl
   return canvasRef
 }
 
-const useInteraction = (canvasRef: RefObject<HTMLElement>): Interaction => {
-  const [interaction, setInteraction] = useState<Interaction>(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current!
-    const setClickInteraction = ({ type, x, y }: MouseEvent) => {
-      setInteraction({ type, value: { x, y } } as ClickInteraction)
-    }
-    const setWheelInteraction = ({ ctrlKey, deltaY, x, y }: WheelEvent) => {
-      const type = deltaY ? 'wheelUp' : 'wheelDown'
-      !ctrlKey && setInteraction({ type, value: { x, y } } as WheelInteraction)
-    }
-
-    canvas.addEventListener('click', setClickInteraction)
-    canvas.addEventListener('contextmenu', setClickInteraction)
-    canvas.addEventListener('wheel', setWheelInteraction)
-    return () => {
-      canvas.removeEventListener('click', setClickInteraction)
-      canvas.removeEventListener('contextmenu', setClickInteraction)
-      canvas.removeEventListener('wheel', setWheelInteraction)
-    }
-  }, [])
-
-  return interaction
-}
-
-const useVisualization = (interaction: Interaction) => {
+export const useVisualization = (interaction: Interaction) => {
   const visualizationRef: RefObject<Visualization> = useRef<Visualization>(new Visualization())
 
   useEffect(() => {
