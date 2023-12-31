@@ -4,14 +4,12 @@ import { getRandomIntInclusive, PI2 } from './utils/Math'
 export class Visualization {
   private visuals: Visual[] = []
 
-  public generatePolygon(point: Point, ctx: CanvasRenderingContext2D) {
-    const polygon = new Polygon(point)
-    polygon.draw(ctx)
-    this.visuals.push(polygon)
+  public generatePolygon(point: Point) {
+    this.visuals.push(new Polygon(point))
   }
 
   public drawAll(ctx: CanvasRenderingContext2D) {
-    this.visuals.forEach((polygon) => polygon.draw(ctx))
+    this.visuals.forEach((visual) => visual.draw(ctx))
   }
 }
 

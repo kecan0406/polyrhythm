@@ -1,10 +1,11 @@
-import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 import { Visualization } from '../lib/visualization'
 import { CanvasSize, ClickInteraction, Interaction, WheelInteraction } from '../types/canvas-types'
 
-export const useCanvas = (canvasSize: CanvasSize): [Interaction, RefObject<HTMLCanvasElement>] => {
+export const useCanvas = (canvasSize: CanvasSize): RefObject<HTMLCanvasElement> => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null)
-  const [interaction, setInteraction] = useInteraction(canvasRef)
+  const interaction = useInteraction(canvasRef)
+  const animate = useVisualization(interaction)
 
   useEffect(() => {
     const canvas = canvasRef.current!
@@ -19,28 +20,32 @@ export const useCanvas = (canvasSize: CanvasSize): [Interaction, RefObject<HTMLC
       canvas.height = Math.floor(height * devicePixelRatio)
 
       ctx.scale(devicePixelRatio, devicePixelRatio)
-      ctx.fillStyle = 'rgb(31,31,36)'
-      ctx.fillRect(0, 0, width, height)
     }
     setCanvas()
 
-    setInteraction({ type: 'resize', value: canvasSize })
-  }, [canvasSize])
+    let requestId: number
+    const requestAnimation = () => {
+      requestId = window.requestAnimationFrame(requestAnimation)
+      animate(canvas)
+    }
+    requestAnimation()
+    return () => window.cancelAnimationFrame(requestId)
+  }, [canvasSize, animate])
 
-  return [interaction, canvasRef]
+  return canvasRef
 }
 
-const useInteraction = (canvasRef: RefObject<HTMLElement>): [Interaction, Dispatch<SetStateAction<Interaction>>] => {
-  const [interaction, setInteraction] = useState<Interaction>({ type: 'resize', value: { width: 0, height: 0 } })
+const useInteraction = (canvasRef: RefObject<HTMLElement>): Interaction => {
+  const [interaction, setInteraction] = useState<Interaction>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current!
     const setClickInteraction = ({ type, x, y }: MouseEvent) => {
       setInteraction({ type, value: { x, y } } as ClickInteraction)
     }
-    const setWheelInteraction = ({ deltaY, x, y }: WheelEvent) => {
+    const setWheelInteraction = ({ ctrlKey, deltaY, x, y }: WheelEvent) => {
       const type = deltaY ? 'wheelUp' : 'wheelDown'
-      setInteraction({ type, value: { x, y } } as WheelInteraction)
+      !ctrlKey && setInteraction({ type, value: { x, y } } as WheelInteraction)
     }
 
     canvas.addEventListener('click', setClickInteraction)
@@ -53,24 +58,38 @@ const useInteraction = (canvasRef: RefObject<HTMLElement>): [Interaction, Dispat
     }
   }, [])
 
-  return [interaction, setInteraction]
+  return interaction
 }
 
-export const useVisualization = (interaction: Interaction, canvasRef: RefObject<HTMLCanvasElement>) => {
+const useVisualization = (interaction: Interaction) => {
   const visualizationRef: RefObject<Visualization> = useRef<Visualization>(new Visualization())
 
   useEffect(() => {
-    const canvas = canvasRef.current!
-    const ctx = canvas.getContext('2d')!
-    const visualization = visualizationRef.current!
+    if (!interaction) return
 
+    const visualization = visualizationRef.current!
     if (interaction.type === 'click') {
-      visualization.generatePolygon(interaction.value, ctx)
-    }
-    if (interaction.type === 'resize') {
-      visualization.drawAll(ctx)
+      visualization.generatePolygon(interaction.value)
     }
   }, [interaction])
+
+  const animate = (canvas: HTMLCanvasElement) => {
+    const ctx = canvas.getContext('2d')!
+    fillBackground(ctx, { width: parseInt(canvas.style.width), height: parseInt(canvas.style.height) })
+    drawVisual(ctx)
+  }
+
+  const fillBackground = (ctx: CanvasRenderingContext2D, { width, height }: CanvasSize) => {
+    ctx.clearRect(0, 0, width, height)
+    ctx.fillStyle = 'rgb(31,31,36)'
+    ctx.fillRect(0, 0, width, height)
+  }
+
+  const drawVisual = (ctx: CanvasRenderingContext2D) => {
+    const visualization = visualizationRef.current!
+    visualization.drawAll(ctx)
+  }
+  return animate
 }
 
 export const useClientWidthHeight = (ref: RefObject<HTMLElement>): CanvasSize => {

@@ -1,5 +1,5 @@
 import React, { RefObject, useRef } from 'react'
-import { useCanvas, useClientWidthHeight, useVisualization } from '../../hooks/canvas-hook'
+import { useCanvas, useClientWidthHeight } from '../../hooks/canvas-hook'
 import { CanvasSize } from '../../types/canvas-types'
 
 const PolyrhythmPlayground = () => {
@@ -16,8 +16,7 @@ export default PolyrhythmPlayground
 
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
-  const [interaction, canvasRef] = useCanvas(canvasSize)
-  useVisualization(interaction, canvasRef)
+  const canvasRef = useCanvas(canvasSize)
 
   return <canvas className="Visualization" ref={canvasRef} onContextMenu={(e) => e.preventDefault()} />
 }
