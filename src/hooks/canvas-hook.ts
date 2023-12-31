@@ -56,7 +56,7 @@ const useInteraction = (canvasRef: RefObject<HTMLElement>): [Interaction, Dispat
   return [interaction, setInteraction]
 }
 
-export const useCanvasVisualization = (interaction: Interaction, canvasRef: RefObject<HTMLCanvasElement>) => {
+export const useVisualization = (interaction: Interaction, canvasRef: RefObject<HTMLCanvasElement>) => {
   const visualizationRef: RefObject<Visualization> = useRef<Visualization>(new Visualization())
 
   useEffect(() => {
