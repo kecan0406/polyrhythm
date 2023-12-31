@@ -1,33 +1,31 @@
-import { CanvasPoint } from '../types/canvas-types'
+import { Point } from '../types/canvas-types'
 import { getRandomIntInclusive, PI2 } from './utils/Math'
 
-export interface Visualization {
-  draw: (ctx: CanvasRenderingContext2D) => void
-}
+export class Visualization {
+  private visuals: Visual[] = []
 
-export class VisualizationManager {
-  private polygonList: Polygon[] = []
-
-  public generatePolygon(canvasPoint: CanvasPoint, ctx: CanvasRenderingContext2D) {
-    const polygon = new Polygon(canvasPoint)
+  public generatePolygon(point: Point, ctx: CanvasRenderingContext2D) {
+    const polygon = new Polygon(point)
     polygon.draw(ctx)
-    this.polygonList.push(polygon)
+    this.visuals.push(polygon)
   }
 
   public drawAll(ctx: CanvasRenderingContext2D) {
-    this.polygonList.forEach((polygon) => polygon.draw(ctx))
+    this.visuals.forEach((polygon) => polygon.draw(ctx))
   }
 }
 
-export class Polygon implements Visualization {
-  private readonly centerX: number
-  private readonly centerY: number
+interface Visual {
+  draw(ctx: CanvasRenderingContext2D): void
+}
+
+export class Polygon implements Visual {
+  private readonly position: Point
   private readonly vertex: number
   private readonly radius: number
 
-  constructor(canvasPoint: CanvasPoint) {
-    this.centerX = canvasPoint.x
-    this.centerY = canvasPoint.y
+  constructor(point: Point) {
+    this.position = point
     this.vertex = getRandomIntInclusive(3, 8)
     this.radius = 100
   }
@@ -51,6 +49,6 @@ export class Polygon implements Visualization {
 
   private getLineXY(i: number): [number, number] {
     const value = (i * PI2) / this.vertex
-    return [this.centerX + this.radius * Math.cos(value), this.centerY + this.radius * Math.sin(value)]
+    return [this.position.x + this.radius * Math.cos(value), this.position.y + this.radius * Math.sin(value)]
   }
 }

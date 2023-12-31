@@ -1,5 +1,5 @@
 import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from 'react'
-import { VisualizationManager } from '../lib/visualization'
+import { Visualization } from '../lib/visualization'
 import { CanvasSize, ClickInteraction, Interaction, WheelInteraction } from '../types/canvas-types'
 
 export const useCanvas = (canvasSize: CanvasSize): [Interaction, RefObject<HTMLCanvasElement>] => {
@@ -57,19 +57,18 @@ const useInteraction = (canvasRef: RefObject<HTMLElement>): [Interaction, Dispat
 }
 
 export const useCanvasVisualization = (interaction: Interaction, canvasRef: RefObject<HTMLCanvasElement>) => {
-  const visualizationManagerRef: RefObject<VisualizationManager> = useRef<VisualizationManager>(
-    new VisualizationManager(),
-  )
+  const visualizationRef: RefObject<Visualization> = useRef<Visualization>(new Visualization())
 
   useEffect(() => {
     const canvas = canvasRef.current!
     const ctx = canvas.getContext('2d')!
-    const visualizationManager = visualizationManagerRef.current!
+    const visualization = visualizationRef.current!
+
     if (interaction.type === 'click') {
-      visualizationManager.generatePolygon(interaction.value, ctx)
+      visualization.generatePolygon(interaction.value, ctx)
     }
     if (interaction.type === 'resize') {
-      visualizationManager.drawAll(ctx)
+      visualization.drawAll(ctx)
     }
   }, [interaction])
 }
