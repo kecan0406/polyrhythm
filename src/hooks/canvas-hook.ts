@@ -65,10 +65,16 @@ const useVisualization = (interaction: Interaction) => {
 
   useEffect(() => {
     if (!interaction) return
-
     const visualization = visualizationRef.current!
-    if (interaction.type === 'click') {
-      visualization.generatePolygon(interaction.value)
+    const { type: interactionType, value: interactionValue } = interaction
+
+    switch (interactionType) {
+      case 'click':
+        visualization.generatePolygon(interactionValue)
+        break
+      case 'contextmenu':
+        visualization.removePolygon()
+        break
     }
   }, [interaction])
 

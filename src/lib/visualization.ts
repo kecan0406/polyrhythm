@@ -8,6 +8,10 @@ export class Visualization {
     this.visuals.push(new Polygon(point))
   }
 
+  public removePolygon() {
+    this.visuals.pop()
+  }
+
   public drawAll(ctx: CanvasRenderingContext2D) {
     this.visuals.forEach((visual) => visual.draw(ctx))
   }
