@@ -19,5 +19,5 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   const [interaction, canvasRef] = useCanvas(canvasSize)
   useCanvasVisualization(interaction, canvasRef)
 
-  return <canvas className="Visualization" ref={canvasRef} />
+  return <canvas className="Visualization" ref={canvasRef} onContextMenu={(e) => e.preventDefault()} />
 }

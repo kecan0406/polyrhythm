@@ -1,25 +1,10 @@
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from 'react'
 import { VisualizationManager } from '../lib/visualization'
-import { CanvasSize, Interaction } from '../types/canvas-types'
+import { CanvasSize, ClickInteraction, Interaction, WheelInteraction } from '../types/canvas-types'
 
 export const useCanvas = (canvasSize: CanvasSize): [Interaction, RefObject<HTMLCanvasElement>] => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null)
-  const [interaction, setInteraction] = useState<Interaction>({ type: 'resize', value: canvasSize })
-
-  useEffect(() => {
-    const canvas = canvasRef.current!
-    const setClickInteraction = (e: MouseEvent) => {
-      setInteraction({ type: 'click', value: { x: e.clientX, y: e.clientY } })
-      e.preventDefault()
-    }
-
-    canvas.addEventListener('click', setClickInteraction)
-    canvas.addEventListener('contextmenu', setClickInteraction)
-    return () => {
-      canvas.removeEventListener('click', setClickInteraction)
-      canvas.removeEventListener('contextmenu', setClickInteraction)
-    }
-  }, [])
+  const [interaction, setInteraction] = useInteraction(canvasRef)
 
   useEffect(() => {
     const canvas = canvasRef.current!
@@ -45,6 +30,32 @@ export const useCanvas = (canvasSize: CanvasSize): [Interaction, RefObject<HTMLC
   return [interaction, canvasRef]
 }
 
+const useInteraction = (canvasRef: RefObject<HTMLElement>): [Interaction, Dispatch<SetStateAction<Interaction>>] => {
+  const [interaction, setInteraction] = useState<Interaction>({ type: 'resize', value: { width: 0, height: 0 } })
+
+  useEffect(() => {
+    const canvas = canvasRef.current!
+    const setClickInteraction = ({ type, x, y }: MouseEvent) => {
+      setInteraction({ type, value: { x, y } } as ClickInteraction)
+    }
+    const setWheelInteraction = ({ deltaY, x, y }: WheelEvent) => {
+      const type = deltaY ? 'wheelUp' : 'wheelDown'
+      setInteraction({ type, value: { x, y } } as WheelInteraction)
+    }
+
+    canvas.addEventListener('click', setClickInteraction)
+    canvas.addEventListener('contextmenu', setClickInteraction)
+    canvas.addEventListener('wheel', setWheelInteraction)
+    return () => {
+      canvas.removeEventListener('click', setClickInteraction)
+      canvas.removeEventListener('contextmenu', setClickInteraction)
+      canvas.removeEventListener('wheel', setWheelInteraction)
+    }
+  }, [])
+
+  return [interaction, setInteraction]
+}
+
 export const useCanvasVisualization = (interaction: Interaction, canvasRef: RefObject<HTMLCanvasElement>) => {
   const visualizationManagerRef: RefObject<VisualizationManager> = useRef<VisualizationManager>(
     new VisualizationManager(),
@@ -54,7 +65,6 @@ export const useCanvasVisualization = (interaction: Interaction, canvasRef: RefO
     const canvas = canvasRef.current!
     const ctx = canvas.getContext('2d')!
     const visualizationManager = visualizationManagerRef.current!
-
     if (interaction.type === 'click') {
       visualizationManager.generatePolygon(interaction.value)
       visualizationManager.draw(ctx)
