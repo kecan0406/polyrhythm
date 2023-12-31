@@ -6,6 +6,7 @@ const PolyrhythmStarter = ({ onClick: close }: PolyrhythmStarterProps) => {
   const handleTransportStart = async () => {
     Tone.setContext(new Tone.Context({ latencyHint: 'interactive' }))
     await Tone.start()
+
     close()
   }
   return <div className="PolyrhythmStarter" onClick={handleTransportStart} />

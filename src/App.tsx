@@ -8,10 +8,7 @@ const App = () => {
   const handlePolyrhythmReady = () => setIsReady(true)
 
   return (
-    <main className="Main">
-      {!isReady && <PolyrhythmStarter onClick={handlePolyrhythmReady} />}
-      <Polyrhythm />
-    </main>
+    <main className="Main">{isReady ? <Polyrhythm /> : <PolyrhythmStarter onClick={handlePolyrhythmReady} />}</main>
   )
 }
 export default App

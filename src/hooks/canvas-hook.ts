@@ -28,6 +28,7 @@ export const useCanvas = ({ width, height }: CanvasSize): RefObject<HTMLCanvasEl
       animate(canvas)
     }
     requestAnimation()
+
     return () => window.cancelAnimationFrame(requestId)
   }, [width, height, animate])
 

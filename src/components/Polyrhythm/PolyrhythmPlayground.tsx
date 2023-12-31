@@ -16,6 +16,5 @@ export default PolyrhythmPlayground
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   const canvasRef = useCanvas(canvasSize)
-
   return <canvas className="Visualization" ref={canvasRef} onContextMenu={(e) => e.preventDefault()} />
 }
