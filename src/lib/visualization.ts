@@ -8,11 +8,13 @@ export interface Visualization {
 export class VisualizationManager {
   private polygonList: Polygon[] = []
 
-  public generatePolygon(canvasPoint: CanvasPoint) {
-    this.polygonList.push(new Polygon(canvasPoint))
+  public generatePolygon(canvasPoint: CanvasPoint, ctx: CanvasRenderingContext2D) {
+    const polygon = new Polygon(canvasPoint)
+    polygon.draw(ctx)
+    this.polygonList.push(polygon)
   }
 
-  public draw(ctx: CanvasRenderingContext2D) {
+  public drawAll(ctx: CanvasRenderingContext2D) {
     this.polygonList.forEach((polygon) => polygon.draw(ctx))
   }
 }

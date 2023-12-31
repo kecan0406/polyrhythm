@@ -66,11 +66,10 @@ export const useCanvasVisualization = (interaction: Interaction, canvasRef: RefO
     const ctx = canvas.getContext('2d')!
     const visualizationManager = visualizationManagerRef.current!
     if (interaction.type === 'click') {
-      visualizationManager.generatePolygon(interaction.value)
-      visualizationManager.draw(ctx)
+      visualizationManager.generatePolygon(interaction.value, ctx)
     }
     if (interaction.type === 'resize') {
-      visualizationManager.draw(ctx)
+      visualizationManager.drawAll(ctx)
     }
   }, [interaction])
 }
