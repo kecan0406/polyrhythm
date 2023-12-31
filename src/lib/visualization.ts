@@ -1,7 +1,20 @@
+import { CanvasPoint } from '../types/canvas-types'
 import { getRandomIntInclusive, PI2 } from './utils/Math'
 
 export interface Visualization {
   draw: (ctx: CanvasRenderingContext2D) => void
+}
+
+export class VisualizationManager {
+  private polygonList: Polygon[] = []
+
+  public generatePolygon(canvasPoint: CanvasPoint) {
+    this.polygonList.push(new Polygon(canvasPoint))
+  }
+
+  public draw(ctx: CanvasRenderingContext2D) {
+    this.polygonList.forEach((polygon) => polygon.draw(ctx))
+  }
 }
 
 export class Polygon implements Visualization {
@@ -10,9 +23,9 @@ export class Polygon implements Visualization {
   private readonly vertex: number
   private readonly radius: number
 
-  constructor(pointX: number, pointY: number) {
-    this.centerX = pointX
-    this.centerY = pointY
+  constructor(canvasPoint: CanvasPoint) {
+    this.centerX = canvasPoint.x
+    this.centerY = canvasPoint.y
     this.vertex = getRandomIntInclusive(3, 8)
     this.radius = 100
   }

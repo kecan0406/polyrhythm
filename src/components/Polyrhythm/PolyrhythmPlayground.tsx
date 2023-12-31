@@ -1,15 +1,14 @@
-import React, { RefObject, useRef, useState } from 'react'
-import { useCanvas, useCanvasAnimate, useClientWidthHeight } from '../../hooks/canvas-hook'
-import { Polygon } from '../../lib/visualization'
+import React, { RefObject, useRef } from 'react'
+import { useCanvas, useCanvasVisualization, useClientWidthHeight } from '../../hooks/canvas-hook'
 import { CanvasSize } from '../../types/canvas-types'
 
 const PolyrhythmPlayground = () => {
   const mainRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null)
   const canvasSize = useClientWidthHeight(mainRef)
-
+  const mounted = !!canvasSize.width
   return (
     <div className="Playground" ref={mainRef}>
-      <PolyrhythmCanvas canvasSize={canvasSize} />
+      {mounted && <PolyrhythmCanvas canvasSize={canvasSize} />}
     </div>
   )
 }
@@ -17,14 +16,8 @@ export default PolyrhythmPlayground
 
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
-  const [polygonList, setPolygonList] = useState<Polygon[]>([])
+  const [interaction, canvasRef] = useCanvas(canvasSize)
+  useCanvasVisualization(interaction, canvasRef)
 
-  const canvasRef = useCanvas(canvasSize)
-  useCanvasAnimate(canvasRef, canvasSize, polygonList)
-
-  const handlePolygon = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const polygon = new Polygon(e.clientX, e.clientY)
-    setPolygonList(polygonList.concat(polygon))
-  }
-  return <canvas className="Visualization" ref={canvasRef} onClick={handlePolygon} onContextMenu={handlePolygon} />
+  return <canvas className="Visualization" ref={canvasRef} />
 }

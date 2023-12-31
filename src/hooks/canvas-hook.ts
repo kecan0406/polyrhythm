@@ -1,16 +1,32 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
-import { Polygon } from '../lib/visualization'
-import { CanvasSize } from '../types/canvas-types'
+import { VisualizationManager } from '../lib/visualization'
+import { CanvasSize, Interaction } from '../types/canvas-types'
 
-export const useCanvas = (canvasSize: CanvasSize) => {
+export const useCanvas = (canvasSize: CanvasSize): [Interaction, RefObject<HTMLCanvasElement>] => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null)
+  const [interaction, setInteraction] = useState<Interaction>({ type: 'resize', value: canvasSize })
+
+  useEffect(() => {
+    const canvas = canvasRef.current!
+    const setClickInteraction = (e: MouseEvent) => {
+      setInteraction({ type: 'click', value: { x: e.clientX, y: e.clientY } })
+      e.preventDefault()
+    }
+
+    canvas.addEventListener('click', setClickInteraction)
+    canvas.addEventListener('contextmenu', setClickInteraction)
+    return () => {
+      canvas.removeEventListener('click', setClickInteraction)
+      canvas.removeEventListener('contextmenu', setClickInteraction)
+    }
+  }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current!
     const ctx = canvas.getContext('2d')!
+    const { width, height } = canvasSize
 
     const setCanvas = () => {
-      const { width, height } = canvasSize
       const devicePixelRatio = window.devicePixelRatio ?? 1
       canvas.style.width = `${width}px`
       canvas.style.height = `${height}px`
@@ -18,33 +34,35 @@ export const useCanvas = (canvasSize: CanvasSize) => {
       canvas.height = Math.floor(height * devicePixelRatio)
 
       ctx.scale(devicePixelRatio, devicePixelRatio)
+      ctx.fillStyle = 'rgb(31,31,36)'
+      ctx.fillRect(0, 0, width, height)
     }
     setCanvas()
+
+    setInteraction({ type: 'resize', value: canvasSize })
   }, [canvasSize])
 
-  return canvasRef
+  return [interaction, canvasRef]
 }
 
-export const useCanvasAnimate = (
-  canvasRef: RefObject<HTMLCanvasElement>,
-  canvasSize: CanvasSize,
-  polygonList: Polygon[],
-) => {
+export const useCanvasVisualization = (interaction: Interaction, canvasRef: RefObject<HTMLCanvasElement>) => {
+  const visualizationManagerRef: RefObject<VisualizationManager> = useRef<VisualizationManager>(
+    new VisualizationManager(),
+  )
+
   useEffect(() => {
     const canvas = canvasRef.current!
     const ctx = canvas.getContext('2d')!
+    const visualizationManager = visualizationManagerRef.current!
 
-    const animate = (ctx: CanvasRenderingContext2D) => {
-      fillBackGround(ctx)
-      polygonList.forEach((polygon) => polygon.draw(ctx))
+    if (interaction.type === 'click') {
+      visualizationManager.generatePolygon(interaction.value)
+      visualizationManager.draw(ctx)
     }
-    const fillBackGround = (ctx: CanvasRenderingContext2D) => {
-      ctx.fillStyle = 'rgb(31,31,36)'
-      ctx.fillRect(0, 0, canvasSize.width, canvasSize.height)
+    if (interaction.type === 'resize') {
+      visualizationManager.draw(ctx)
     }
-
-    animate(ctx)
-  }, [canvasSize, polygonList])
+  }, [interaction])
 }
 
 export const useClientWidthHeight = (ref: RefObject<HTMLElement>): CanvasSize => {
@@ -57,7 +75,6 @@ export const useClientWidthHeight = (ref: RefObject<HTMLElement>): CanvasSize =>
     setClientWidthHeight()
 
     window.addEventListener('resize', setClientWidthHeight)
-
     return () => window.removeEventListener('resize', setClientWidthHeight)
   }, [])
 
