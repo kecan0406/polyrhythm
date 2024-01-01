@@ -1,16 +1,16 @@
 import React from 'react'
-import { PolyrhythmProvider } from '../../hooks/polyrhythm-hook'
+import { PolyrhythmManagerProvider } from '../../hooks/polyrhythm-hook'
 import PolyrhythmController from './PolyrhythmController'
 import PolyrhythmPlayground from './PolyrhythmPlayground'
 
 const Polyrhythm = () => {
   return (
-    <PolyrhythmProvider>
+    <PolyrhythmManagerProvider>
       <div className="Polyrhythm">
         <PolyrhythmController />
         <PolyrhythmPlayground />
       </div>
-    </PolyrhythmProvider>
+    </PolyrhythmManagerProvider>
   )
 }
 

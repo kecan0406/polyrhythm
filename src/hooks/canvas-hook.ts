@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { Visualization } from '../lib/visualization'
 import { CanvasSize, Interaction, Size } from '../types/canvas-types'
-import { usePolyrhythm } from './polyrhythm-hook'
+import { usePolyrhythmManager } from './polyrhythm-hook'
 
 export const useCanvas = (
   { width, height }: CanvasSize,
@@ -38,13 +38,11 @@ export const useCanvas = (
 }
 
 export const useVisualization = (interaction: Interaction) => {
-  const polyrhythmRef = usePolyrhythm()
+  const polyrhythmManager = usePolyrhythmManager()
   const visualizationRef: RefObject<Visualization> = useRef<Visualization>(new Visualization())
 
   useEffect(() => {
-    if (!polyrhythmRef || !interaction) return
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const polyrhythm = polyrhythmRef.current!
+    if (!polyrhythmManager || !interaction) return
     const visualization = visualizationRef.current!
 
     const { type: interactionType, value: interactionValue } = interaction
