@@ -1,6 +1,7 @@
-import React, { RefObject, useRef, useState } from 'react'
+import React, { RefObject, useRef } from 'react'
 import { useCanvas, useClientWidthHeight, useVisualization } from '../../hooks/canvas-hook'
-import { CanvasSize, ClickInteraction, Interaction, WheelInteraction } from '../../types/canvas-types'
+import { useInteractionActions } from '../../hooks/interaction-hook'
+import { CanvasSize, ClickInteraction, WheelInteraction } from '../../types/canvas-types'
 
 const PolyrhythmPlayground = () => {
   const mainRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null)
@@ -15,16 +16,18 @@ export default PolyrhythmPlayground
 
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
-  const [interaction, setInteraction] = useState<Interaction>(null)
+  const interactionActions = useInteractionActions()
+  const animate = useVisualization()
 
-  const animate = useVisualization(interaction)
-
-  const handleClickInteraction = ({ type, clientX: x, clientY: y }: React.MouseEvent) => {
-    setInteraction({ type, value: { x, y } } as ClickInteraction)
+  const handleClickInteraction = (e: React.MouseEvent) => {
+    const { type, clientX: x, clientY: y } = e
+    interactionActions.canvasInteraction({ type, value: { x, y } } as ClickInteraction)
+    e.preventDefault()
   }
+
   const handleWheelInteraction = ({ ctrlKey, deltaY, clientX: x, clientY: y }: React.WheelEvent) => {
     const type = deltaY ? 'wheelUp' : 'wheelDown'
-    !ctrlKey && setInteraction({ type, value: { x, y } } as WheelInteraction)
+    !ctrlKey && interactionActions.canvasInteraction({ type, value: { x, y } } as WheelInteraction)
   }
 
   const canvasRef = useCanvas(canvasSize, animate)
@@ -33,10 +36,7 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
       className="Visualization"
       ref={canvasRef}
       onClick={handleClickInteraction}
-      onContextMenu={(e) => {
-        e.preventDefault()
-        handleClickInteraction(e)
-      }}
+      onContextMenu={handleClickInteraction}
       onWheel={handleWheelInteraction}
     />
   )

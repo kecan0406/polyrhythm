@@ -1,6 +1,7 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { Visualization } from '../lib/visualization'
-import { CanvasSize, Interaction, Size } from '../types/canvas-types'
+import { CanvasSize, Size } from '../types/canvas-types'
+import { useInteractionValue } from './interaction-hook'
 import { usePolyrhythmManager } from './polyrhythm-hook'
 
 export const useCanvas = (
@@ -37,7 +38,8 @@ export const useCanvas = (
   return canvasRef
 }
 
-export const useVisualization = (interaction: Interaction) => {
+export const useVisualization = () => {
+  const interaction = useInteractionValue()
   const polyrhythmManager = usePolyrhythmManager()
   const visualizationRef: RefObject<Visualization> = useRef<Visualization>(new Visualization())
 
