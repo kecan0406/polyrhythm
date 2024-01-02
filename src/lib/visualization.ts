@@ -4,8 +4,8 @@ import { PI2 } from './utils/Math'
 export class Visualization {
   private visuals: Visual[] = []
 
-  public generatePolygon(point: Point, vertex: number) {
-    this.visuals.push(new Polygon(point, vertex))
+  public generatePolygon(position: Point, vertex: number) {
+    this.visuals.push(new Polygon(position, vertex))
   }
 
   public removePolygon() {
@@ -26,8 +26,8 @@ export class Polygon implements Visual {
   private readonly vertex: number
   private readonly radius: number
 
-  constructor(point: Point, vertex: number) {
-    this.position = point
+  constructor(position: Point, vertex: number) {
+    this.position = position
     this.vertex = vertex
     this.radius = 100
   }

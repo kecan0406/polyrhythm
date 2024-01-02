@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { Visualization } from '../lib/visualization'
 import { CanvasSize, Size } from '../types/canvas-types'
-import { usePolyrhythmManager } from './polyrhythm-hook'
+import { usePolyrhythm } from './polyrhythm-hook'
 
 export const useCanvas = (
   { width, height }: CanvasSize,
@@ -38,16 +38,16 @@ export const useCanvas = (
 }
 
 export const useVisualization = () => {
-  const polyrhythmManager = usePolyrhythmManager()
+  const polyrhythm = usePolyrhythm()
   const visualizationRef: RefObject<Visualization> = useRef<Visualization>(new Visualization())
 
   useEffect(() => {
     const visualization = visualizationRef.current!
-    polyrhythmManager.forEach(({ point, interval }) => visualization.generatePolygon(point, parseInt(interval)))
+    polyrhythm.forEach(({ position, interval }) => visualization.generatePolygon(position, parseInt(interval)))
     return () => {
-      polyrhythmManager.forEach(() => visualization.removePolygon())
+      polyrhythm.forEach(() => visualization.removePolygon())
     }
-  }, [polyrhythmManager])
+  }, [polyrhythm])
 
   const animate = (canvas: HTMLCanvasElement) => {
     const ctx = canvas.getContext('2d')!

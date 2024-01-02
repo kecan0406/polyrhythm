@@ -2,58 +2,57 @@ import React, { createContext, RefObject, useContext, useEffect, useRef, useStat
 import * as Tone from 'tone'
 import { Volume } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
-import { Draw } from 'tone/build/esm/core/util/Draw'
 import { getBeepSynth } from '../lib/instruments'
-import { polyrhythmNotes } from '../lib/sample'
-import { getRandomIntInclusive } from '../lib/utils/Math'
+import { getRandomInt } from '../lib/utils/Math'
 import { Point } from '../types/canvas-types'
 import { useInteractionValue } from './interaction-hook'
 
-type PolyrhythmId = { id: number; interval: string; point: Point }
-const PolyrhythmManagerContext = createContext<PolyrhythmId[]>([])
+type Polyrhythm = { id: number; interval: string; position: Point }
+const PolyrhythmContext = createContext<Polyrhythm[]>([])
 
-export const PolyrhythmManagerProvider = ({ children }: { children: React.ReactNode }) => {
-  const [polyrhythmIds, setPolyrhythmIds] = useState<PolyrhythmId[]>([])
+export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) => {
+  const [polyrhythm, setPolyrhythm] = useState<Polyrhythm[]>([])
   const transport = useTransport()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const draw = useDraw()
   const volume = useVolume()
-
-  const registerPolyrhythm = (transport: Transport, volume: Volume, point: Point) => {
-    const interval = `${getRandomIntInclusive(3, 5)}n`
-    const beepSynth = getBeepSynth().connect(volume)
-    const { note } = polyrhythmNotes.find((note) => note.interval === interval)!
-    const id = transport.scheduleRepeat((time) => {
-      beepSynth.triggerAttackRelease(note, time, 0.05)
-    }, interval)
-    setPolyrhythmIds(polyrhythmIds.concat({ id, interval, point }))
-  }
-
-  const deregisterPolyrhythm = (transport: Transport) => {
-    if (!polyrhythmIds.length) return
-
-    const { id } = polyrhythmIds.at(-1)!
-    setPolyrhythmIds(polyrhythmIds.slice(0, -1))
-    id !== undefined && transport.clear(id)
-  }
 
   const interaction = useInteractionValue()
   useEffect(() => {
-    if (!interaction || !transport || !volume) return
+    if (!interaction) return
+
     switch (interaction.type) {
       case 'click':
-        registerPolyrhythm(transport, volume, interaction.value)
+        registerPolyrhythm(interaction.value)
         break
       case 'contextmenu':
-        deregisterPolyrhythm(transport)
+        deregisterPolyrhythm()
         break
     }
   }, [interaction])
 
-  return <PolyrhythmManagerContext.Provider value={polyrhythmIds}>{children}</PolyrhythmManagerContext.Provider>
+  const registerPolyrhythm = (position: Point) => {
+    const interval = `${getRandomInt(3, 5)}n`
+    const beepSynth = getBeepSynth().connect(volume!)
+
+    const id = transport!.scheduleRepeat((time) => {
+      beepSynth.triggerAttackRelease('C4', time, 0.05)
+    }, interval)
+
+    setPolyrhythm(polyrhythm.concat({ id, interval, position }))
+  }
+
+  const deregisterPolyrhythm = () => {
+    if (!polyrhythm.length) return
+
+    const { id } = polyrhythm.at(-1)!
+    id !== undefined && transport!.clear(id)
+
+    setPolyrhythm(polyrhythm.slice(0, -1))
+  }
+
+  return <PolyrhythmContext.Provider value={polyrhythm}>{children}</PolyrhythmContext.Provider>
 }
 
-export const usePolyrhythmManager = () => useContext(PolyrhythmManagerContext)
+export const usePolyrhythm = () => useContext(PolyrhythmContext)
 
 const useTransport = () => {
   const transportRef: RefObject<Transport> = useRef<Transport>(Tone.getTransport())
@@ -67,9 +66,4 @@ const useTransport = () => {
 const useVolume = () => {
   const volumeRef: RefObject<Volume> = useRef<Volume>(new Tone.Volume(-20).toDestination())
   return volumeRef.current
-}
-
-const useDraw = () => {
-  const drawRef: RefObject<Draw> = useRef<Draw>(Tone.getDraw())
-  return drawRef.current
 }
