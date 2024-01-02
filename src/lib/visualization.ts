@@ -1,11 +1,11 @@
 import { Point } from '../types/canvas-types'
-import { getRandomIntInclusive, PI2 } from './utils/Math'
+import { PI2 } from './utils/Math'
 
 export class Visualization {
   private visuals: Visual[] = []
 
-  public generatePolygon(point: Point) {
-    this.visuals.push(new Polygon(point))
+  public generatePolygon(point: Point, vertex: number) {
+    this.visuals.push(new Polygon(point, vertex))
   }
 
   public removePolygon() {
@@ -26,9 +26,9 @@ export class Polygon implements Visual {
   private readonly vertex: number
   private readonly radius: number
 
-  constructor(point: Point) {
+  constructor(point: Point, vertex: number) {
     this.position = point
-    this.vertex = getRandomIntInclusive(3, 8)
+    this.vertex = vertex
     this.radius = 100
   }
 

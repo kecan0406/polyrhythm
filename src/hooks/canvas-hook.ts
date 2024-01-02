@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { Visualization } from '../lib/visualization'
 import { CanvasSize, Size } from '../types/canvas-types'
-import { useInteractionValue } from './interaction-hook'
+import { usePolyrhythmManager } from './polyrhythm-hook'
 
 export const useCanvas = (
   { width, height }: CanvasSize,
@@ -38,23 +38,16 @@ export const useCanvas = (
 }
 
 export const useVisualization = () => {
-  const interaction = useInteractionValue()
+  const polyrhythmManager = usePolyrhythmManager()
   const visualizationRef: RefObject<Visualization> = useRef<Visualization>(new Visualization())
 
   useEffect(() => {
-    if (!interaction) return
     const visualization = visualizationRef.current!
-
-    const { type: interactionType, value: interactionValue } = interaction
-    switch (interactionType) {
-      case 'click':
-        visualization.generatePolygon(interactionValue)
-        break
-      case 'contextmenu':
-        visualization.removePolygon()
-        break
+    polyrhythmManager.forEach(({ point, interval }) => visualization.generatePolygon(point, parseInt(interval)))
+    return () => {
+      polyrhythmManager.forEach(() => visualization.removePolygon())
     }
-  }, [interaction])
+  }, [polyrhythmManager])
 
   const animate = (canvas: HTMLCanvasElement) => {
     const ctx = canvas.getContext('2d')!
