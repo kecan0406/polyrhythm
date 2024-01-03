@@ -78,7 +78,7 @@ const useTransport = () => {
   return transportRef.current
 }
 
-const useVolume = () => {
+export const useVolume = () => {
   const volumeRef: RefObject<Volume> = useRef<Volume>(new Tone.Volume(-20).toDestination())
   return volumeRef.current
 }
