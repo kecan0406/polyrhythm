@@ -11,7 +11,7 @@ import React, {
 import * as Tone from 'tone'
 import { Volume } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
-import { Time } from 'tone/build/esm/core/type/Units'
+import { Decibels, Time } from 'tone/build/esm/core/type/Units'
 import { getBeepSynth } from '../lib/instruments'
 import { Point } from '../types/canvas-types'
 import { Rhythm } from '../types/polyrhythm-types'
@@ -20,12 +20,14 @@ type PolyrhythmActions = {
   register: (position: Point) => void
   deregister: () => void
   setInterval: (interval: Time) => void
+  setVolume: (volume: number) => void
 }
 const PolyrhythmValueContext = createContext<Rhythm[]>([])
 const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
   register: () => {},
   deregister: () => {},
   setInterval: () => {},
+  setVolume: () => {},
 })
 
 export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) => {
@@ -54,6 +56,9 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
       },
       setInterval: (interval: Time) => {
         intervalRef.current = interval
+      },
+      setVolume: (vol: Decibels) => {
+        volume!.volume.value = vol
       },
     }),
     [polyrhythm],
