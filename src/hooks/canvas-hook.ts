@@ -43,10 +43,9 @@ export const useVisualization = () => {
 
   useEffect(() => {
     const visualization = visualizationRef.current!
-    polyrhythm.forEach(({ position, interval }) => visualization.generatePolygon(position, parseInt(interval)))
-    return () => {
-      polyrhythm.forEach(() => visualization.removePolygon())
-    }
+    polyrhythm.forEach((rhythm) => visualization.generateVisual(rhythm))
+
+    return () => polyrhythm.forEach(() => visualization.removeVisual())
   }, [polyrhythm])
 
   const animate = (canvas: HTMLCanvasElement) => {

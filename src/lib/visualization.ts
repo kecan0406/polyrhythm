@@ -1,14 +1,15 @@
 import { Point } from '../types/canvas-types'
-import { PI2 } from './utils/Math'
+import { Rhythm } from '../types/polyrhythm-types'
+import { parseVertex, PI2 } from './utils/math-util'
 
 export class Visualization {
   private visuals: Visual[] = []
 
-  public generatePolygon(position: Point, vertex: number) {
-    this.visuals.push(new Polygon(position, vertex))
+  public generateVisual(rhythm: Rhythm) {
+    this.visuals.push(new Polygon(rhythm))
   }
 
-  public removePolygon() {
+  public removeVisual() {
     this.visuals.pop()
   }
 
@@ -22,13 +23,15 @@ interface Visual {
 }
 
 export class Polygon implements Visual {
+  private readonly id: number
   private readonly position: Point
   private readonly vertex: number
   private readonly radius: number
 
-  constructor(position: Point, vertex: number) {
-    this.position = position
-    this.vertex = vertex
+  constructor(rhythm: Rhythm) {
+    this.id = rhythm.id
+    this.position = rhythm.position
+    this.vertex = parseVertex(rhythm.interval)
     this.radius = 100
   }
 

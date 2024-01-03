@@ -3,15 +3,15 @@ import * as Tone from 'tone'
 import { Volume } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
 import { getBeepSynth } from '../lib/instruments'
-import { getRandomInt } from '../lib/utils/Math'
+import { getRandomInterval } from '../lib/utils/rhythm-util'
 import { Point } from '../types/canvas-types'
+import { Rhythm } from '../types/polyrhythm-types'
 import { useInteractionValue } from './interaction-hook'
 
-type Polyrhythm = { id: number; interval: string; position: Point }
-const PolyrhythmContext = createContext<Polyrhythm[]>([])
+const PolyrhythmContext = createContext<Rhythm[]>([])
 
 export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) => {
-  const [polyrhythm, setPolyrhythm] = useState<Polyrhythm[]>([])
+  const [polyrhythm, setPolyrhythm] = useState<Rhythm[]>([])
   const transport = useTransport()
   const volume = useVolume()
 
@@ -21,26 +21,27 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
 
     switch (interaction.type) {
       case 'click':
-        registerPolyrhythm(interaction.value)
+        registerRhythm(interaction.value)
         break
       case 'contextmenu':
-        deregisterPolyrhythm()
+        deregisterRhythm()
         break
     }
   }, [interaction])
 
-  const registerPolyrhythm = (position: Point) => {
-    const interval = `${getRandomInt(3, 5)}n`
+  const registerRhythm = (position: Point) => {
+    const interval = getRandomInterval()
     const beepSynth = getBeepSynth().connect(volume!)
 
     const id = transport!.scheduleRepeat((time) => {
       beepSynth.triggerAttackRelease('C4', time, 0.05)
     }, interval)
 
-    setPolyrhythm(polyrhythm.concat({ id, interval, position }))
+    const rhythm: Rhythm = { id, interval, position }
+    setPolyrhythm(polyrhythm.concat(rhythm))
   }
 
-  const deregisterPolyrhythm = () => {
+  const deregisterRhythm = () => {
     if (!polyrhythm.length) return
 
     const { id } = polyrhythm.at(-1)!
