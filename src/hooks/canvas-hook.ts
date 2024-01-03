@@ -42,7 +42,6 @@ export const useVisualization = () => {
   const visualizationRef: RefObject<Visualization> = useRef<Visualization>(new Visualization())
 
   useEffect(() => {
-    console.log(polyrhythm)
     const visualization = visualizationRef.current!
     polyrhythm.forEach((rhythm) => visualization.generateVisual(rhythm))
 
