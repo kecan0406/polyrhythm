@@ -1,29 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { usePolyrhythmValue } from '../../../../hooks/polyrhythm-hook'
+import React, { useState } from 'react'
 import { Rhythm } from '../../../../lib/polyrhythm'
 import RhythmSelector from './RhythmSelector'
 import RhythmVolumeController from './RhythmVolumeController'
 
 const RhythmController = () => {
   const [rhythm, setRhythm] = useState<Rhythm | null>(null)
-  const polyrhythm = usePolyrhythmValue()
 
-  const handleSelectRhythm = (id: number) => {
-    const targetRhythm = polyrhythm.find((rhythm) => rhythm.id === id)
-    if (targetRhythm) {
-      setRhythm(targetRhythm)
-    }
+  const handleSelectRhythm = (rhythm: Rhythm | null) => {
+    setRhythm(rhythm)
   }
-
-  useEffect(() => {
-    if (!polyrhythm.length) {
-      setRhythm(null)
-    }
-  }, [polyrhythm])
 
   return (
     <div className="RhythmController">
-      <RhythmSelector onClick={handleSelectRhythm} polyrhythm={polyrhythm} />
+      <RhythmSelector onClick={handleSelectRhythm} />
       {rhythm && <RhythmVolumeController rhythm={rhythm} />}
     </div>
   )

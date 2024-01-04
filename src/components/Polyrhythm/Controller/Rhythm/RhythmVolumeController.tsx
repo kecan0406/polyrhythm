@@ -17,13 +17,18 @@ const RhythmVolumeController = ({ rhythm }: { rhythm: Rhythm }) => {
     setVolume(target.valueAsNumber)
   }
 
+  return <RhythmVolumeControllerUI volume={volume} onChange={handleVolume} />
+}
+export default RhythmVolumeController
+
+type RhythmVolumeControllerUIProps = { volume: number; onChange: (e: ChangeEvent<HTMLInputElement>) => void }
+const RhythmVolumeControllerUI = ({ volume, onChange }: RhythmVolumeControllerUIProps) => {
   return (
     <div className="VolumeController">
       <section>
         <label htmlFor="Volume">Volume : {volume}</label>
-        <input id="Volume" type="range" min={-100} max={0} value={volume} onChange={handleVolume} />
+        <input id="Volume" type="range" min={-100} max={0} value={volume} onChange={onChange} />
       </section>
     </div>
   )
 }
-export default RhythmVolumeController
