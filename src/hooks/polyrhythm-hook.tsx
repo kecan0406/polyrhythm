@@ -1,5 +1,5 @@
-import React, { createContext, MutableRefObject, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { getDestination, getTransport } from 'tone'
+import React, { createContext, MutableRefObject, useContext, useMemo, useRef, useState } from 'react'
+import { getDestination } from 'tone'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
 import { Decibels, Time } from 'tone/build/esm/core/type/Units'
 import { Rhythm } from '../lib/polyrhythm'
@@ -25,14 +25,6 @@ const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
 
 export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) => {
   const [polyrhythm, setPolyrhythm] = useState<Rhythm[]>([])
-
-  useEffect(() => {
-    const transport = getTransport()
-    transport.start(0)
-    return () => {
-      transport.stop(0)
-    }
-  }, [])
 
   const intervalRef: MutableRefObject<Time> = useRef<Time>('3n')
   const noteRef: MutableRefObject<Note> = useRef<Note>('C4')
