@@ -37,6 +37,6 @@ export class Rhythm {
   }
 
   public getVolume(): Decibels {
-    return this.synth.volume.value
+    return Math.round(this.synth.volume.value)
   }
 }
