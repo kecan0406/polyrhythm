@@ -11,6 +11,7 @@ import React, {
 import * as Tone from 'tone'
 import { Volume } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
+import { Note } from 'tone/build/esm/core/type/NoteUnits'
 import { Decibels, Time } from 'tone/build/esm/core/type/Units'
 import { getBeepSynth } from '../lib/instruments'
 import { Point } from '../types/canvas-types'
@@ -20,6 +21,7 @@ type PolyrhythmActions = {
   register: (position: Point) => void
   deregister: () => void
   setInterval: (interval: Time) => void
+  setNote: (note: Note) => void
   setVolume: (volume: number) => void
 }
 const PolyrhythmValueContext = createContext<Rhythm[]>([])
@@ -27,23 +29,27 @@ const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
   register: () => {},
   deregister: () => {},
   setInterval: () => {},
+  setNote: () => {},
   setVolume: () => {},
 })
 
 export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) => {
-  const intervalRef: MutableRefObject<Time> = useRef<Time>('3n')
   const [polyrhythm, setPolyrhythm] = useState<Rhythm[]>([])
   const transport = useTransport()
   const volume = useVolume()
+
+  const intervalRef: MutableRefObject<Time> = useRef<Time>('3n')
+  const noteRef: MutableRefObject<Note> = useRef<Note>('C4')
 
   const actions: PolyrhythmActions = useMemo(
     () => ({
       register: (position: Point) => {
         const interval = intervalRef.current
+        const note = noteRef.current
         const beepSynth = getBeepSynth().connect(volume!)
 
         const id = transport!.scheduleRepeat((time) => {
-          beepSynth.triggerAttackRelease('C4', time, 0.05)
+          beepSynth.triggerAttackRelease(note, time, 0.05)
         }, interval)
 
         const rhythm: Rhythm = { id, interval, position }
@@ -53,6 +59,9 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
         const rhythm = polyrhythm.at(-1)
         rhythm && transport!.clear(rhythm.id)
         setPolyrhythm(polyrhythm.slice(0, -1))
+      },
+      setNote: (note: Note) => {
+        noteRef.current = note
       },
       setInterval: (interval: Time) => {
         intervalRef.current = interval
