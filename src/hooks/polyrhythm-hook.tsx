@@ -9,7 +9,7 @@ import React, {
   useState,
 } from 'react'
 import * as Tone from 'tone'
-import { Volume } from 'tone'
+import { getDestination, Volume } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
 import { Decibels, Time } from 'tone/build/esm/core/type/Units'
@@ -23,6 +23,7 @@ type PolyrhythmActions = {
   setInterval: (interval: Time) => void
   setNote: (note: Note) => void
   setVolume: (volume: number) => void
+  setMasterVolume: (volume: number) => void
 }
 const PolyrhythmValueContext = createContext<Rhythm[]>([])
 const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
@@ -31,12 +32,12 @@ const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
   setInterval: () => {},
   setNote: () => {},
   setVolume: () => {},
+  setMasterVolume: () => {},
 })
 
 export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) => {
   const [polyrhythm, setPolyrhythm] = useState<Rhythm[]>([])
   const transport = useTransport()
-  const volume = useVolume()
 
   const intervalRef: MutableRefObject<Time> = useRef<Time>('3n')
   const noteRef: MutableRefObject<Note> = useRef<Note>('C4')
@@ -46,7 +47,7 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
       register: (position: Point) => {
         const interval = intervalRef.current
         const note = noteRef.current
-        const beepSynth = getBeepSynth().connect(volume!)
+        const beepSynth = getBeepSynth().toDestination()
 
         const id = transport!.scheduleRepeat((time) => {
           beepSynth.triggerAttackRelease(note, time, 0.05)
@@ -66,8 +67,9 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
       setInterval: (interval: Time) => {
         intervalRef.current = interval
       },
-      setVolume: (vol: Decibels) => {
-        volume!.volume.value = vol
+      setVolume: () => {},
+      setMasterVolume: (vol: Decibels) => {
+        getDestination().volume.value = vol
       },
     }),
     [polyrhythm],
@@ -93,6 +95,6 @@ const useTransport = () => {
 }
 
 export const useVolume = () => {
-  const volumeRef: RefObject<Volume> = useRef<Volume>(new Tone.Volume(-20).toDestination())
+  const volumeRef: RefObject<Volume> = useRef<Volume>(new Tone.Volume().toDestination())
   return volumeRef.current
 }
