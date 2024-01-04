@@ -1,22 +1,18 @@
 import React, { ChangeEvent } from 'react'
-import { usePolyrhythmValue } from '../../../hooks/polyrhythm-hook'
-const RhythmList = () => {
-  const polyrhythm = usePolyrhythmValue()
-
+import { Rhythm } from '../../../lib/polyrhythm'
+const RhythmList = ({ onChange, polyrhythm }: { onChange: (id: number) => void; polyrhythm: Rhythm[] }) => {
   const handleSelectRhythm = ({ target }: ChangeEvent<HTMLSelectElement>) => {
-    console.log(target.value)
+    onChange(Number(target.value))
   }
 
   return (
-    <div className="RhythmList">
-      <section>
-        <select onChange={handleSelectRhythm}>
-          {polyrhythm.map(({ id }) => (
-            <option label={`ID : ${id}`} value={id} key={id} />
-          ))}
-        </select>
-      </section>
-    </div>
+    <section>
+      <select onChange={handleSelectRhythm}>
+        {polyrhythm.map(({ id }) => (
+          <option label={`ID : ${id}`} value={id} key={id} />
+        ))}
+      </select>
+    </section>
   )
 }
 export default RhythmList

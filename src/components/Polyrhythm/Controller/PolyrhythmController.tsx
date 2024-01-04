@@ -1,15 +1,17 @@
 import React from 'react'
 import IntervalController from './IntervalController'
 import NoteController from './NoteController'
-import RhythmList from './RhythmList'
+import TargetController from './TargetController'
 import VolumeController from './VolumeController'
 
 const PolyrhythmController = () => {
   return (
     <div className="Controller">
-      <RhythmList />
-      <IntervalController />
-      <NoteController />
+      <TargetController />
+      <div className="GeneratorController">
+        <IntervalController />
+        <NoteController />
+      </div>
       <VolumeController />
     </div>
   )
