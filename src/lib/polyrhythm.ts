@@ -7,12 +7,12 @@ import { getBeepSynth } from './instruments'
 
 export class Rhythm {
   public readonly id: number
-  public readonly note: Note
   public readonly interval: Time
-  public readonly position: Point
+  public position: Point
 
   private readonly transport: Transport = getTransport()
   private readonly synth: Synth = getBeepSynth()
+  private note: Note
 
   constructor(note: Note, interval: Time, position: Point) {
     this.note = note
@@ -32,11 +32,19 @@ export class Rhythm {
     this.transport.clear(this.id)
   }
 
+  public getVolume(): Decibels {
+    return Math.round(this.synth.volume.value)
+  }
+
   public setVolume(volume: Decibels) {
     this.synth.volume.value = volume
   }
 
-  public getVolume(): Decibels {
-    return Math.round(this.synth.volume.value)
+  public getNote(): Note {
+    return this.note
+  }
+
+  public setNote(note: Note) {
+    this.note = note
   }
 }

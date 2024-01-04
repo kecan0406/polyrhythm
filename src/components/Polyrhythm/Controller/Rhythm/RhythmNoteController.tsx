@@ -10,8 +10,14 @@ const RhythmNoteController = ({ rhythm }: RhythmNoteControllerProps) => {
     setIndex(target.valueAsNumber)
   }
 
-  useEffect(() => {}, [rhythm])
-  useEffect(() => {}, [index])
+  useEffect(() => {
+    const rhythmNote = rhythm.getNote()
+    setIndex(notes.findIndex((note) => note === rhythmNote))
+  }, [rhythm])
+
+  useEffect(() => {
+    rhythm.setNote(notes[index])
+  }, [index])
 
   return <RhythmNoteControllerUI notes={notes} onChange={handleNote} index={index} />
 }
