@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { usePolyrhythmActions } from '../../../hooks/polyrhythm-hook'
+import { usePolyrhythmActions } from '../../../../hooks/polyrhythm-hook'
 const IntervalController = () => {
   const polyrhythmActions = usePolyrhythmActions()
   const [interval, setInterval] = useState<number>(3)

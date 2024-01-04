@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
-import { usePolyrhythmActions } from '../../../hooks/polyrhythm-hook'
+import { usePolyrhythmActions } from '../../../../hooks/polyrhythm-hook'
 
 const notes: Note[] = ['C5', 'E5', 'G5', 'C6']
 const NoteController = () => {

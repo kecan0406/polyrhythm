@@ -35,4 +35,8 @@ export class Rhythm {
   public setVolume(volume: Decibels) {
     this.synth.volume.value = volume
   }
+
+  public getVolume(): Decibels {
+    return this.synth.volume.value
+  }
 }

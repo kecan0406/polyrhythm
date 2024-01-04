@@ -1,0 +1,16 @@
+.Controller {
+  background-color: white;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 260px;
+  height: 100%;
+
+  .RhythmController {
+  }
+
+  .ConfigController {
+  }
+}

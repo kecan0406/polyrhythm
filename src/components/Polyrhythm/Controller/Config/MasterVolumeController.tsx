@@ -1,9 +1,9 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Decibels } from 'tone/build/esm/core/type/Units'
-import { usePolyrhythmActions } from '../../../hooks/polyrhythm-hook'
-const VolumeController = () => {
-  const polyrhythmActions = usePolyrhythmActions()
+import { usePolyrhythmActions } from '../../../../hooks/polyrhythm-hook'
+const MasterVolumeController = () => {
   const [masterVolume, setMasterVolume] = useState<Decibels>(-100)
+  const polyrhythmActions = usePolyrhythmActions()
 
   const handleMasterVolume = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setMasterVolume(target.valueAsNumber)
@@ -14,7 +14,7 @@ const VolumeController = () => {
   }, [masterVolume])
 
   return (
-    <div className="VolumeController">
+    <div className="MasterVolumeController">
       <section>
         <label htmlFor="MasterVolume">Master Volume : {masterVolume}</label>
         <input id="MasterVolume" type="range" min={-100} max={0} value={masterVolume} onChange={handleMasterVolume} />
@@ -22,4 +22,4 @@ const VolumeController = () => {
     </div>
   )
 }
-export default VolumeController
+export default MasterVolumeController
