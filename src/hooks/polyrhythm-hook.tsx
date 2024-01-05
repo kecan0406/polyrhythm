@@ -10,7 +10,6 @@ type PolyrhythmActions = {
   deregister: () => void
   setInterval: (interval: Time) => void
   setNote: (note: Note) => void
-  setVolume: (volume: number) => void
   setMasterVolume: (volume: number) => void
 }
 const PolyrhythmValueContext = createContext<Rhythm[]>([])
@@ -19,7 +18,6 @@ const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
   deregister: () => {},
   setInterval: () => {},
   setNote: () => {},
-  setVolume: () => {},
   setMasterVolume: () => {},
 })
 
@@ -32,9 +30,10 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
   const actions: PolyrhythmActions = useMemo(
     () => ({
       register: (position: Point) => {
+        const id = polyrhythm.length
         const note = noteRef.current
         const interval = intervalRef.current
-        const rhythm = new Rhythm(note, interval, position)
+        const rhythm = new Rhythm(id, note, interval, position)
         setPolyrhythm(polyrhythm.concat(rhythm))
       },
       deregister: () => {
@@ -48,7 +47,6 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
       setInterval: (interval: Time) => {
         intervalRef.current = interval
       },
-      setVolume: () => {},
       setMasterVolume: (vol: Decibels) => {
         getDestination().volume.value = vol
       },

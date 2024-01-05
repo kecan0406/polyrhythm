@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Rhythm } from '../../../../lib/polyrhythm'
+import RhythmIntervalController from './RhythmIntervalController'
 import RhythmNoteController from './RhythmNoteController'
 import RhythmSelector from './RhythmSelector'
 import RhythmVolumeController from './RhythmVolumeController'
@@ -16,6 +17,7 @@ const RhythmController = () => {
       <RhythmSelector onClick={handleSelectRhythm} />
       {rhythm && <RhythmVolumeController rhythm={rhythm} />}
       {rhythm && <RhythmNoteController rhythm={rhythm} />}
+      {rhythm && <RhythmIntervalController rhythm={rhythm} />}
     </div>
   )
 }

@@ -29,7 +29,7 @@ export class Polygon implements Visual {
 
   constructor(rhythm: Rhythm) {
     this.position = rhythm.position
-    this.vertex = parseVertex(rhythm.interval)
+    this.vertex = parseVertex(rhythm.getInterval())
     this.radius = 100
   }
 
