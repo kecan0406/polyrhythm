@@ -1,9 +1,11 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
+import { usePolyrhythmActions } from '../../../../hooks/polyrhythm-hook'
 import { Rhythm } from '../../../../lib/polyrhythm'
 import { parseVertex } from '../../../../lib/utils/math-util'
 
 type RhythmIntervalControllerProps = { rhythm: Rhythm }
 const RhythmIntervalController = ({ rhythm }: RhythmIntervalControllerProps) => {
+  const polyrhythmActions = usePolyrhythmActions()
   const [interval, setInterval] = useState<number>(() => parseVertex(rhythm.getInterval()))
 
   useEffect(() => {
@@ -15,6 +17,7 @@ const RhythmIntervalController = ({ rhythm }: RhythmIntervalControllerProps) => 
     setInterval(interval)
     rhythm.setInterval(`${interval}n`)
     rhythm.resetRepeat()
+    polyrhythmActions.refresh()
   }
 
   return <RhythmIntervalControllerUI interval={interval} onChange={handleInterval} />

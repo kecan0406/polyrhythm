@@ -8,6 +8,7 @@ import { Point } from '../types/canvas-types'
 type PolyrhythmActions = {
   register: (position: Point) => void
   deregister: () => void
+  refresh: () => void
   setInterval: (interval: Time) => void
   setNote: (note: Note) => void
   setMasterVolume: (volume: number) => void
@@ -16,6 +17,7 @@ const PolyrhythmValueContext = createContext<Rhythm[]>([])
 const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
   register: () => {},
   deregister: () => {},
+  refresh: () => {},
   setInterval: () => {},
   setNote: () => {},
   setMasterVolume: () => {},
@@ -40,6 +42,9 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
         const rhythm = polyrhythm.at(-1)
         rhythm && rhythm.clearRepeat()
         setPolyrhythm(polyrhythm.slice(0, -1))
+      },
+      refresh: () => {
+        setPolyrhythm([...polyrhythm])
       },
       setNote: (note: Note) => {
         noteRef.current = note
