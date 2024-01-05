@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { usePolyrhythmValue } from '../../../../hooks/polyrhythm-hook'
 import { Rhythm } from '../../../../lib/polyrhythm'
-const RhythmSelector = ({ onClick }: { onClick: (rhythm: Rhythm) => void }) => {
+const RhythmSelector = ({ onClick }: { onClick: (rhythm: Rhythm | null) => void }) => {
   const polyrhythm = usePolyrhythmValue()
+
+  useEffect(() => {
+    if (!polyrhythm.length) {
+      onClick(null)
+    }
+  }, [polyrhythm])
 
   const handleSelectRhythm = (id: number) => {
     const targetRhythm = polyrhythm.find((rhythm) => rhythm.id === id)

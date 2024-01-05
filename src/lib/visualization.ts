@@ -5,12 +5,12 @@ import { PI2, parseVertex } from './utils/math-util'
 export class Visualization {
   private visuals: Visual[] = []
 
-  public generateVisual(rhythm: Rhythm) {
-    this.visuals.push(new Polygon(rhythm))
+  public generateVisual(polyrhythm: Rhythm[]) {
+    this.visuals = polyrhythm.map((rhythm) => new Polygon(rhythm))
   }
 
-  public removeVisual() {
-    this.visuals.pop()
+  public clearVisual() {
+    this.visuals = []
   }
 
   public drawAll(ctx: CanvasRenderingContext2D) {

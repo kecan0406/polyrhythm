@@ -8,7 +8,7 @@ import RhythmVolumeController from './RhythmVolumeController'
 const RhythmController = () => {
   const [rhythm, setRhythm] = useState<Rhythm | null>(null)
 
-  const handleSelectRhythm = (rhythm: Rhythm) => {
+  const handleSelectRhythm = (rhythm: Rhythm | null) => {
     setRhythm(rhythm)
   }
 
