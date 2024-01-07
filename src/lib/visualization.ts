@@ -1,6 +1,6 @@
 import { Point } from '../types/canvas-types'
 import { Rhythm } from './polyrhythm'
-import { PI2, parseVertex } from './utils/math-util'
+import { PI2 } from './utils/math-util'
 
 export class Visualization {
   private visuals: Visual[] = []
@@ -23,13 +23,11 @@ interface Visual {
 }
 
 export class Polygon implements Visual {
-  private readonly position: Point
-  private readonly vertex: number
+  private readonly rhythm: Rhythm
   private readonly radius: number
 
   constructor(rhythm: Rhythm) {
-    this.position = rhythm.position
-    this.vertex = parseVertex(rhythm.getInterval())
+    this.rhythm = rhythm
     this.radius = 100
   }
 
@@ -43,15 +41,16 @@ export class Polygon implements Visual {
   }
 
   private drawLines(ctx: CanvasRenderingContext2D) {
-    ctx.moveTo(...this.getLineXY(0))
-    for (let i = 1; i <= this.vertex; i++) {
-      ctx.lineTo(...this.getLineXY(i))
+    const { interval: vertex, position } = this.rhythm
+    ctx.moveTo(...this.getLineXY(0, vertex, position))
+    for (let i = 1; i <= vertex; i++) {
+      ctx.lineTo(...this.getLineXY(i, vertex, position))
     }
     ctx.stroke()
   }
 
-  private getLineXY(i: number): [number, number] {
-    const value = (i * PI2) / this.vertex
-    return [this.position.x + this.radius * Math.cos(value), this.position.y + this.radius * Math.sin(value)]
+  private getLineXY(i: number, vertex: number, { x, y }: Point): [number, number] {
+    const value = (i * PI2) / vertex
+    return [x + this.radius * Math.cos(value), y + this.radius * Math.sin(value)]
   }
 }

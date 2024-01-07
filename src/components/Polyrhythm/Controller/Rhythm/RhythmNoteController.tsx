@@ -5,20 +5,16 @@ import { Rhythm } from '../../../../lib/polyrhythm'
 const notes: Note[] = ['C5', 'E5', 'G5', 'C6']
 type RhythmNoteControllerProps = { rhythm: Rhythm }
 const RhythmNoteController = ({ rhythm }: RhythmNoteControllerProps) => {
-  const [index, setIndex] = useState<number>(() => {
-    const rhythmNote = rhythm.getNote()
-    return notes.findIndex((note) => note === rhythmNote)
-  })
+  const [index, setIndex] = useState<number>(() => notes.findIndex((note) => note === rhythm.note))
 
   useEffect(() => {
-    const rhythmNote = rhythm.getNote()
-    setIndex(notes.findIndex((note) => note === rhythmNote))
+    setIndex(notes.findIndex((note) => note === rhythm.note))
   }, [rhythm])
 
   const handleNote = ({ target }: ChangeEvent<HTMLInputElement>) => {
     const index = target.valueAsNumber
     setIndex(index)
-    rhythm.setNote(notes[index])
+    rhythm.note = notes[index]
   }
 
   return <RhythmNoteControllerUI notes={notes} onChange={handleNote} index={index} />

@@ -1,15 +1,14 @@
 import React, { createContext, MutableRefObject, useContext, useMemo, useRef, useState } from 'react'
 import { getDestination } from 'tone'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
-import { Decibels, Time } from 'tone/build/esm/core/type/Units'
+import { Decibels } from 'tone/build/esm/core/type/Units'
 import { Rhythm } from '../lib/polyrhythm'
 import { Point } from '../types/canvas-types'
 
 type PolyrhythmActions = {
   register: (position: Point) => void
   deregister: () => void
-  refresh: () => void
-  setInterval: (interval: Time) => void
+  setInterval: (interval: number) => void
   setNote: (note: Note) => void
   setMasterVolume: (volume: number) => void
 }
@@ -17,7 +16,6 @@ const PolyrhythmValueContext = createContext<Rhythm[]>([])
 const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
   register: () => {},
   deregister: () => {},
-  refresh: () => {},
   setInterval: () => {},
   setNote: () => {},
   setMasterVolume: () => {},
@@ -26,7 +24,7 @@ const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
 export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) => {
   const [polyrhythm, setPolyrhythm] = useState<Rhythm[]>([])
 
-  const intervalRef: MutableRefObject<Time> = useRef<Time>('3n')
+  const intervalRef: MutableRefObject<number> = useRef<number>(3)
   const noteRef: MutableRefObject<Note> = useRef<Note>('C4')
 
   const actions: PolyrhythmActions = useMemo(
@@ -43,13 +41,10 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
         rhythm && rhythm.clearRepeat()
         setPolyrhythm(polyrhythm.slice(0, -1))
       },
-      refresh: () => {
-        setPolyrhythm([...polyrhythm])
-      },
       setNote: (note: Note) => {
         noteRef.current = note
       },
-      setInterval: (interval: Time) => {
+      setInterval: (interval: number) => {
         intervalRef.current = interval
       },
       setMasterVolume: (vol: Decibels) => {

@@ -10,7 +10,7 @@ const IntervalController = () => {
   }
 
   useEffect(() => {
-    polyrhythmActions.setInterval(`${interval}n`)
+    polyrhythmActions.setInterval(interval)
   }, [interval])
 
   return <IntervalControllerUI interval={interval} onChange={handleInterval} />
