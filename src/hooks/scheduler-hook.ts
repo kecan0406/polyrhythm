@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { getTransport } from 'tone'
+import { getDraw, getTransport } from 'tone'
 import { Rhythm } from '../lib/polyrhythm'
 
 export const useScheduler = (polyrhythm: Rhythm[]) => {
@@ -7,22 +7,25 @@ export const useScheduler = (polyrhythm: Rhythm[]) => {
     const transport = getTransport()
     transport.loop = true
     transport.loopStart = 0
-    transport.loopEnd = '768i'
+    transport.loopEnd = '1m'
     transport.timeSignature = [4, 4]
   }, [])
 
   useEffect(() => {
     const transport = getTransport()
+    const draw = getDraw()
 
+    const totalMeasure = transport.toTicks(transport.loopEnd)
     polyrhythm.forEach((rhythm) => {
-      const beat = Math.round(768 / rhythm.interval)
-      for (let cur = 0; cur <= rhythm.interval; cur++) {
-        transport.schedule(
-          (time) => {
-            rhythm.beepSynth.triggerAttackRelease(rhythm.note, time, 0.005)
-          },
-          `${beat * cur}i`,
-        )
+      const beats = Math.round(totalMeasure / rhythm.interval)
+      for (let time = 0; time <= rhythm.interval; time++) {
+        const beat = `${beats * time}i`
+        transport.schedule((time) => {
+          rhythm.beepSynth.triggerAttackRelease(rhythm.note, time, 0.005)
+          draw.schedule(() => {
+            //animate
+          }, time)
+        }, beat)
       }
     })
 
