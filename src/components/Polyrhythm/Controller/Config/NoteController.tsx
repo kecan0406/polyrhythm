@@ -1,18 +1,20 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
-import { usePolyrhythmActions } from '../../../../hooks/polyrhythm-hook'
+import { usePolyrhythmConfig } from '../../../../hooks/polyrhythm-config-hook'
 
 const notes: Note[] = ['C5', 'E5', 'G5', 'C6']
 const NoteController = () => {
-  const polyrhythmActions = usePolyrhythmActions()
-  const [index, setIndex] = useState<number>(0)
+  const polyrhythmConfig = usePolyrhythmConfig()
+  const [index, setIndex] = useState<number>(() => {
+    return notes.findIndex((note) => note === polyrhythmConfig.note)
+  })
 
   const handleNote = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setIndex(target.valueAsNumber)
   }
 
   useEffect(() => {
-    polyrhythmActions.setNote(notes[index])
+    polyrhythmConfig.note = notes[index]
   }, [index])
 
   return <NoteControllerUI notes={notes} onChange={handleNote} index={index} />

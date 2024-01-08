@@ -1,16 +1,16 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { usePolyrhythmActions } from '../../../../hooks/polyrhythm-hook'
+import { usePolyrhythmConfig } from '../../../../hooks/polyrhythm-config-hook'
 
 const IntervalController = () => {
-  const polyrhythmActions = usePolyrhythmActions()
-  const [interval, setInterval] = useState<number>(3)
+  const polyrhythmConfig = usePolyrhythmConfig()
+  const [interval, setInterval] = useState<number>(() => polyrhythmConfig.interval)
 
   const handleInterval = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setInterval(target.valueAsNumber)
   }
 
   useEffect(() => {
-    polyrhythmActions.setInterval(interval)
+    polyrhythmConfig.interval = interval
   }, [interval])
 
   return <IntervalControllerUI interval={interval} onChange={handleInterval} />
