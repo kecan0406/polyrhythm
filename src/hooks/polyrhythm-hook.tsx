@@ -6,11 +6,13 @@ import { usePolyrhythmConfig } from './polyrhythm-config-hook'
 type PolyrhythmActions = {
   register: (position: Point) => void
   deregister: () => void
+  reset: () => void
 }
 const PolyrhythmValueContext = createContext<Rhythm[]>([])
 const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
   register: () => {},
   deregister: () => {},
+  reset: () => {},
 })
 
 export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) => {
@@ -25,9 +27,10 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
         setPolyrhythm(polyrhythm.concat(rhythm))
       },
       deregister: () => {
-        const rhythm = polyrhythm.at(-1)
-        rhythm && rhythm.clearRepeat()
         setPolyrhythm(polyrhythm.slice(0, -1))
+      },
+      reset: () => {
+        setPolyrhythm([...polyrhythm])
       },
     }),
     [polyrhythm],
