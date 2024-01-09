@@ -18,14 +18,14 @@ export const useScheduler = (polyrhythm: Rhythm[]) => {
     const totalMeasure = transport.toTicks(transport.loopEnd)
     polyrhythm.forEach((rhythm) => {
       const beats = Math.round(totalMeasure / rhythm.interval)
-      for (let time = 0; time <= rhythm.interval; time++) {
-        const beat = `${beats * time}i`
+      for (let count = 0; count <= rhythm.interval; count++) {
+        const beat = beats * count
         transport.schedule((time) => {
           rhythm.beepSynth.triggerAttackRelease(rhythm.note, time, 0.005)
           draw.schedule(() => {
-            //animate
+            rhythm.now = transport.getTicksAtTime(time)
           }, time)
-        }, beat)
+        }, `${beat}i`)
       }
     })
 

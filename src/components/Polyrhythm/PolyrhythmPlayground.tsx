@@ -1,4 +1,5 @@
 import React, { RefObject, useRef } from 'react'
+import { useAnimate } from '../../hooks/animate-hook'
 import { useCanvas, useClientWidthHeight, useVisualization } from '../../hooks/canvas-hook'
 import { usePolyrhythmActions, usePolyrhythmValue } from '../../hooks/polyrhythm-hook'
 import { useScheduler } from '../../hooks/scheduler-hook'
@@ -19,8 +20,9 @@ type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   const polyrhythmActions = usePolyrhythmActions()
   const polyrhythm = usePolyrhythmValue()
-  const animate = useVisualization(polyrhythm)
+  const visualization = useVisualization(polyrhythm)
   useScheduler(polyrhythm)
+  const animate = useAnimate(visualization)
 
   const handleRegister = (e: React.MouseEvent) => {
     polyrhythmActions.register({ x: e.clientX, y: e.clientY })

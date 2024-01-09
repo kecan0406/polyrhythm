@@ -9,8 +9,8 @@ export class Rhythm {
   public interval: number
   public position: Point
   public note: Note
-
   public beepSynth: Synth = getBeepSynth().toDestination()
+  public now: number = 0
 
   constructor(id: number, note: Note, interval: number, position: Point) {
     this.id = id
