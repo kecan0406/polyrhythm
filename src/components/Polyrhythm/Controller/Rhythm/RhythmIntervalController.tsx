@@ -28,7 +28,7 @@ const RhythmIntervalControllerUI = ({ interval, onChange }: RhythmIntervalContro
     <div className="IntervalController">
       <section>
         <label htmlFor="interval">Interval : {interval}</label>
-        <input type="range" id="interval" min={3} max={6} onChange={onChange} value={interval} />
+        <input type="range" id="interval" min={3} max={12} onChange={onChange} value={interval} />
       </section>
     </div>
   )
