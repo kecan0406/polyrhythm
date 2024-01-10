@@ -1,6 +1,6 @@
 import { Visualization } from '../lib/visualization'
 import { Size } from '../types/canvas-types'
-import { useTransport } from './scheduler-hook'
+import { useTransport } from './transport-hook'
 
 export const useAnimate = (visualization: Visualization) => {
   const transport = useTransport()
