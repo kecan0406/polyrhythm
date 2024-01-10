@@ -1,7 +1,9 @@
 import { Visualization } from '../lib/visualization'
 import { Size } from '../types/canvas-types'
+import { useTransport } from './scheduler-hook'
 
 export const useAnimate = (visualization: Visualization) => {
+  const transport = useTransport()
   const animate = (canvas: HTMLCanvasElement) => {
     const ctx = canvas.getContext('2d')!
     fillBackground(ctx, { width: parseInt(canvas.style.width), height: parseInt(canvas.style.height) })
@@ -15,7 +17,7 @@ export const useAnimate = (visualization: Visualization) => {
   }
 
   const drawVisual = (ctx: CanvasRenderingContext2D) => {
-    visualization.drawAll(ctx)
+    visualization.drawAll(ctx, transport.toTicks())
   }
 
   return animate

@@ -1,11 +1,8 @@
-import { getTransport } from 'tone'
-import { Transport } from 'tone/build/esm/core/clock/Transport'
 import { Point } from '../types/canvas-types'
 import { Rhythm } from './polyrhythm'
 import { PI2 } from './utils/math-util'
 
 export class Visualization {
-  private transport: Transport = getTransport()
   private visuals: Visual[] = []
 
   public generateVisual(polyrhythm: Rhythm[]) {
@@ -16,8 +13,7 @@ export class Visualization {
     this.visuals = []
   }
 
-  public drawAll(ctx: CanvasRenderingContext2D) {
-    const ticks = this.transport.toTicks()
+  public drawAll(ctx: CanvasRenderingContext2D, ticks: number) {
     this.visuals.forEach((visual) => visual.draw(ctx, ticks))
   }
 }

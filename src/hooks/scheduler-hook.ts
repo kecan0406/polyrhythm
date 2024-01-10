@@ -1,18 +1,23 @@
-import { useEffect } from 'react'
+import { RefObject, useEffect, useRef } from 'react'
 import { getTransport } from 'tone'
-import { Rhythm } from '../lib/polyrhythm'
+import { Transport } from 'tone/build/esm/core/clock/Transport'
+import { usePolyrhythmValue } from './polyrhythm-hook'
 
-export const useScheduler = (polyrhythm: Rhythm[]) => {
+export const useTransport = (): Transport => {
+  const polyrhythm = usePolyrhythmValue()
+  const transportRef: RefObject<Transport> = useRef<Transport>(getTransport())
+
   useEffect(() => {
-    const transport = getTransport()
+    const transport = transportRef.current!
     transport.loop = true
     transport.loopStart = 0
     transport.loopEnd = '1m'
     transport.timeSignature = [4, 4]
+    transport.start(0)
   }, [])
 
   useEffect(() => {
-    const transport = getTransport()
+    const transport = transportRef.current!
 
     const totalMeasure = transport.toTicks(transport.loopEnd)
     polyrhythm.forEach((rhythm) => {
@@ -30,4 +35,6 @@ export const useScheduler = (polyrhythm: Rhythm[]) => {
       transport.cancel(0)
     }
   }, [polyrhythm])
+
+  return transportRef.current!
 }
