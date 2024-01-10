@@ -13,13 +13,13 @@ export class Visualization {
     this.visuals = []
   }
 
-  public drawAll(ctx: CanvasRenderingContext2D, currentTicks: number) {
-    this.visuals.forEach((visual) => visual.draw(ctx, currentTicks))
+  public drawAll(ctx: CanvasRenderingContext2D, currentTicks: number, secondsToTicks: number) {
+    this.visuals.forEach((visual) => visual.draw(ctx, currentTicks, secondsToTicks))
   }
 }
 
 interface Visual {
-  draw(ctx: CanvasRenderingContext2D, currentTicks: number): void
+  draw(ctx: CanvasRenderingContext2D, currentTicks: number, secondsToTicks: number): void
 }
 
 export class Polygon implements Visual {
@@ -31,10 +31,12 @@ export class Polygon implements Visual {
     this.radius = 100
   }
 
-  public draw(ctx: CanvasRenderingContext2D, currentTicks: number) {
-    ctx.lineWidth = 3
-    ctx.strokeStyle = 'rgb(255,255,255)'
+  public draw(ctx: CanvasRenderingContext2D, currentTicks: number, secondsToTicks: number) {
+    const ms100Ticks = secondsToTicks * 0.1
+    const ticks = currentTicks % this.rhythm.beats
 
+    ticks <= ms100Ticks ? (ctx.lineWidth = 6) : (ctx.lineWidth = 3)
+    ctx.strokeStyle = 'rgb(255,255,255)'
     this.drawLines(ctx)
     this.drawDot(ctx, currentTicks)
   }
