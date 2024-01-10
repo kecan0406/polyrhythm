@@ -21,13 +21,14 @@ export const useTransport = (): Transport => {
 
     const totalMeasure = transport.toTicks(transport.loopEnd)
     polyrhythm.forEach((rhythm) => {
-      const beats = Math.round(totalMeasure / rhythm.interval)
-      rhythm.beats = beats
+      const tick = Math.round(totalMeasure / rhythm.interval)
       for (let count = 0; count <= rhythm.interval; count++) {
-        const ticks = beats * count
-        transport.schedule((time) => {
-          rhythm.beepSynth.triggerAttackRelease(rhythm.note, time, 0.005)
-        }, `${ticks}i`)
+        transport.schedule(
+          (time) => {
+            rhythm.beepSynth.triggerAttackRelease(rhythm.note, time, 0.005)
+          },
+          `${tick * count}i`,
+        )
       }
     })
 

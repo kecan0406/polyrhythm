@@ -6,8 +6,8 @@ import { getBeepSynth } from './instruments'
 
 export class Rhythm {
   public readonly id: number
+
   public interval: number
-  public beats: number = 0
   public position: Point
   public note: Note
   public beepSynth: Synth = getBeepSynth().toDestination()
