@@ -1,7 +1,7 @@
 import React, { RefObject, useRef } from 'react'
-import { useAnimate } from '../../hooks/animate-hook'
-import { useCanvas, useClientWidthHeight, useVisualization } from '../../hooks/canvas-hook'
+import { useCanvas, useClientWidthHeight } from '../../hooks/canvas-hook'
 import { usePolyrhythmActions } from '../../hooks/polyrhythm-hook'
+import { useAnimate, useVisualization } from '../../hooks/visualization-hook'
 import { CanvasSize } from '../../types/canvas-types'
 
 const PolyrhythmPlayground = () => {
