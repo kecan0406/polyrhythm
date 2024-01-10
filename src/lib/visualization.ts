@@ -1,6 +1,6 @@
 import { Point } from '../types/canvas-types'
 import { Rhythm } from './polyrhythm'
-import { PI2 } from './utils/math-util'
+import { PI2, getDivRatio } from './utils/math-util'
 
 export class Visualization {
   private visuals: Visual[] = []
@@ -13,13 +13,13 @@ export class Visualization {
     this.visuals = []
   }
 
-  public drawAll(ctx: CanvasRenderingContext2D, ticks: number) {
-    this.visuals.forEach((visual) => visual.draw(ctx, ticks))
+  public drawAll(ctx: CanvasRenderingContext2D, currentTicks: number) {
+    this.visuals.forEach((visual) => visual.draw(ctx, currentTicks))
   }
 }
 
 interface Visual {
-  draw(ctx: CanvasRenderingContext2D, ticks: number): void
+  draw(ctx: CanvasRenderingContext2D, currentTicks: number): void
 }
 
 export class Polygon implements Visual {
@@ -31,47 +31,45 @@ export class Polygon implements Visual {
     this.radius = 100
   }
 
-  public draw(ctx: CanvasRenderingContext2D, ticks: number) {
+  public draw(ctx: CanvasRenderingContext2D, currentTicks: number) {
     ctx.lineWidth = 3
     ctx.strokeStyle = 'rgb(255,255,255)'
 
     this.drawLines(ctx)
-    this.drawDot(ctx, ticks)
+    this.drawDot(ctx, currentTicks)
   }
 
   private drawLines(ctx: CanvasRenderingContext2D) {
-    const { interval: vertex, position } = this.rhythm
     ctx.beginPath()
-    ctx.moveTo(...this.getXY(0, vertex, position))
-    for (let i = 1; i <= vertex; i++) {
-      ctx.lineTo(...this.getXY(i, vertex, position))
+    for (let line = 0; line <= this.rhythm.interval; line++) {
+      const { x, y } = this.getArcPoint(line)
+      line ? ctx.lineTo(x, y) : ctx.moveTo(x, y)
     }
     ctx.stroke()
     ctx.closePath()
   }
 
-  private getXY(i: number, vertex: number, { x, y }: Point): [number, number] {
-    const value = (i * PI2) / vertex
-    return [x + this.radius * Math.cos(value), y + this.radius * Math.sin(value)]
-  }
-
-  private drawDot(ctx: CanvasRenderingContext2D, ticks: number) {
-    const { interval: vertex, position } = this.rhythm
-    const rate = Math.trunc(ticks / this.rhythm.beats)
-    const percent = (ticks % this.rhythm.beats) / this.rhythm.beats
-    const lineXY = this.getLineXY(rate, percent, vertex, position)
+  private drawDot(ctx: CanvasRenderingContext2D, currentTicks: number) {
     ctx.beginPath()
     ctx.fillStyle = 'rgb(255,255,255)'
-    ctx.arc(...lineXY, 8, 0, PI2)
+    const { x, y } = this.getLinePoint(currentTicks)
+    ctx.arc(x, y, 8, 0, PI2)
     ctx.fill()
     ctx.closePath()
   }
 
-  private getLineXY(rate: number, percent: number, vertex: number, position: Point): [number, number] {
-    const from = this.getXY(rate, vertex, position)
-    const to = this.getXY(rate + 1, vertex, position)
-    const x = from[0] + (to[0] - from[0]) * percent
-    const y = from[1] + (to[1] - from[1]) * percent
-    return [x, y]
+  private getArcPoint(i: number): Point {
+    const { interval, position } = this.rhythm
+    const arc = (i * PI2) / interval
+
+    return { x: position.x + this.radius * Math.cos(arc), y: position.y + this.radius * Math.sin(arc) }
+  }
+
+  private getLinePoint(currentTicks: number): Point {
+    const [line, ratio] = getDivRatio(currentTicks, this.rhythm.beats)
+    const { x: fromX, y: fromY } = this.getArcPoint(line)
+    const { x: toX, y: toY } = this.getArcPoint(line + 1)
+
+    return { x: fromX + (toX - fromX) * ratio, y: fromY + (toY - fromY) * ratio }
   }
 }
