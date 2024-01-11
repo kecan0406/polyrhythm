@@ -34,8 +34,7 @@ export const useAnimate = (visualization: Visualization) => {
   }
 
   const drawVisual = (ctx: CanvasRenderingContext2D) => {
-    const secondsToTicks = transport.toTicks(1)
-    visualization.drawAll(ctx, transport.toTicks(), secondsToTicks)
+    visualization.drawAll(ctx, transport.ticks)
   }
 
   return animate

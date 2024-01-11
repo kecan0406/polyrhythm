@@ -1,7 +1,7 @@
 import React, { createContext, RefObject, useContext, useRef } from 'react'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
 
-type PolyrhythmConfig = {
+export type PolyrhythmConfig = {
   interval: number
   note: Note
 }

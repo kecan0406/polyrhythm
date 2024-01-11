@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useMemo, useState } from 'react'
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { Rhythm } from '../lib/polyrhythm'
 import { Point } from '../types/canvas-types'
 import { usePolyrhythmConfig } from './polyrhythm-config-hook'
+import { useTransport } from './transport-hook'
 
 type PolyrhythmActions = {
   register: (position: Point) => void
@@ -18,12 +19,32 @@ const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
 export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) => {
   const [polyrhythm, setPolyrhythm] = useState<Rhythm[]>([])
   const polyrhythmConfig = usePolyrhythmConfig()
+  const transport = useTransport()
+
+  useEffect(() => {
+    const totalMeasure = transport.toTicks(transport.loopEnd)
+    polyrhythm.forEach((rhythm) => {
+      const tick = Math.round(totalMeasure / rhythm.interval)
+      for (let count = 0; count <= rhythm.interval; count++) {
+        transport.schedule(
+          (time) => {
+            rhythm.beepSynth.triggerAttackRelease(rhythm.note, time, 0.005)
+          },
+          `${tick * count}i`,
+        )
+      }
+    })
+
+    return () => {
+      transport.cancel(0)
+    }
+  }, [polyrhythm])
 
   const actions: PolyrhythmActions = useMemo(
     () => ({
       register: (position: Point) => {
         const id = polyrhythm.length
-        const rhythm = new Rhythm(id, polyrhythmConfig.note, polyrhythmConfig.interval, position)
+        const rhythm = new Rhythm(id, polyrhythmConfig, position)
         setPolyrhythm(polyrhythm.concat(rhythm))
       },
       deregister: () => {

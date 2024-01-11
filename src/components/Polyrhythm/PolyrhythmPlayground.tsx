@@ -20,7 +20,6 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   const polyrhythmActions = usePolyrhythmActions()
   const visualization = useVisualization()
   const animate = useAnimate(visualization)
-
   const handleRegister = (e: React.MouseEvent) => {
     polyrhythmActions.register({ x: e.clientX, y: e.clientY })
   }
