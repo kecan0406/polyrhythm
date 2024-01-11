@@ -22,15 +22,16 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
   const transport = useTransport()
 
   useEffect(() => {
-    const totalMeasure = transport.toTicks(transport.loopEnd)
+    const { timeSignature, ppq } = transport.get()
+
     polyrhythm.forEach((rhythm) => {
-      const tick = Math.round(totalMeasure / rhythm.interval)
-      for (let count = 0; count <= rhythm.interval; count++) {
+      const vertexTick = Math.round((timeSignature * ppq) / rhythm.interval)
+      for (let i = 0; i < rhythm.interval; i++) {
         transport.schedule(
           (time) => {
             rhythm.beepSynth.triggerAttackRelease(rhythm.note, time, 0.005)
           },
-          `${tick * count}i`,
+          `${vertexTick * i}i`,
         )
       }
     })
@@ -44,8 +45,7 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
     () => ({
       register: (position: Point) => {
         const id = polyrhythm.length
-        const rhythm = new Rhythm(id, polyrhythmConfig, position)
-        setPolyrhythm(polyrhythm.concat(rhythm))
+        setPolyrhythm(polyrhythm.concat(new Rhythm(id, polyrhythmConfig, position)))
       },
       deregister: () => {
         const rhythm = polyrhythm.at(-1)
