@@ -29,6 +29,10 @@ export class Rhythm {
     this.beepSynth.volume.value = volume
   }
 
+  public dispose() {
+    this.beepSynth.dispose()
+  }
+
   public getQuarterTick(): number {
     return Math.round(QUARTER_NOTE / this.interval)
   }

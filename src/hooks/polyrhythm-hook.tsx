@@ -48,6 +48,8 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
         setPolyrhythm(polyrhythm.concat(rhythm))
       },
       deregister: () => {
+        const rhythm = polyrhythm.at(-1)
+        rhythm && rhythm.dispose()
         setPolyrhythm(polyrhythm.slice(0, -1))
       },
       reset: () => {
