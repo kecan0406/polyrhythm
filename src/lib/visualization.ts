@@ -13,13 +13,13 @@ export class Visualization {
     this.visuals = []
   }
 
-  public drawAll(ctx: CanvasRenderingContext2D, currentTick: number) {
-    this.visuals.forEach((visual) => visual.draw(ctx, currentTick))
+  public drawAll(ctx: CanvasRenderingContext2D) {
+    this.visuals.forEach((visual) => visual.draw(ctx))
   }
 }
 
 interface Visual {
-  draw(ctx: CanvasRenderingContext2D, currentTick: number): void
+  draw(ctx: CanvasRenderingContext2D): void
 }
 
 export class Polygon implements Visual {
@@ -33,10 +33,10 @@ export class Polygon implements Visual {
     this.rhythm = rhythm
   }
 
-  public draw(ctx: CanvasRenderingContext2D, currentTick: number) {
-    this.currentTick = currentTick
+  public draw(ctx: CanvasRenderingContext2D) {
+    this.currentTick = this.rhythm.transport.ticks
 
-    this.rhythm.toTicks(0.05) > currentTick % (QUARTER_NOTE / this.rhythm.interval)
+    this.rhythm.transport.toTicks(0.05) > this.currentTick % (QUARTER_NOTE / this.rhythm.interval)
       ? (ctx.lineWidth = 6)
       : (ctx.lineWidth = 3)
     ctx.strokeStyle = this.strokeStyle

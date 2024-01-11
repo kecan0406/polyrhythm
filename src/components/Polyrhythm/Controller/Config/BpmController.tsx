@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { getTransport } from 'tone'
 
 const BpmController = () => {
-  const [bpm, setBpm] = useState<number>(120)
+  const [bpm, setBpm] = useState<number>(() => getTransport().bpm.value)
 
   const handleBpm = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBpm(Math.round(e.target.valueAsNumber))
   }
 
   useEffect(() => {
-    const transport = getTransport()
-    transport.bpm.value = bpm
+    getTransport().bpm.value = bpm
   }, [bpm])
 
   return <BpmControllerUI bpm={bpm} onChange={handleBpm} />

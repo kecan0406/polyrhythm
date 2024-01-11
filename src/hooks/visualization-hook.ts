@@ -2,7 +2,6 @@ import { RefObject, useEffect, useRef } from 'react'
 import { Visualization } from '../lib/visualization'
 import { Size } from '../types/canvas-types'
 import { usePolyrhythmValue } from './polyrhythm-hook'
-import { useTransport } from './transport-hook'
 
 export const useVisualization = () => {
   const polyrhythm = usePolyrhythmValue()
@@ -20,7 +19,6 @@ export const useVisualization = () => {
 }
 
 export const useAnimate = (visualization: Visualization) => {
-  const transport = useTransport()
   const animate = (canvas: HTMLCanvasElement) => {
     const ctx = canvas.getContext('2d')!
     fillBackground(ctx, { width: parseInt(canvas.style.width), height: parseInt(canvas.style.height) })
@@ -34,7 +32,7 @@ export const useAnimate = (visualization: Visualization) => {
   }
 
   const drawVisual = (ctx: CanvasRenderingContext2D) => {
-    visualization.drawAll(ctx, transport.ticks)
+    visualization.drawAll(ctx)
   }
 
   return animate
