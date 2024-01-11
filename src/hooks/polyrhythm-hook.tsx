@@ -42,7 +42,7 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
     () => ({
       register: (position: Point) => {
         const id = polyrhythm.length
-        setPolyrhythm(polyrhythm.concat(new Rhythm(id, polyrhythmConfig, position)))
+        setPolyrhythm(polyrhythm.concat(new Rhythm(id, polyrhythmConfig, position, transport)))
       },
       deregister: () => {
         const rhythm = polyrhythm.at(-1)

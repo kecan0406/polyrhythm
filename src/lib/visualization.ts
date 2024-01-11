@@ -35,7 +35,10 @@ export class Polygon implements Visual {
 
   public draw(ctx: CanvasRenderingContext2D, currentTick: number) {
     this.currentTick = currentTick
-    ctx.lineWidth = 3
+
+    this.rhythm.toTicks(0.05) > currentTick % (QUARTER_NOTE / this.rhythm.interval)
+      ? (ctx.lineWidth = 6)
+      : (ctx.lineWidth = 3)
     ctx.strokeStyle = this.strokeStyle
 
     this.drawCTX(ctx, this.drawLines.bind(this))

@@ -29,7 +29,7 @@ export const useAnimate = (visualization: Visualization) => {
 
   const fillBackground = (ctx: CanvasRenderingContext2D, { width, height }: Size) => {
     ctx.clearRect(0, 0, width, height)
-    ctx.fillStyle = 'rgb(31,31,36)'
+    ctx.fillStyle = 'rgb(0,0,0)'
     ctx.fillRect(0, 0, width, height)
   }
 
