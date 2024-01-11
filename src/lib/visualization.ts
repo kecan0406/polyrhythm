@@ -1,6 +1,6 @@
 import { Point } from '../types/canvas-types'
 import { Rhythm } from './polyrhythm'
-import { PI2, getDivRatio } from './utils/math-util'
+import { PI2, QUARTER_NOTE, getDivRatio } from './utils/math-util'
 
 export class Visualization {
   private visuals: Visual[] = []
@@ -24,7 +24,6 @@ interface Visual {
 
 export class Polygon implements Visual {
   private readonly rhythm: Rhythm
-  private readonly quarterTick: number
 
   private readonly strokeStyle: string = 'rgb(255,255,255)'
   private readonly radius: number = 100
@@ -32,7 +31,6 @@ export class Polygon implements Visual {
 
   constructor(rhythm: Rhythm) {
     this.rhythm = rhythm
-    this.quarterTick = rhythm.getQuarterTick()
   }
 
   public draw(ctx: CanvasRenderingContext2D, currentTick: number) {
@@ -73,7 +71,7 @@ export class Polygon implements Visual {
   }
 
   private getLinePoint(): Point {
-    const [line, ratio] = getDivRatio(this.currentTick, this.quarterTick)
+    const [line, ratio] = getDivRatio(this.currentTick, Math.round(QUARTER_NOTE / this.rhythm.interval))
     const { x: fromX, y: fromY } = this.getArcPoint(line)
     const { x: toX, y: toY } = this.getArcPoint(line + 1)
 

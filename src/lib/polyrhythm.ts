@@ -4,7 +4,6 @@ import { Decibels } from 'tone/build/esm/core/type/Units'
 import { PolyrhythmConfig } from '../hooks/polyrhythm-config-hook'
 import { Point } from '../types/canvas-types'
 import { getBeepSynth } from './instruments'
-import { QUARTER_NOTE } from './utils/math-util'
 
 export class Rhythm {
   public readonly id: number
@@ -31,9 +30,5 @@ export class Rhythm {
 
   public dispose() {
     this.beepSynth.dispose()
-  }
-
-  public getQuarterTick(): number {
-    return Math.round(QUARTER_NOTE / this.interval)
   }
 }
