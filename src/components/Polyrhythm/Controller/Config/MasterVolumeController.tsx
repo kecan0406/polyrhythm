@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { getDestination } from 'tone'
 import { Decibels } from 'tone/build/esm/core/type/Units'
 const MasterVolumeController = () => {
-  const [masterVolume, setMasterVolume] = useState<Decibels>(-100)
+  const [masterVolume, setMasterVolume] = useState<Decibels>(-40)
 
   const handleMasterVolume = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setMasterVolume(target.valueAsNumber)
