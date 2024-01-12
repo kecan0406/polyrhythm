@@ -3,14 +3,16 @@ import { Decibels } from 'tone/build/esm/core/type/Units'
 import { Rhythm } from '../../../../lib/polyrhythm'
 
 const RhythmVolumeController = ({ rhythm }: { rhythm: Rhythm }) => {
-  const [volume, setVolume] = useState<Decibels>(() => rhythm.beepSynth.volume.value)
+  const [volume, setVolume] = useState<Decibels>(() => rhythm.instrument.getVolume())
 
   useEffect(() => {
-    rhythm.beepSynth.volume.value = volume
-  }, [volume])
+    setVolume(rhythm.instrument.getVolume())
+  }, [rhythm])
 
   const handleVolume = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    setVolume(target.valueAsNumber)
+    const volume = target.valueAsNumber
+    setVolume(volume)
+    rhythm.instrument.setVolume(volume)
   }
 
   return <RhythmVolumeControllerUI volume={volume} onChange={handleVolume} />

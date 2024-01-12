@@ -3,6 +3,7 @@ import { Rhythm } from '../../../../lib/polyrhythm'
 import RhythmIntervalController from './RhythmIntervalController'
 import RhythmNoteController from './RhythmNoteController'
 import RhythmSelector from './RhythmSelector'
+import RhythmSynthController from './RhythmSynthController'
 import RhythmVolumeController from './RhythmVolumeController'
 
 const RhythmController = () => {
@@ -20,6 +21,7 @@ const RhythmController = () => {
           <RhythmVolumeController rhythm={rhythm} />
           <RhythmNoteController rhythm={rhythm} />
           <RhythmIntervalController rhythm={rhythm} />
+          <RhythmSynthController rhythm={rhythm} />
         </>
       )}
     </div>

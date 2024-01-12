@@ -1,9 +1,9 @@
-import { getTransport, Synth } from 'tone'
+import { getTransport } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
 import { PolyrhythmConfig } from '../hooks/polyrhythm-config-hook'
 import { Point } from '../types/canvas-types'
-import { getBeepSynth } from './instruments'
+import { Instruments } from './instruments'
 import { QUARTER_NOTE } from './utils/math-util'
 
 export class Rhythm {
@@ -12,16 +12,17 @@ export class Rhythm {
   public interval: number
   public position: Point
   public note: Note
-  public beepSynth: Synth = getBeepSynth().toDestination()
+  public instrument: Instruments
   public transport: Transport = getTransport()
 
   private scheduleId: number
 
-  constructor(id: number, { note, interval }: PolyrhythmConfig, position: Point) {
+  constructor(id: number, { synthName, note, interval }: PolyrhythmConfig, position: Point) {
     this.id = id
     this.note = note
     this.interval = interval
     this.position = position
+    this.instrument = new Instruments(synthName)
     this.scheduleId = this.scheduleRepeat()
   }
 
@@ -32,13 +33,13 @@ export class Rhythm {
 
   public dispose() {
     this.transport.clear(this.scheduleId)
-    this.beepSynth.dispose()
+    this.instrument.dispose()
   }
 
   private scheduleRepeat() {
     return this.transport.scheduleRepeat(
       (time) => {
-        this.beepSynth.triggerAttackRelease(this.note, time, 0.005)
+        this.instrument.trigger(this.note, time, 0.005)
       },
       `${Math.round(QUARTER_NOTE / this.interval)}i`,
       0,

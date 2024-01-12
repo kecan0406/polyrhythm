@@ -3,6 +3,7 @@ import BpmController from './BpmController'
 import IntervalController from './IntervalController'
 import MasterVolumeController from './MasterVolumeController'
 import NoteController from './NoteController'
+import SynthController from './SynthController'
 
 const ConfigController = () => {
   return (
@@ -10,6 +11,7 @@ const ConfigController = () => {
       <BpmController />
       <IntervalController />
       <NoteController />
+      <SynthController />
       <MasterVolumeController />
     </div>
   )

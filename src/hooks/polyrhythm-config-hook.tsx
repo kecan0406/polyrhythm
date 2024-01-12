@@ -1,11 +1,13 @@
 import React, { createContext, RefObject, useContext, useRef } from 'react'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
+import { SynthName } from '../lib/instruments'
 
 export type PolyrhythmConfig = {
   interval: number
+  synthName: SynthName
   note: Note
 }
-const initialPolyrhythmConfig: PolyrhythmConfig = { interval: 3, note: 'C5' }
+const initialPolyrhythmConfig: PolyrhythmConfig = { interval: 3, note: 'C5', synthName: 'beep' }
 const PolyrhythmConfigContext = createContext<PolyrhythmConfig | null>(initialPolyrhythmConfig)
 
 export const PolyrhythmConfigProvider = ({ children }: { children: React.ReactNode }) => {

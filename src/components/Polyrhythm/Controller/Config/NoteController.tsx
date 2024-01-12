@@ -17,12 +17,12 @@ const NoteController = () => {
     polyrhythmConfig.note = notes[index]
   }, [index])
 
-  return <NoteControllerUI notes={notes} onChange={handleNote} index={index} />
+  return <NoteControllerUI onChange={handleNote} index={index} />
 }
 export default NoteController
 
-type NoteControllerUIProps = { index: number; notes: Note[]; onChange: (e: ChangeEvent<HTMLInputElement>) => void }
-const NoteControllerUI = ({ index, notes, onChange }: NoteControllerUIProps) => {
+type NoteControllerUIProps = { index: number; onChange: (e: ChangeEvent<HTMLInputElement>) => void }
+const NoteControllerUI = ({ index, onChange }: NoteControllerUIProps) => {
   return (
     <div className="NoteController">
       <section>
