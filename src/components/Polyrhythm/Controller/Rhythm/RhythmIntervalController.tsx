@@ -15,7 +15,7 @@ const RhythmIntervalController = ({ rhythm }: RhythmIntervalControllerProps) => 
     const interval = target.valueAsNumber
     setInterval(interval)
     rhythm.interval = interval
-    polyrhythmActions.reset()
+    polyrhythmActions.reset(rhythm)
   }
 
   return <RhythmIntervalControllerUI interval={interval} onChange={handleInterval} />
