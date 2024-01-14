@@ -1,3 +1,4 @@
+import { TWELVE_TONE_COLORS } from '../constants/chromesthesia'
 import { Point } from '../types/canvas-types'
 import { Rhythm } from './polyrhythm'
 import { OPACITY_REGEX, PI2, QUARTER_NOTE, getDivRatio } from './utils/math-util'
@@ -34,11 +35,12 @@ export class Polygon implements Visual {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
+    this.color = TWELVE_TONE_COLORS[this.rhythm.note].replace(OPACITY_REGEX, '0.7')
     this.currentTick = this.rhythm.transport.ticks
 
     this.drawLines(ctx, 6)
-    this.drawDot(ctx, 16)
-    this.drawDot(ctx, 8)
+    this.drawDot(ctx, 20, this.color)
+    this.drawDot(ctx, 12, 'rgb(255,255,255,0.7)')
   }
 
   private drawLines(ctx: CanvasRenderingContext2D, radius: number) {
@@ -49,7 +51,7 @@ export class Polygon implements Visual {
     ctx.lineJoin = 'round'
     ctx.lineWidth = radius
     ctx.strokeStyle = this.color
-    if (activeTime > vertexTick) {
+    if (activeTime >= vertexTick) {
       const opacity = Number((1 - 0.3 * (vertexTick / activeTime)).toFixed(2))
       ctx.strokeStyle = this.color.replace(OPACITY_REGEX, `${opacity}`)
       ctx.lineWidth = radius * (1.5 * opacity)
@@ -63,9 +65,9 @@ export class Polygon implements Visual {
     ctx.closePath()
   }
 
-  private drawDot(ctx: CanvasRenderingContext2D, radius: number) {
+  private drawDot(ctx: CanvasRenderingContext2D, radius: number, color: string) {
     ctx.beginPath()
-    ctx.fillStyle = this.color
+    ctx.fillStyle = color
 
     const { x, y } = this.getLinePoint()
     ctx.arc(x, y, radius, 0, PI2)

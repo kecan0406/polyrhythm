@@ -1,12 +1,11 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { Note } from 'tone/build/esm/core/type/NoteUnits'
+import { NOTES } from '../../../../constants/note'
 import { usePolyrhythmConfig } from '../../../../hooks/polyrhythm-config-hook'
 
-const notes: Note[] = ['C5', 'E5', 'G5', 'C6']
 const NoteController = () => {
   const polyrhythmConfig = usePolyrhythmConfig()
   const [index, setIndex] = useState<number>(() => {
-    return notes.findIndex((note) => note === polyrhythmConfig.note)
+    return NOTES.findIndex((note) => note === polyrhythmConfig.note)
   })
 
   const handleNote = ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -14,7 +13,7 @@ const NoteController = () => {
   }
 
   useEffect(() => {
-    polyrhythmConfig.note = notes[index]
+    polyrhythmConfig.note = NOTES[index]
   }, [index])
 
   return <NoteControllerUI onChange={handleNote} index={index} />
@@ -26,8 +25,8 @@ const NoteControllerUI = ({ index, onChange }: NoteControllerUIProps) => {
   return (
     <div className="NoteController">
       <section>
-        <label htmlFor="note">Note : {notes[index]}</label>
-        <input type="range" id="note" min={0} max={notes.length - 1} onChange={onChange} value={index} />
+        <label htmlFor="note">Note : {NOTES[index]}</label>
+        <input type="range" id="note" min={0} max={NOTES.length - 1} onChange={onChange} value={index} />
       </section>
     </div>
   )
