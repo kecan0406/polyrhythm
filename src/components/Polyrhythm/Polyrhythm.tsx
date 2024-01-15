@@ -6,14 +6,16 @@ import PolyrhythmPlayground from './PolyrhythmPlayground'
 
 const Polyrhythm = () => {
   return (
-    <PolyrhythmConfigProvider>
-      <PolyrhythmProvider>
-        <div className="Polyrhythm">
-          <PolyrhythmController />
-          <PolyrhythmPlayground />
-        </div>
-      </PolyrhythmProvider>
-    </PolyrhythmConfigProvider>
+    <div className="Polyrhythm">
+      <PolyrhythmConfigProvider>
+        <PolyrhythmProvider>
+          <div className="Polyrhythm">
+            <PolyrhythmController />
+            <PolyrhythmPlayground />
+          </div>
+        </PolyrhythmProvider>
+      </PolyrhythmConfigProvider>
+    </div>
   )
 }
 
