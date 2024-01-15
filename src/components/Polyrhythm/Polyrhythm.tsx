@@ -1,21 +1,26 @@
+import styled from '@emotion/styled'
 import React from 'react'
 import { PolyrhythmConfigProvider } from '../../hooks/polyrhythm-config-hook'
 import { PolyrhythmProvider } from '../../hooks/polyrhythm-hook'
-import PolyrhythmController from './Controller/PolyrhythmController'
+import PolyrhythmDrawer from './PolyrhythmDrawer'
 import PolyrhythmPlayground from './PolyrhythmPlayground'
+
+const PolyrhythmContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+`
 
 const Polyrhythm = () => {
   return (
-    <div className="Polyrhythm">
-      <PolyrhythmConfigProvider>
-        <PolyrhythmProvider>
-          <div className="Polyrhythm">
-            <PolyrhythmController />
-            <PolyrhythmPlayground />
-          </div>
-        </PolyrhythmProvider>
-      </PolyrhythmConfigProvider>
-    </div>
+    <PolyrhythmConfigProvider>
+      <PolyrhythmProvider>
+        <PolyrhythmContainer>
+          <PolyrhythmDrawer />
+          <PolyrhythmPlayground />
+        </PolyrhythmContainer>
+      </PolyrhythmProvider>
+    </PolyrhythmConfigProvider>
   )
 }
 

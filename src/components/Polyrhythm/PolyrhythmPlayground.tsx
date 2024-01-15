@@ -1,19 +1,32 @@
+import styled from '@emotion/styled'
 import React, { RefObject, useRef } from 'react'
 import { useCanvas, useClientWidthHeight } from '../../hooks/canvas-hook'
 import { usePolyrhythmActions } from '../../hooks/polyrhythm-hook'
 import { useAnimate, useVisualization } from '../../hooks/visualization-hook'
 import { CanvasSize } from '../../types/canvas-types'
 
+const Playground = styled.div`
+  overflow: hidden;
+  display: flex;
+
+  width: 100%;
+  height: 100%;
+`
+
 const PolyrhythmPlayground = () => {
   const mainRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null)
   const playgroundSize = useClientWidthHeight(mainRef)
   return (
-    <div className="Playground" ref={mainRef}>
+    <Playground ref={mainRef}>
       <PolyrhythmCanvas canvasSize={playgroundSize} />
-    </div>
+    </Playground>
   )
 }
 export default PolyrhythmPlayground
+
+const CanvasVisualization = styled.canvas`
+  display: block;
+`
 
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
@@ -30,5 +43,5 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   }
 
   const canvasRef = useCanvas(canvasSize, animate)
-  return <canvas className="Visualization" ref={canvasRef} onClick={handleRegister} onContextMenu={handleDeregister} />
+  return <CanvasVisualization ref={canvasRef} onClick={handleRegister} onContextMenu={handleDeregister} />
 }

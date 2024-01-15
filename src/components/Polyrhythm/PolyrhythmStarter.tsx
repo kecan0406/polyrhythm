@@ -1,5 +1,12 @@
+import styled from '@emotion/styled'
 import React from 'react'
 import * as Tone from 'tone'
+
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: black;
+`
 
 type PolyrhythmStarterProps = { onClick: () => void }
 const PolyrhythmStarter = ({ onClick: close }: PolyrhythmStarterProps) => {
@@ -10,7 +17,7 @@ const PolyrhythmStarter = ({ onClick: close }: PolyrhythmStarterProps) => {
     transport.start(0)
     close()
   }
-  return <div className="PolyrhythmStarter" onClick={handleTransportStart} />
+  return <Container onClick={handleTransportStart} />
 }
 
 export default PolyrhythmStarter
