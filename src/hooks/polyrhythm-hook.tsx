@@ -26,7 +26,6 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
     transport.loopStart = 0
     transport.loopEnd = '1m'
     transport.timeSignature = [4, 4]
-    transport.start(0)
   }, [])
 
   const actions: PolyrhythmActions = useMemo(
