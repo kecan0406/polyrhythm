@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
 import Polyrhythm from './components/Polyrhythm/Polyrhythm'
