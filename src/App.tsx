@@ -11,14 +11,18 @@ const Container = styled.div`
 `
 
 const App = () => {
-  const [isReady, setIsReady] = useState(false)
-  const handlePolyrhythmReady = () => setIsReady(true)
+  const [isMountStarter, setIsMountStarter] = useState<boolean>(true)
+  const [isMountMain, setIsMountMain] = useState<boolean>(false)
+  const handlePolyrhythmReady = () => {
+    setIsMountMain(true)
+    setTimeout(() => setIsMountStarter(false), 1500)
+  }
 
   return (
     <Container>
       <Global styles={globalStyle} />
-      {!isReady && <PolyrhythmStarter onClick={handlePolyrhythmReady} />}
-      <Polyrhythm />
+      {isMountStarter && <PolyrhythmStarter onClick={handlePolyrhythmReady} />}
+      {isMountMain && <Polyrhythm />}
     </Container>
   )
 }

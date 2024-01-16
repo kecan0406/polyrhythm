@@ -50,7 +50,7 @@ const PolyrhythmStarter = ({ onClick: close }: PolyrhythmStarterProps) => {
     transport.start(0)
 
     setIsClicked(true)
-    setTimeout(() => close(), 1500)
+    close()
   }
 
   return (
