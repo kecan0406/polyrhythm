@@ -6,7 +6,7 @@ import ConfigController from './Controller/Config/ConfigController'
 
 type DrawerProps = { isOpen: boolean; initialRender: boolean }
 const Drawer = styled.div<DrawerProps>`
-  background-color: white;
+  background: white;
   position: absolute;
   display: flex;
   flex-direction: column;
