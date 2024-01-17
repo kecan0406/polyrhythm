@@ -9,7 +9,7 @@ const Drawer = styled.div<DrawerProps>`
   background: white;
   position: absolute;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   justify-content: space-between;
   width: 260px;
   height: 100%;
