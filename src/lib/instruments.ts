@@ -1,29 +1,49 @@
-import { MembraneSynth, Synth, Volume } from 'tone'
+import { AMSynth, Freeverb, MembraneSynth, PolySynth, Synth, Volume } from 'tone'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
 import { Time } from 'tone/build/esm/core/type/Units'
 
-export const getBeepSynth = (): Synth => {
-  return new Synth({
+export const getBeepSynth = (): PolySynth => {
+  return new PolySynth(Synth).set({
     envelope: {
-      attack: 0.01,
-      decay: 0,
-      sustain: 1,
-      release: 0.01,
+      attack: 0.02,
+      decay: 0.3,
+      sustain: 0,
+      release: 0.2,
     },
   })
 }
-const getMembraneSynth = (): Synth => {
-  return new MembraneSynth()
+const getMembraneSynth = (): PolySynth => {
+  return new PolySynth(MembraneSynth).set({
+    envelope: {
+      attack: 0.02,
+      decay: 0.3,
+      sustain: 0,
+      release: 0.2,
+    },
+  })
+}
+const getAmsineSynth = (): PolySynth => {
+  return new PolySynth(AMSynth).set({
+    oscillator: { type: 'amsine' },
+    detune: 0,
+    envelope: {
+      attack: 0.02,
+      decay: 0.3,
+      sustain: 0,
+      release: 0.2,
+    },
+  })
 }
 
 export type SynthName = keyof typeof SYNTH
-const SYNTH = { beep: () => getBeepSynth(), membrane: () => getMembraneSynth() }
+const SYNTH = { beep: () => getBeepSynth(), membrane: () => getMembraneSynth(), amsine: () => getAmsineSynth() }
 
 export class Instruments {
   public synthName: SynthName
 
-  private synth: Synth
-  private readonly volume: Volume = new Volume().toDestination()
+  private synth: PolySynth
+  private readonly volume: Volume = new Volume()
+  private readonly freeverb: Freeverb = new Freeverb().toDestination()
 
   constructor(synthName: SynthName) {
     this.synthName = synthName
@@ -35,9 +55,9 @@ export class Instruments {
     this.synth = this.setSynth(synthName)
   }
 
-  private setSynth(synthName: SynthName): Synth {
+  private setSynth(synthName: SynthName): PolySynth {
     this.synthName = synthName
-    return SYNTH[this.synthName]().connect(this.volume)
+    return SYNTH[this.synthName]().connect(this.volume).connect(this.freeverb)
   }
 
   public trigger(note: Note, duration: Time, time: Time) {
@@ -53,7 +73,6 @@ export class Instruments {
   }
 
   public dispose() {
-    this.synth.dispose()
     this.volume.dispose()
   }
 }
