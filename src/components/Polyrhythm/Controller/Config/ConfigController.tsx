@@ -7,6 +7,7 @@ import SynthController from './SynthController'
 
 const ControllerContainer = styled.div`
   margin-bottom: 3rem;
+  color: rgb(209, 210, 211);
 `
 
 const ConfigController = () => {

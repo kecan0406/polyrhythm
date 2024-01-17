@@ -27,6 +27,12 @@ const VolumeButton = styled.button`
   background-image: none;
   background-color: transparent;
   border: none;
+
+  fill: hsla(0, 0%, 100%, 0.7);
+
+  :hover {
+    fill: #fff;
+  }
 `
 
 const MasterVolumeController = () => {
