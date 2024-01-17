@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
-import React, { RefObject, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getDestination } from 'tone'
-import { Destination } from 'tone/build/esm/core/context/Destination'
 import { ReactComponent as VolumeUpIcon } from '../../../../assets/icon/volume-up.svg'
 import { ReactComponent as VolumeXIcon } from '../../../../assets/icon/volume-x.svg'
 import ProgressBar from '../../../../elements/inputs/ProgressBar'
@@ -12,7 +11,7 @@ const MasterVolumeContainer = styled.div`
   justify-content: flex-end;
   text-align: center;
   flex-grow: 1;
-  margin-right: 8px;
+  margin-right: 12px;
 `
 const MasterVolume = styled.div`
   display: flex;
@@ -36,15 +35,13 @@ const VolumeButton = styled.button`
 `
 
 const MasterVolumeController = () => {
-  const destinationRef: RefObject<Destination> = useRef<Destination>(getDestination())
   const [masterVolume, setMasterVolume] = useState<number>(0.5)
   const [isMute, setIsMute] = useState<boolean>(false)
   const [isHover, setIsHover] = useState<boolean>(false)
 
   useEffect(() => {
-    const destination = destinationRef.current!
-    destination.mute = isMute
-    destination.volume.value = linear2db(masterVolume)
+    const destination = getDestination()
+    destination.volume.value = linear2db(isMute ? 0 : masterVolume)
   }, [masterVolume, isMute])
 
   const handleMute = () => {

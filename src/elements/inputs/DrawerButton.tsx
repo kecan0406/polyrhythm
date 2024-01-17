@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 const DrawerHandler = styled.button`
   position: fixed;
   top: 50%;
+  transform: translateY(-50%);
   left: 260px;
   width: 32px;
   height: 72px;
