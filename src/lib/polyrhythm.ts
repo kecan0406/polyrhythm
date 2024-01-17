@@ -39,7 +39,7 @@ export class Rhythm {
   private scheduleRepeat() {
     return this.transport.scheduleRepeat(
       (time) => {
-        this.instrument.trigger(this.note, time, 0.005)
+        this.instrument.trigger(this.note, '8n', time)
       },
       `${Math.round(QUARTER_NOTE / this.interval)}i`,
       0,

@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { usePolyrhythmConfig } from '../../../../hooks/polyrhythm-config-hook'
 import { SynthName } from '../../../../lib/instruments'
 
-const synths: SynthName[] = ['beep', 'membrane']
+const synths: SynthName[] = ['beep', 'membrane', 'amsine']
 const SynthController = () => {
   const polyrhythmConfig = usePolyrhythmConfig()
   const [index, setIndex] = useState<number>(() => {
