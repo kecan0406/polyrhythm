@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 const ControllerContainer = styled.div`
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
   color: rgb(209, 210, 211);
 `
 
