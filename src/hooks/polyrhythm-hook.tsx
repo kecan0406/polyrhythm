@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { getTransport } from 'tone'
+import { Freeverb, getTransport } from 'tone'
 import { Rhythm } from '../lib/polyrhythm'
 import { Point } from '../types/canvas-types'
 import { usePolyrhythmConfig } from './polyrhythm-config-hook'
@@ -17,6 +17,7 @@ const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
 })
 
 export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) => {
+  const freeVerb = useMemo(() => new Freeverb().toDestination(), [])
   const [polyrhythm, setPolyrhythm] = useState<Rhythm[]>([])
   const polyrhythmConfig = usePolyrhythmConfig()
 
@@ -32,7 +33,9 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
     () => ({
       register: (position: Point) => {
         const id = polyrhythm.length
-        setPolyrhythm(polyrhythm.concat(new Rhythm(id, polyrhythmConfig, position)))
+        const rhythm = new Rhythm(id, polyrhythmConfig, position)
+        rhythm.instrument.connect(freeVerb)
+        setPolyrhythm(polyrhythm.concat(rhythm))
       },
       deregister: () => {
         const rhythm = polyrhythm.at(-1)

@@ -43,11 +43,14 @@ export class Instruments {
 
   private synth: PolySynth
   private readonly volume: Volume = new Volume()
-  private readonly freeverb: Freeverb = new Freeverb().toDestination()
 
   constructor(synthName: SynthName) {
     this.synthName = synthName
     this.synth = this.setSynth(synthName)
+  }
+
+  public connect(destination: Freeverb) {
+    this.volume.connect(destination)
   }
 
   public changeSynth(synthName: SynthName) {
@@ -57,7 +60,7 @@ export class Instruments {
 
   private setSynth(synthName: SynthName): PolySynth {
     this.synthName = synthName
-    return SYNTH[this.synthName]().connect(this.volume).connect(this.freeverb)
+    return SYNTH[this.synthName]().connect(this.volume)
   }
 
   public trigger(note: Note, duration: Time, time: Time) {
@@ -74,5 +77,6 @@ export class Instruments {
 
   public dispose() {
     this.volume.dispose()
+    setTimeout(() => this.synth.dispose(), 1000)
   }
 }

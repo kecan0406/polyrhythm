@@ -9,6 +9,7 @@ const DrawerHandler = styled.button`
   width: 32px;
   height: 72px;
   opacity: 0.25;
+  transform: translateY(-50%);
   transition: opacity 0.25s;
   &:hover {
     opacity: 1;
