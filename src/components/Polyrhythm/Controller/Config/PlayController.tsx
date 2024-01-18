@@ -16,6 +16,7 @@ const Play = styled.div`
 `
 const PlayController = () => {
   const [isPlaying, setIsPlaying] = useState<boolean>(true)
+
   const handlePlay = () => {
     const transport = getTransport()
     isPlaying ? transport.pause() : transport.start()

@@ -1,23 +1,25 @@
-const CracoAlias = require('craco-alias')
+import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin'
 
-module.exports = {
+type WebpackConfig = { webpackConfig: { resolve: { plugins: TsconfigPathsPlugin[] } } }
+export default {
   babel: {
     plugins: [
       [
         '@emotion',
         {
           autoLabel: 'dev-only',
-          labelFormat: 'emotion-[local]',
+          labelFormat: '[local]',
         },
       ],
     ],
   },
   plugins: [
     {
-      plugin: CracoAlias,
-      options: {
-        source: 'tsconfig',
-        tsConfigPath: 'tsconfig.paths.json',
+      plugin: {
+        overrideWebpackConfig: ({ webpackConfig }: WebpackConfig) => {
+          webpackConfig.resolve.plugins.push(new TsconfigPathsPlugin({}))
+          return webpackConfig
+        },
       },
     },
   ],
