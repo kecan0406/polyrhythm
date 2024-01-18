@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 import MasterVolumeController from './Controller/Config/MasterVolumeController'
+import PlayController from './Controller/Config/PlayController'
 
 const Footer = styled.footer`
   background: #212428;
@@ -21,11 +22,16 @@ const FooterContainer = styled.div`
   justify-content: space-between;
 `
 
+const Introduce = styled.div`
+  display: flex;
+  width: 30%;
+`
 const PolyrhythmFooter = () => {
   return (
     <Footer>
       <FooterContainer>
-        <div />
+        <Introduce>dd</Introduce>
+        <PlayController />
         <MasterVolumeController />
       </FooterContainer>
     </Footer>
