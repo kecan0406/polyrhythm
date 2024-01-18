@@ -35,7 +35,11 @@ export class Polygon implements Visual {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    this.color = TWELVE_TONE_COLORS[this.rhythm.note].replace(OPACITY_REGEX, '0.7')
+    const { color } = TWELVE_TONE_COLORS.find((color) => this.rhythm.note.startsWith(color.note)) ?? {
+      color: 'rgb(255,255,255,1)',
+    }
+
+    this.color = color.replace(OPACITY_REGEX, '0.7')
     this.currentTick = this.rhythm.transport.ticks
 
     this.drawLines(ctx, 6)

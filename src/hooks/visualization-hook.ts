@@ -1,21 +1,20 @@
 import { Visualization } from '@/lib/visualization'
 import { Size } from '@/types/canvas-types'
-import { RefObject, useEffect, useRef } from 'react'
+import { useEffect, useMemo } from 'react'
 import { usePolyrhythmValue } from './polyrhythm-hook'
 
 export const useVisualization = () => {
   const polyrhythm = usePolyrhythmValue()
-  const visualizationRef: RefObject<Visualization> = useRef<Visualization>(new Visualization())
+  const visualization = useMemo(() => new Visualization(), [])
 
   useEffect(() => {
-    const visualization = visualizationRef.current!
     visualization.generateVisual(polyrhythm)
     return () => {
       visualization.clearVisual()
     }
   }, [polyrhythm])
 
-  return visualizationRef.current!
+  return visualization
 }
 
 export const useAnimate = (visualization: Visualization) => {
