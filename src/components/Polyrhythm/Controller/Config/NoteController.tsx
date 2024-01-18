@@ -1,6 +1,6 @@
+import { NOTES } from '@/constants/note'
+import { usePolyrhythmConfig } from '@/hooks/polyrhythm-config-hook'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { NOTES } from '../../../../constants/note'
-import { usePolyrhythmConfig } from '../../../../hooks/polyrhythm-config-hook'
 
 const NoteController = () => {
   const polyrhythmConfig = usePolyrhythmConfig()

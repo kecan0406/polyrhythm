@@ -1,9 +1,9 @@
+import { useCanvas, useClientWidthHeight } from '@/hooks/canvas-hook'
+import { usePolyrhythmActions } from '@/hooks/polyrhythm-hook'
+import { useAnimate, useVisualization } from '@/hooks/visualization-hook'
+import { CanvasSize } from '@/types/canvas-types'
 import styled from '@emotion/styled'
 import React, { RefObject, useRef } from 'react'
-import { useCanvas, useClientWidthHeight } from '../../hooks/canvas-hook'
-import { usePolyrhythmActions } from '../../hooks/polyrhythm-hook'
-import { useAnimate, useVisualization } from '../../hooks/visualization-hook'
-import { CanvasSize } from '../../types/canvas-types'
 
 const Playground = styled.div`
   overflow: hidden;

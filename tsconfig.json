@@ -1,6 +1,8 @@
 {
+  "extends": "./tsconfig.paths.json",
   "compilerOptions": {
     "target": "es5",
+    "rootDir": "src",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -15,7 +17,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "jsxImportSource": "@emotion/react",
+    "jsxImportSource": "@emotion/react"
   },
-  "include": ["src"]
+  "include": ["src", "craco.config.js"]
 }

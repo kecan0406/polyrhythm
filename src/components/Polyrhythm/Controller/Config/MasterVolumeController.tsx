@@ -1,11 +1,11 @@
+import { ReactComponent as VolumeUpIcon } from '@/assets/icon/volume-up.svg'
+import { ReactComponent as VolumeXIcon } from '@/assets/icon/volume-x.svg'
+import ActiveButton from '@/elements/inputs/ActiveButton'
+import ProgressBar from '@/elements/inputs/ProgressBar'
+import { linear2db } from '@/lib/utils/math-util'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
 import { getDestination } from 'tone'
-import { ReactComponent as VolumeUpIcon } from '../../../../assets/icon/volume-up.svg'
-import { ReactComponent as VolumeXIcon } from '../../../../assets/icon/volume-x.svg'
-import ActiveButton from '../../../../elements/inputs/ActiveButton'
-import ProgressBar from '../../../../elements/inputs/ProgressBar'
-import { linear2db } from '../../../../lib/utils/math-util'
 
 const MasterVolumeContainer = styled.div`
   display: flex;

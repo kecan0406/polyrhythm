@@ -1,5 +1,5 @@
+import { usePolyrhythmConfig } from '@/hooks/polyrhythm-config-hook'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { usePolyrhythmConfig } from '../../../../hooks/polyrhythm-config-hook'
 
 const IntervalController = () => {
   const polyrhythmConfig = usePolyrhythmConfig()

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^7.1.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "node-sass": "^9.0.0",
@@ -25,6 +26,7 @@
     "@types/styled-components": "^5.1.34",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
+    "craco-alias": "^3.0.1",
     "eslint": "^8.53.0",
     "eslint-plugin-react": "^7.33.2",
     "prettier": "^3.1.0",
@@ -33,9 +35,9 @@
     "web-vitals": "^3.5.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

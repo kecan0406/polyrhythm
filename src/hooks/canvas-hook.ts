@@ -1,5 +1,5 @@
+import { CanvasSize, Size } from '@/types/canvas-types'
 import { RefObject, useEffect, useRef, useState } from 'react'
-import { CanvasSize, Size } from '../types/canvas-types'
 
 export const useCanvas = (
   { width, height }: CanvasSize,

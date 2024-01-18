@@ -1,7 +1,7 @@
+import { Rhythm } from '@/lib/polyrhythm'
+import { Point } from '@/types/canvas-types'
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { Freeverb, getTransport } from 'tone'
-import { Rhythm } from '../lib/polyrhythm'
-import { Point } from '../types/canvas-types'
 import { usePolyrhythmConfig } from './polyrhythm-config-hook'
 
 type PolyrhythmActions = {

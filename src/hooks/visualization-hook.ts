@@ -1,6 +1,6 @@
+import { Visualization } from '@/lib/visualization'
+import { Size } from '@/types/canvas-types'
 import { RefObject, useEffect, useRef } from 'react'
-import { Visualization } from '../lib/visualization'
-import { Size } from '../types/canvas-types'
 import { usePolyrhythmValue } from './polyrhythm-hook'
 
 export const useVisualization = () => {

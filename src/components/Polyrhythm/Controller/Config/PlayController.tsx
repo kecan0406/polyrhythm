@@ -1,9 +1,9 @@
+import { ReactComponent as Pause } from '@/assets/icon/pause.svg'
+import { ReactComponent as PlayArrow } from '@/assets/icon/play-arrow.svg'
+import ActiveButton from '@/elements/inputs/ActiveButton'
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
 import { getTransport } from 'tone'
-import { ReactComponent as Pause } from '../../../../assets/icon/pause.svg'
-import { ReactComponent as PlayArrow } from '../../../../assets/icon/play-arrow.svg'
-import ActiveButton from '../../../../elements/inputs/ActiveButton'
 
 const PlayContainer = styled.div`
   width: 40%;

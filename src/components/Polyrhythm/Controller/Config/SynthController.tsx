@@ -1,6 +1,6 @@
+import { usePolyrhythmConfig } from '@/hooks/polyrhythm-config-hook'
+import { SynthName } from '@/lib/instruments'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { usePolyrhythmConfig } from '../../../../hooks/polyrhythm-config-hook'
-import { SynthName } from '../../../../lib/instruments'
 
 const synths: SynthName[] = ['beep', 'membrane', 'amsine']
 const SynthController = () => {

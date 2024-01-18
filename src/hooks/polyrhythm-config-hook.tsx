@@ -1,6 +1,6 @@
+import { SynthName } from '@/lib/instruments'
 import React, { createContext, RefObject, useContext, useRef } from 'react'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
-import { SynthName } from '../lib/instruments'
 
 export type PolyrhythmConfig = {
   interval: number

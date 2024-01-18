@@ -1,7 +1,7 @@
+import DrawerButton from '@/elements/inputs/DrawerButton'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
-import DrawerButton from '../../elements/inputs/DrawerButton'
 import ConfigController from './Controller/Config/ConfigController'
 
 type DrawerProps = { isOpen: boolean; initialRender: boolean }

@@ -1,8 +1,8 @@
+import { PolyrhythmConfig } from '@/hooks/polyrhythm-config-hook'
+import { Point } from '@/types/canvas-types'
 import { getTransport } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
-import { PolyrhythmConfig } from '../hooks/polyrhythm-config-hook'
-import { Point } from '../types/canvas-types'
 import { Instruments } from './instruments'
 import { QUARTER_NOTE } from './utils/math-util'
 
