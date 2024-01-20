@@ -1,6 +1,7 @@
 import { Global } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
+import { RecoilRoot } from 'recoil'
 import { globalStyle } from './commons/styles/global-style'
 import Polyrhythm from './components/Polyrhythm/Polyrhythm'
 import PolyrhythmStarter from './components/Polyrhythm/PolyrhythmStarter'
@@ -19,11 +20,13 @@ const App = () => {
   }
 
   return (
-    <Container>
+    <RecoilRoot>
       <Global styles={globalStyle} />
-      {isMountStarter && <PolyrhythmStarter onClick={handlePolyrhythmReady} />}
-      {isMountMain && <Polyrhythm />}
-    </Container>
+      <Container>
+        {isMountStarter && <PolyrhythmStarter onClick={handlePolyrhythmReady} />}
+        {isMountMain && <Polyrhythm />}
+      </Container>
+    </RecoilRoot>
   )
 }
 export default App
