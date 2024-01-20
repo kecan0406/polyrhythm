@@ -1,4 +1,5 @@
 import Piano from '@/components/Polyrhythm/Controller/Config/Piano'
+import SynthController from '@/components/Polyrhythm/Controller/Config/SynthController'
 import styled from '@emotion/styled'
 import React from 'react'
 
@@ -10,6 +11,7 @@ const ControllerContainer = styled.div`
 const ConfigController = () => {
   return (
     <ControllerContainer>
+      <SynthController />
       <Piano />
     </ControllerContainer>
   )

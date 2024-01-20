@@ -16,14 +16,14 @@ const KeyboardContainer = styled.div`
 type PianoNoteProps = { none?: boolean; isActive: boolean; index: number }
 const PianoNote = styled.button<PianoNoteProps>`
   opacity: ${({ none }) => (none ? 0 : 1)};
-  animation: ${({ isActive, index }) => (isActive ? pianoAnimation(3 - index) : 'none')} 0.3s forwards;
+  animation: ${({ isActive, index }) => (isActive ? pianoAnimation(3 - index) : 'none')} 0.2s forwards;
 `
 const pianoAnimation = (range: number) => keyframes`
     from {
         background-color: #fff;
     }
     to {
-        box-shadow: ${range}px -6px 0 0 #17191d inset;
+        box-shadow: ${range}px -4px 0 0 #17191d inset;
     }
 `
 
