@@ -1,7 +1,7 @@
 import { TWELVE_TONE_COLORS } from '@/constants/chromesthesia'
 import { Point } from '@/types/canvas-types'
+import { OPACITY_REGEX, PI2, QUARTER_NOTE, getDivRatio } from '@/utils/math-util'
 import { Rhythm } from './polyrhythm'
-import { OPACITY_REGEX, PI2, QUARTER_NOTE, getDivRatio } from './utils/math-util'
 
 export class Visualization {
   private visuals: Visual[] = []

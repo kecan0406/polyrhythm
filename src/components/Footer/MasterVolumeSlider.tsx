@@ -2,7 +2,7 @@ import { ReactComponent as VolumeUpIcon } from '@/assets/icon/volume-up.svg'
 import { ReactComponent as VolumeXIcon } from '@/assets/icon/volume-x.svg'
 import ActiveButton from '@/elements/inputs/ActiveButton'
 import ProgressBar from '@/elements/inputs/ProgressBar'
-import { linear2db } from '@/lib/utils/math-util'
+import { linear2db, valueLimit } from '@/utils/math-util'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
 import { getDestination } from 'tone'
@@ -35,14 +35,19 @@ const MasterVolumeSlider = () => {
 
   const handleVolume = (percent: number) => {
     setIsMute(isMute ? false : percent <= 0)
-    setMasterVolume(percent <= 0 ? 0 : percent >= 1 ? 1 : percent)
+    setMasterVolume(valueLimit(percent))
   }
 
   return (
     <MasterVolumeSliderContainer>
       <MasterVolume onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
         <ActiveButton onClick={handleMute}>{isMute ? <VolumeXIcon /> : <VolumeUpIcon />}</ActiveButton>
-        <ProgressBar progress={isMute ? 0 : masterVolume} isHover={isHover} onDrag={handleVolume} />
+        <ProgressBar
+          progress={isMute ? 0 : masterVolume}
+          isHover={isHover}
+          onDrag={handleVolume}
+          direction="horizontal"
+        />
       </MasterVolume>
     </MasterVolumeSliderContainer>
   )

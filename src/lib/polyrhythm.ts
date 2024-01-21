@@ -1,9 +1,9 @@
 import { NoteSymbol, rhythmConfig } from '@/recoil/config/atom'
 import { Point } from '@/types/canvas-types'
+import { QUARTER_NOTE } from '@/utils/math-util'
 import { getTransport } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
 import { Instruments } from './instruments'
-import { QUARTER_NOTE } from './utils/math-util'
 
 export class Rhythm {
   public readonly id: number
