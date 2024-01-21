@@ -3,41 +3,47 @@ import { AMSynth, InputNode, MembraneSynth, PolySynth, Synth, Volume } from 'ton
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
 import { Time } from 'tone/build/esm/core/type/Units'
 
-export const getBeepSynth = (): PolySynth => {
-  return new PolySynth(Synth).set({
-    envelope: {
-      attack: 0.02,
-      decay: 0.3,
-      sustain: 0,
-      release: 0.2,
-    },
-  })
-}
-const getMembraneSynth = (): PolySynth => {
-  return new PolySynth(MembraneSynth).set({
-    envelope: {
-      attack: 0.02,
-      decay: 0.3,
-      sustain: 0,
-      release: 0.2,
-    },
-  })
-}
-const getAmsineSynth = (): PolySynth => {
-  return new PolySynth(AMSynth).set({
-    oscillator: { type: 'amsine' },
-    detune: 0,
-    envelope: {
-      attack: 0.02,
-      decay: 0.3,
-      sustain: 0,
-      release: 0.2,
-    },
-  })
-}
-
 export type SynthName = keyof typeof SYNTH
-const SYNTH = { beep: () => getBeepSynth(), membrane: () => getMembraneSynth(), amsine: () => getAmsineSynth() }
+const SYNTH = {
+  beep: {
+    get: () =>
+      new PolySynth(Synth).set({
+        envelope: {
+          attack: 0.02,
+          decay: 0.3,
+          sustain: 0,
+          release: 0.2,
+        },
+      }),
+    pitch: [1, 2, 3, 4],
+  },
+  membrane: {
+    get: () =>
+      new PolySynth(MembraneSynth).set({
+        envelope: {
+          attack: 0.02,
+          decay: 0.3,
+          sustain: 0,
+          release: 0.2,
+        },
+      }),
+    pitch: [1, 2],
+  },
+  amsine: {
+    get: () =>
+      new PolySynth(AMSynth).set({
+        oscillator: { type: 'amsine' },
+        detune: 0,
+        envelope: {
+          attack: 0.02,
+          decay: 0.3,
+          sustain: 0,
+          release: 0.2,
+        },
+      }),
+    pitch: [3, 4],
+  },
+}
 
 export class Instruments {
   public synthName: SynthName
@@ -62,7 +68,7 @@ export class Instruments {
 
   private setSynth(synthName: SynthName): PolySynth {
     this.synthName = synthName
-    return SYNTH[this.synthName]().connect(this.volume)
+    return SYNTH[this.synthName].get().connect(this.volume)
   }
 
   public trigger(noteSymbol: NoteSymbol, pitch: number, duration: Time, time?: Time) {
