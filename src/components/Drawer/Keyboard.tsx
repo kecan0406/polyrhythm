@@ -1,13 +1,12 @@
-import { rhythmConfigState } from '@/recoil/config/atom'
-import { rhythmConfigNoteState } from '@/recoil/config/selector'
+import { NoteSymbol, rhythmConfigState } from '@/recoil/config/atom'
+import { rhythmConfigNoteSymbolState } from '@/recoil/config/selector'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { Note } from 'tone/build/esm/core/type/NoteUnits'
 
-const WHITE_NOTES: Note[] = ['C5', 'D5', 'E5', 'F5', 'G5', 'A5', 'B5']
-const BLACK_NOTES: Note[] = ['B#5', 'C#5', 'D#5', 'E#5', 'F#5', 'G#5', 'A#5']
+const WHITE_NOTES: NoteSymbol[] = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
+const BLACK_NOTES: NoteSymbol[] = ['B#', 'C#', 'D#', 'E#', 'F#', 'G#', 'A#']
 
 const KeyboardContainer = styled.div`
   position: relative;
@@ -47,17 +46,17 @@ const KeyboardNoteContainer = styled.div<NoteProps>`
   }
 `
 
-type KeyboardProps = { onPlay: (note: Note) => void }
+type KeyboardProps = { onPlay: (note: NoteSymbol) => void }
 const Keyboard = ({ onPlay }: KeyboardProps) => {
-  const rhythmConfigNote = useRecoilValue(rhythmConfigNoteState)
+  const rhythmConfigNote = useRecoilValue(rhythmConfigNoteSymbolState)
   const setRhythmConfig = useSetRecoilState(rhythmConfigState)
   const isPressRef = useRef<boolean>(false)
 
-  const handleNote = ({ currentTarget: { value: note } }: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    if (!isPressRef.current || note === rhythmConfigNote) return
+  const handleNote = ({ currentTarget: { value } }: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (!isPressRef.current || value === rhythmConfigNote) return
 
-    setRhythmConfig((currVal) => ({ ...currVal, note: note as Note }))
-    onPlay(note as Note)
+    setRhythmConfig((currVal) => ({ ...currVal, noteSymbol: value as NoteSymbol }))
+    onPlay(value as NoteSymbol)
   }
 
   const handlePressNote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -68,12 +67,12 @@ const Keyboard = ({ onPlay }: KeyboardProps) => {
   return (
     <KeyboardContainer>
       <KeyboardNoteContainer isBlack={false}>
-        {WHITE_NOTES.map((note, index) => (
+        {WHITE_NOTES.map((noteSymbol, index) => (
           <KeyboardNote
-            value={note}
-            key={note}
+            value={noteSymbol}
+            key={noteSymbol}
             index={index}
-            isActive={note === rhythmConfigNote}
+            isActive={noteSymbol === rhythmConfigNote}
             onMouseDown={handlePressNote}
             onMouseUp={() => (isPressRef.current = false)}
             onMouseMove={handleNote}
@@ -81,15 +80,15 @@ const Keyboard = ({ onPlay }: KeyboardProps) => {
         ))}
       </KeyboardNoteContainer>
       <KeyboardNoteContainer isBlack={true}>
-        {BLACK_NOTES.map((note, index) => {
+        {BLACK_NOTES.map((noteSymbol, index) => {
           const isNone = index === 0 || index === 3
           return (
             <KeyboardNote
-              value={note}
-              key={note}
+              value={noteSymbol}
+              key={noteSymbol}
               none={isNone}
               index={index}
-              isActive={note === rhythmConfigNote}
+              isActive={noteSymbol === rhythmConfigNote}
               onMouseDown={handlePressNote}
               onMouseUp={() => (isPressRef.current = false)}
               onMouseMove={isNone ? () => {} : handleNote}

@@ -35,7 +35,7 @@ export class Polygon implements Visual {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    const { color } = TWELVE_TONE_COLORS.find((color) => this.rhythm.note.startsWith(color.note)) ?? {
+    const { color } = TWELVE_TONE_COLORS.find((color) => this.rhythm.noteSymbol.startsWith(color.note)) ?? {
       color: 'rgb(255,255,255,1)',
     }
 

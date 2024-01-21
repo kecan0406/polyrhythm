@@ -9,10 +9,18 @@ export const rhythmConfigSynthNameState = selector({
   },
 })
 
-export const rhythmConfigNoteState = selector({
-  key: 'rhythmConfigNote',
+export const rhythmConfigPitchState = selector({
+  key: 'rhythmConfigPitch',
   get: ({ get }) => {
-    const { note } = get(rhythmConfigState)
-    return note
+    const { pitch } = get(rhythmConfigState)
+    return pitch
+  },
+})
+
+export const rhythmConfigNoteSymbolState = selector({
+  key: 'rhythmConfigNoteSymbol',
+  get: ({ get }) => {
+    const { noteSymbol } = get(rhythmConfigState)
+    return noteSymbol
   },
 })

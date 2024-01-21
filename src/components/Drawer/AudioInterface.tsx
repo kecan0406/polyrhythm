@@ -1,29 +1,44 @@
 import Keyboard from '@/components/Drawer/Keyboard'
 import SynthSelector from '@/components/Drawer/SynthSelector'
-import { SYNTH } from '@/lib/instruments'
-import { rhythmConfigSynthNameState } from '@/recoil/config/selector'
+import { Instruments } from '@/lib/instruments'
+import { NoteSymbol } from '@/recoil/config/atom'
+import { rhythmConfigPitchState, rhythmConfigSynthNameState } from '@/recoil/config/selector'
 import styled from '@emotion/styled'
-import React, { useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { Note } from 'tone/build/esm/core/type/NoteUnits'
+import { getDestination } from 'tone'
 
 const AudioInterfaceContainer = styled.div`
   margin-bottom: 4rem;
   color: rgb(209, 210, 211);
 `
 
+const NoteController = styled.div``
+
 const AudioInterface = () => {
   const rhythmConfigSynthName = useRecoilValue(rhythmConfigSynthNameState)
-  const synth = useMemo(() => SYNTH[rhythmConfigSynthName]().toDestination(), [rhythmConfigSynthName])
+  const rhythmConfigPitch = useRecoilValue(rhythmConfigPitchState)
+  const [instrument, setInstrument] = useState<Instruments>(() =>
+    new Instruments(rhythmConfigSynthName).connect(getDestination()),
+  )
 
-  const handlePlayKeyboard = (note: Note) => {
-    synth.triggerAttackRelease(note, '8n')
+  useEffect(() => {
+    setInstrument((prevInst) => {
+      prevInst.dispose()
+      return new Instruments(rhythmConfigSynthName).connect(getDestination())
+    })
+  }, [rhythmConfigSynthName])
+
+  const handlePlayKeyboard = (noteSymbol: NoteSymbol) => {
+    instrument.trigger(noteSymbol, rhythmConfigPitch, '8n')
   }
 
   return (
     <AudioInterfaceContainer>
       <SynthSelector />
-      <Keyboard onPlay={handlePlayKeyboard} />
+      <NoteController>
+        <Keyboard onPlay={handlePlayKeyboard} />
+      </NoteController>
     </AudioInterfaceContainer>
   )
 }

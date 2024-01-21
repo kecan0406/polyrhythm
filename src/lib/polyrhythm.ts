@@ -1,8 +1,7 @@
-import { rhythmConfig } from '@/recoil/config/atom'
+import { NoteSymbol, rhythmConfig } from '@/recoil/config/atom'
 import { Point } from '@/types/canvas-types'
 import { getTransport } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
-import { Note } from 'tone/build/esm/core/type/NoteUnits'
 import { Instruments } from './instruments'
 import { QUARTER_NOTE } from './utils/math-util'
 
@@ -11,15 +10,17 @@ export class Rhythm {
 
   public interval: number
   public position: Point
-  public note: Note
+  public noteSymbol: NoteSymbol
+  public pitch: number
   public instrument: Instruments
   public transport: Transport = getTransport()
 
   private scheduleId: number
 
-  constructor(id: number, { synthName, note, interval }: rhythmConfig, position: Point) {
+  constructor(id: number, { synthName, noteSymbol, pitch, interval }: rhythmConfig, position: Point) {
     this.id = id
-    this.note = note
+    this.noteSymbol = noteSymbol
+    this.pitch = pitch
     this.interval = interval
     this.position = position
     this.instrument = new Instruments(synthName)
@@ -38,9 +39,7 @@ export class Rhythm {
 
   private scheduleRepeat() {
     return this.transport.scheduleRepeat(
-      (time) => {
-        this.instrument.trigger(this.note, '8n', time)
-      },
+      (time) => this.instrument.trigger(this.noteSymbol, this.pitch, '8n', time),
       `${Math.round(QUARTER_NOTE / this.interval)}i`,
       0,
     )

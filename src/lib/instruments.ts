@@ -1,4 +1,5 @@
-import { AMSynth, Freeverb, MembraneSynth, PolySynth, Synth, Volume } from 'tone'
+import { NoteSymbol } from '@/recoil/config/atom'
+import { AMSynth, InputNode, MembraneSynth, PolySynth, Synth, Volume } from 'tone'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
 import { Time } from 'tone/build/esm/core/type/Units'
 
@@ -36,7 +37,7 @@ const getAmsineSynth = (): PolySynth => {
 }
 
 export type SynthName = keyof typeof SYNTH
-export const SYNTH = { beep: () => getBeepSynth(), membrane: () => getMembraneSynth(), amsine: () => getAmsineSynth() }
+const SYNTH = { beep: () => getBeepSynth(), membrane: () => getMembraneSynth(), amsine: () => getAmsineSynth() }
 
 export class Instruments {
   public synthName: SynthName
@@ -49,8 +50,9 @@ export class Instruments {
     this.synth = this.setSynth(synthName)
   }
 
-  public connect(destination: Freeverb) {
+  public connect(destination: InputNode): this {
     this.volume.connect(destination)
+    return this
   }
 
   public changeSynth(synthName: SynthName) {
@@ -63,7 +65,8 @@ export class Instruments {
     return SYNTH[this.synthName]().connect(this.volume)
   }
 
-  public trigger(note: Note, duration: Time, time: Time) {
+  public trigger(noteSymbol: NoteSymbol, pitch: number, duration: Time, time?: Time) {
+    const note = `${noteSymbol}${pitch}` as Note
     this.synth.triggerAttackRelease(note, duration, time)
   }
 
