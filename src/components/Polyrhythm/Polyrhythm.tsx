@@ -1,9 +1,9 @@
 import { PolyrhythmProvider } from '@/hooks/polyrhythm-hook'
 import styled from '@emotion/styled'
 import React from 'react'
-import PolyrhythmDrawer from './PolyrhythmDrawer'
-import PolyrhythmFooter from './PolyrhythmFooter'
-import PolyrhythmPlayground from './PolyrhythmPlayground'
+import Drawer from './Drawer'
+import Footer from './Footer'
+import Playground from './Playground'
 
 const PolyrhythmContainer = styled.div`
   display: flex;
@@ -15,10 +15,10 @@ const Polyrhythm = () => {
   return (
     <PolyrhythmProvider>
       <PolyrhythmContainer>
-        <PolyrhythmDrawer />
-        <PolyrhythmPlayground />
+        <Drawer />
+        <Playground />
       </PolyrhythmContainer>
-      <PolyrhythmFooter />
+      <Footer />
     </PolyrhythmProvider>
   )
 }

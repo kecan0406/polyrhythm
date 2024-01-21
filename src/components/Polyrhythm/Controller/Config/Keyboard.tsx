@@ -14,12 +14,12 @@ const KeyboardContainer = styled.div`
   justify-content: center;
   height: 80px;
 `
-type PianoNoteProps = { none?: boolean; isActive: boolean; index: number }
-const PianoNote = styled.button<PianoNoteProps>`
+type KeyboardNoteProps = { none?: boolean; isActive: boolean; index: number }
+const KeyboardNote = styled.button<KeyboardNoteProps>`
   opacity: ${({ none }) => (none ? 0 : 1)};
-  animation: ${({ isActive, index }) => (isActive ? pianoAnimation(3 - index) : 'none')} 0.2s forwards;
+  animation: ${({ isActive, index }) => (isActive ? keyboardAnimation(3 - index) : 'none')} 0.2s forwards;
 `
-const pianoAnimation = (range: number) => keyframes`
+const keyboardAnimation = (range: number) => keyframes`
     from {
         background-color: #fff;
     }
@@ -29,13 +29,13 @@ const pianoAnimation = (range: number) => keyframes`
 `
 
 type NoteProps = { isBlack: boolean }
-const PianoNotes = styled.div<NoteProps>`
+const KeyboardNoteContainer = styled.div<NoteProps>`
   position: absolute;
   display: flex;
   width: 75%;
   flex-direction: row;
   height: ${({ isBlack }) => (isBlack ? 55 : 100)}%;
-  & > ${PianoNote} {
+  & > ${KeyboardNote} {
     flex-grow: 1;
     border: 2px solid #17191d;
     border-radius: 2px;
@@ -46,7 +46,7 @@ const PianoNotes = styled.div<NoteProps>`
   }
 `
 
-const Piano = () => {
+const Keyboard = () => {
   const [rhythmConfig, setRhythmConfig] = useRecoilState(rhythmConfigState)
   const [note, setNote] = useState<Note>(rhythmConfig.note)
   const isPressRef = useRef<boolean>(false)
@@ -66,37 +66,37 @@ const Piano = () => {
 
   return (
     <KeyboardContainer>
-      <PianoNotes isBlack={false}>
-        {WHITE_NOTES.map((pianoNote, index) => (
-          <PianoNote
-            value={pianoNote}
-            key={pianoNote}
+      <KeyboardNoteContainer isBlack={false}>
+        {WHITE_NOTES.map((kbdNote, index) => (
+          <KeyboardNote
+            value={kbdNote}
+            key={kbdNote}
             index={index}
-            isActive={pianoNote === note}
+            isActive={kbdNote === note}
             onMouseDown={handlePressNote}
             onMouseUp={() => (isPressRef.current = false)}
             onMouseMove={handleNote}
           />
         ))}
-      </PianoNotes>
-      <PianoNotes isBlack={true}>
-        {BLACK_NOTES.map((pianoNote, index) => {
+      </KeyboardNoteContainer>
+      <KeyboardNoteContainer isBlack={true}>
+        {BLACK_NOTES.map((kbdNote, index) => {
           const isNone = index === 0 || index === 3
           return (
-            <PianoNote
-              value={pianoNote}
-              key={pianoNote}
+            <KeyboardNote
+              value={kbdNote}
+              key={kbdNote}
               none={isNone}
               index={index}
-              isActive={pianoNote === note}
+              isActive={kbdNote === note}
               onMouseDown={handlePressNote}
               onMouseUp={() => (isPressRef.current = false)}
               onMouseMove={isNone ? () => {} : handleNote}
             />
           )
         })}
-      </PianoNotes>
+      </KeyboardNoteContainer>
     </KeyboardContainer>
   )
 }
-export default Piano
+export default Keyboard

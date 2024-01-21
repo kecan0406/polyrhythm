@@ -5,7 +5,7 @@ import { CanvasSize } from '@/types/canvas-types'
 import styled from '@emotion/styled'
 import React, { RefObject, useRef } from 'react'
 
-const Playground = styled.div`
+const PlaygroundContainer = styled.div`
   overflow: hidden;
   display: flex;
 
@@ -13,16 +13,16 @@ const Playground = styled.div`
   height: 100%;
 `
 
-const PolyrhythmPlayground = () => {
+const Playground = () => {
   const mainRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null)
   const playgroundSize = useClientWidthHeight(mainRef)
   return (
-    <Playground ref={mainRef}>
+    <PlaygroundContainer ref={mainRef}>
       <PolyrhythmCanvas canvasSize={playgroundSize} />
-    </Playground>
+    </PlaygroundContainer>
   )
 }
-export default PolyrhythmPlayground
+export default Playground
 
 const CanvasVisualization = styled.canvas`
   display: block;

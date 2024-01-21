@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { RecoilRoot } from 'recoil'
 import { globalStyle } from './commons/styles/global-style'
 import Polyrhythm from './components/Polyrhythm/Polyrhythm'
-import PolyrhythmStarter from './components/Polyrhythm/PolyrhythmStarter'
+import Starter from './components/Polyrhythm/Starter'
 
 const Container = styled.div`
   width: 100vw;
@@ -23,7 +23,7 @@ const App = () => {
     <RecoilRoot>
       <Global styles={globalStyle} />
       <Container>
-        {isMountStarter && <PolyrhythmStarter onClick={handlePolyrhythmReady} />}
+        {isMountStarter && <Starter onClick={handlePolyrhythmReady} />}
         {isMountMain && <Polyrhythm />}
       </Container>
     </RecoilRoot>

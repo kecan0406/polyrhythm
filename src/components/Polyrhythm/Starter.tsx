@@ -37,8 +37,8 @@ const fadeoutAnimation = () => keyframes`
     }
 `
 
-type PolyrhythmStarterProps = { onClick: () => void }
-const PolyrhythmStarter = ({ onClick: close }: PolyrhythmStarterProps) => {
+type StarterProps = { onClick: () => void }
+const Starter = ({ onClick: close }: StarterProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false)
 
   const handleTransportStart = async () => {
@@ -60,4 +60,4 @@ const PolyrhythmStarter = ({ onClick: close }: PolyrhythmStarterProps) => {
   )
 }
 
-export default PolyrhythmStarter
+export default Starter

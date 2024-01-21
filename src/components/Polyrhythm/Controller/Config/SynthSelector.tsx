@@ -4,13 +4,13 @@ import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 
-const SynthControllerContainer = styled.div``
-const SynthLabel = styled.label``
+const SynthSelectorContainer = styled.div``
+const SynthSelectorLabel = styled.label``
 const SynthSelect = styled.select``
 const SynthOption = styled.option``
 
 const synths: SynthName[] = ['beep', 'membrane', 'amsine']
-const SynthController = () => {
+const SynthSelector = () => {
   const [rhythmConfig, setRhythmConfig] = useRecoilState(rhythmConfigState)
   const [synthName, setSynthName] = useState<SynthName>(rhythmConfig.synthName)
 
@@ -23,8 +23,8 @@ const SynthController = () => {
   }
 
   return (
-    <SynthControllerContainer>
-      <SynthLabel>
+    <SynthSelectorContainer>
+      <SynthSelectorLabel>
         Synth:
         <SynthSelect onChange={handleSynth}>
           {synths.map((synth) => (
@@ -33,8 +33,8 @@ const SynthController = () => {
             </SynthOption>
           ))}
         </SynthSelect>
-      </SynthLabel>
-    </SynthControllerContainer>
+      </SynthSelectorLabel>
+    </SynthSelectorContainer>
   )
 }
-export default SynthController
+export default SynthSelector

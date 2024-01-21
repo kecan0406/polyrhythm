@@ -1,11 +1,11 @@
+import AudioInterface from '@/components/Polyrhythm/Controller/AudioInterface'
 import DrawerButton from '@/elements/inputs/DrawerButton'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
-import ConfigController from './Controller/Config/ConfigController'
 
 type DrawerProps = { isOpen: boolean; initialRender: boolean }
-const Drawer = styled.div<DrawerProps>`
+const DrawerContainer = styled.div<DrawerProps>`
   background: #17191d;
   position: absolute;
   display: flex;
@@ -24,7 +24,7 @@ const slideAnimation = (isShow: boolean) => keyframes`
     }
 `
 
-const PolyrhythmDrawer = () => {
+const Drawer = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true)
   const [initialRender, setInitialRender] = useState<boolean>(true)
 
@@ -34,10 +34,10 @@ const PolyrhythmDrawer = () => {
   }
 
   return (
-    <Drawer initialRender={initialRender} isOpen={isOpen}>
-      <ConfigController />
+    <DrawerContainer initialRender={initialRender} isOpen={isOpen}>
+      <AudioInterface />
       <DrawerButton onClick={handleDrawer} isOpen={isOpen} />
-    </Drawer>
+    </DrawerContainer>
   )
 }
-export default PolyrhythmDrawer
+export default Drawer
