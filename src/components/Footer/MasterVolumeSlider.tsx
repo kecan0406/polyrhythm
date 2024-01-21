@@ -7,7 +7,7 @@ import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
 import { getDestination } from 'tone'
 
-const MasterVolumeContainer = styled.div`
+const MasterVolumeSliderContainer = styled.div`
   display: flex;
   width: 30%;
   justify-content: flex-end;
@@ -19,7 +19,7 @@ const MasterVolume = styled.div`
   flex: 0 1 125px;
   align-items: center;
 `
-const MasterVolumeController = () => {
+const MasterVolumeSlider = () => {
   const [masterVolume, setMasterVolume] = useState<number>(0.5)
   const [isMute, setIsMute] = useState<boolean>(false)
   const [isHover, setIsHover] = useState<boolean>(false)
@@ -39,12 +39,12 @@ const MasterVolumeController = () => {
   }
 
   return (
-    <MasterVolumeContainer>
+    <MasterVolumeSliderContainer>
       <MasterVolume onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
         <ActiveButton onClick={handleMute}>{isMute ? <VolumeXIcon /> : <VolumeUpIcon />}</ActiveButton>
         <ProgressBar progress={isMute ? 0 : masterVolume} isHover={isHover} onDrag={handleVolume} />
       </MasterVolume>
-    </MasterVolumeContainer>
+    </MasterVolumeSliderContainer>
   )
 }
-export default MasterVolumeController
+export default MasterVolumeSlider

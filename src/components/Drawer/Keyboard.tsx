@@ -25,7 +25,7 @@ const keyboardAnimation = (range: number) => keyframes`
     }
     to {
         box-shadow: ${range}px -4px 0 0 #17191d inset;
-    }
+    } 
 `
 
 type NoteProps = { isBlack: boolean }

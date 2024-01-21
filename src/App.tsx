@@ -3,8 +3,8 @@ import styled from '@emotion/styled'
 import React, { useState } from 'react'
 import { RecoilRoot } from 'recoil'
 import { globalStyle } from './commons/styles/global-style'
-import Polyrhythm from './components/Polyrhythm/Polyrhythm'
-import Starter from './components/Polyrhythm/Starter'
+import Polyrhythm from './components/Polyrhythm'
+import Starter from './components/Starter'
 
 const Container = styled.div`
   width: 100vw;

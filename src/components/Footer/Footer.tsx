@@ -1,8 +1,8 @@
-import Introduce from '@/components/Introduce'
+import Introduce from '@/components/Footer/Introduce'
+import MasterVolumeSlider from '@/components/Footer/MasterVolumeSlider'
+import Player from '@/components/Footer/Player'
 import styled from '@emotion/styled'
 import React from 'react'
-import MasterVolumeController from './Controller/Config/MasterVolumeController'
-import Player from './Controller/Config/Player'
 
 const FooterContainer = styled.footer`
   background: #212428;
@@ -23,7 +23,7 @@ const Footer = () => {
     <FooterContainer>
       <Introduce />
       <Player />
-      <MasterVolumeController />
+      <MasterVolumeSlider />
     </FooterContainer>
   )
 }

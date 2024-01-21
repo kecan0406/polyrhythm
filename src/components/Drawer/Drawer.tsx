@@ -1,4 +1,4 @@
-import AudioInterface from '@/components/Polyrhythm/Controller/AudioInterface'
+import AudioInterface from '@/components/Drawer/AudioInterface'
 import DrawerButton from '@/elements/inputs/DrawerButton'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'

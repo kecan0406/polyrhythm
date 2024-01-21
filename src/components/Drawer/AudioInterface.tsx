@@ -1,5 +1,5 @@
-import Keyboard from '@/components/Polyrhythm/Controller/Config/Keyboard'
-import SynthSelector from '@/components/Polyrhythm/Controller/Config/SynthSelector'
+import Keyboard from '@/components/Drawer/Keyboard'
+import SynthSelector from '@/components/Drawer/SynthSelector'
 import styled from '@emotion/styled'
 import React from 'react'
 
