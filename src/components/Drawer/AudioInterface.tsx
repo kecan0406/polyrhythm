@@ -17,10 +17,10 @@ const AudioInterfaceContainer = styled.div`
 `
 
 const KeyboardPart = styled.div`
-  width: 90%;
+  flex-grow: 1;
 `
 const TunePart = styled.div`
-  width: 10%;
+  flex-grow: 0.1;
 `
 
 const AudioInterface = () => {

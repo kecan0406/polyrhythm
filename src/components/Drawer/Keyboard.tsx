@@ -89,7 +89,7 @@ const Keyboard = ({ onPlay }: KeyboardProps) => {
               none={isNone}
               index={index}
               isActive={noteSymbol === rhythmConfigNote}
-              onMouseDown={handlePressNote}
+              onMouseDown={isNone ? () => {} : handlePressNote}
               onMouseUp={() => (isPressRef.current = false)}
               onMouseMove={isNone ? () => {} : handleNote}
             />

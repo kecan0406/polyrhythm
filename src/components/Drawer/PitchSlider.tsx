@@ -6,9 +6,13 @@ import React, { useEffect, useState } from 'react'
 import { useSetRecoilState } from 'recoil'
 
 const PitchSliderContainer = styled.div`
-  width: 100%;
+  display: flex;
+  justify-content: center;
   height: 100%;
+  width: 100%;
+  flex-direction: column;
 `
+const PitchDisplay = styled.div``
 
 const PITCHES = [1, 2, 3, 4, 5, 6]
 const PitchSlider = () => {
@@ -25,6 +29,7 @@ const PitchSlider = () => {
 
   return (
     <PitchSliderContainer>
+      <PitchDisplay>{PITCHES[Math.round(pitchProgress * (PITCHES.length - 1))]}</PitchDisplay>
       <Slider progress={pitchProgress} onDrag={handlePitch} direction="vertical" />
     </PitchSliderContainer>
   )
