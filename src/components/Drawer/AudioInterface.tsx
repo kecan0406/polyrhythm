@@ -1,5 +1,5 @@
 import Keyboard from '@/components/Drawer/Keyboard'
-import PitchSlider from '@/components/Drawer/PitchSlider'
+import PitchController from '@/components/Drawer/PitchController'
 import SynthSelector from '@/components/Drawer/SynthSelector'
 import { Instruments } from '@/lib/instruments'
 import { NoteSymbol } from '@/recoil/config/atom'
@@ -13,14 +13,14 @@ const AudioInterfaceContainer = styled.div`
   margin-bottom: 4rem;
   color: rgb(209, 210, 211);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 `
 
 const KeyboardPart = styled.div`
   flex-grow: 1;
-`
-const TunePart = styled.div`
-  flex-grow: 0.1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 `
 
 const AudioInterface = () => {
@@ -43,13 +43,11 @@ const AudioInterface = () => {
 
   return (
     <AudioInterfaceContainer>
+      <SynthSelector />
       <KeyboardPart>
-        <SynthSelector />
         <Keyboard onPlay={handlePlayKeyboard} />
+        <PitchController />
       </KeyboardPart>
-      <TunePart>
-        <PitchSlider />
-      </TunePart>
     </AudioInterfaceContainer>
   )
 }

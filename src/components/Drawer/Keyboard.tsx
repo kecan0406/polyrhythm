@@ -11,8 +11,9 @@ const BLACK_NOTES: NoteSymbol[] = ['B#', 'C#', 'D#', 'E#', 'F#', 'G#', 'A#']
 const KeyboardContainer = styled.div`
   position: relative;
   display: flex;
+  width: 75%;
+  height: 125px;
   justify-content: center;
-  height: 80px;
 `
 type KeyboardNoteProps = { none?: boolean; isActive: boolean; index: number }
 const KeyboardNote = styled.button<KeyboardNoteProps>`
@@ -32,7 +33,7 @@ type NoteProps = { isBlack: boolean }
 const KeyboardNoteContainer = styled.div<NoteProps>`
   position: absolute;
   display: flex;
-  width: 75%;
+  width: 100%;
   flex-direction: row;
   height: ${({ isBlack }) => (isBlack ? 55 : 100)}%;
   & > ${KeyboardNote} {
