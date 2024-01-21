@@ -19,7 +19,7 @@ export const getProgressPercent = (
 ) => {
   switch (direction) {
     case 'horizontal':
-      return (e.clientX - progressBar.offsetLeft) / 100
+      return ((progressBar.offsetWidth + progressBar.offsetLeft - e.clientX) / progressBar.offsetWidth - 1) * -1
     case 'vertical':
       return -(e.clientY - progressBar.offsetTop - 100) / 100
   }

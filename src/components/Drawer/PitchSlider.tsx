@@ -1,4 +1,4 @@
-import ProgressBar from '@/elements/inputs/ProgressBar'
+import Slider from '@/elements/inputs/Slider'
 import { rhythmConfigState } from '@/recoil/config/atom'
 import { valueLimit } from '@/utils/math-util'
 import styled from '@emotion/styled'
@@ -10,18 +10,10 @@ const PitchSliderContainer = styled.div`
   height: 100%;
 `
 
-const Slider = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-`
-
 const PITCHES = [1, 2, 3, 4, 5, 6]
 const PitchSlider = () => {
   const [pitchProgress, setPitchProgress] = useState<number>(0)
   const setRhythmConfig = useSetRecoilState(rhythmConfigState)
-  const [isHover, setIsHover] = useState<boolean>(false)
 
   useEffect(() => {
     setRhythmConfig((currVal) => ({ ...currVal, pitch: Math.round(pitchProgress * (PITCHES.length - 1)) }))
@@ -33,9 +25,7 @@ const PitchSlider = () => {
 
   return (
     <PitchSliderContainer>
-      <Slider onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
-        <ProgressBar progress={pitchProgress} isHover={isHover} onDrag={handlePitch} direction="vertical" />
-      </Slider>
+      <Slider progress={pitchProgress} onDrag={handlePitch} direction="vertical" />
     </PitchSliderContainer>
   )
 }
