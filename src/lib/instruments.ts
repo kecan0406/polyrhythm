@@ -36,7 +36,7 @@ const getAmsineSynth = (): PolySynth => {
 }
 
 export type SynthName = keyof typeof SYNTH
-const SYNTH = { beep: () => getBeepSynth(), membrane: () => getMembraneSynth(), amsine: () => getAmsineSynth() }
+export const SYNTH = { beep: () => getBeepSynth(), membrane: () => getMembraneSynth(), amsine: () => getAmsineSynth() }
 
 export class Instruments {
   public synthName: SynthName

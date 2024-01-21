@@ -1,8 +1,8 @@
 import { SynthName } from '@/lib/instruments'
 import { rhythmConfigState } from '@/recoil/config/atom'
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
-import { useRecoilState } from 'recoil'
+import React from 'react'
+import { useSetRecoilState } from 'recoil'
 
 const SynthSelectorContainer = styled.div``
 const SynthSelectorLabel = styled.label``
@@ -11,15 +11,11 @@ const SynthOption = styled.option``
 
 const synths: SynthName[] = ['beep', 'membrane', 'amsine']
 const SynthSelector = () => {
-  const [rhythmConfig, setRhythmConfig] = useRecoilState(rhythmConfigState)
-  const [synthName, setSynthName] = useState<SynthName>(rhythmConfig.synthName)
-
-  useEffect(() => {
-    setRhythmConfig((currVal) => ({ ...currVal, synthName }))
-  }, [synthName])
+  const setRhythmConfig = useSetRecoilState(rhythmConfigState)
 
   const handleSynth = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
-    setSynthName(target.value as SynthName)
+    const synthName = target.value as SynthName
+    setRhythmConfig((currVal) => ({ ...currVal, synthName }))
   }
 
   return (

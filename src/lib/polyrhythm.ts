@@ -1,4 +1,4 @@
-import { PolyrhythmConfig } from '@/recoil/config/atom'
+import { rhythmConfig } from '@/recoil/config/atom'
 import { Point } from '@/types/canvas-types'
 import { getTransport } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
@@ -17,7 +17,7 @@ export class Rhythm {
 
   private scheduleId: number
 
-  constructor(id: number, { synthName, note, interval }: PolyrhythmConfig, position: Point) {
+  constructor(id: number, { synthName, note, interval }: rhythmConfig, position: Point) {
     this.id = id
     this.note = note
     this.interval = interval
