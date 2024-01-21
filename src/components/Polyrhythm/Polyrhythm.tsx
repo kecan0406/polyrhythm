@@ -1,4 +1,3 @@
-import { PolyrhythmConfigProvider } from '@/hooks/polyrhythm-config-hook'
 import { PolyrhythmProvider } from '@/hooks/polyrhythm-hook'
 import styled from '@emotion/styled'
 import React from 'react'
@@ -14,15 +13,13 @@ const PolyrhythmContainer = styled.div`
 
 const Polyrhythm = () => {
   return (
-    <PolyrhythmConfigProvider>
-      <PolyrhythmProvider>
-        <PolyrhythmContainer>
-          <PolyrhythmDrawer />
-          <PolyrhythmPlayground />
-        </PolyrhythmContainer>
-        <PolyrhythmFooter />
-      </PolyrhythmProvider>
-    </PolyrhythmConfigProvider>
+    <PolyrhythmProvider>
+      <PolyrhythmContainer>
+        <PolyrhythmDrawer />
+        <PolyrhythmPlayground />
+      </PolyrhythmContainer>
+      <PolyrhythmFooter />
+    </PolyrhythmProvider>
   )
 }
 

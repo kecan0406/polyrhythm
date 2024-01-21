@@ -1,7 +1,8 @@
-import { usePolyrhythmConfig } from '@/hooks/polyrhythm-config-hook'
 import { SynthName } from '@/lib/instruments'
+import { rhythmConfigState } from '@/recoil/config/atom'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
+import { useRecoilState } from 'recoil'
 
 const SynthControllerContainer = styled.div``
 const SynthLabel = styled.label``
@@ -10,11 +11,11 @@ const SynthOption = styled.option``
 
 const synths: SynthName[] = ['beep', 'membrane', 'amsine']
 const SynthController = () => {
-  const polyrhythmConfig = usePolyrhythmConfig()
-  const [synthName, setSynthName] = useState<SynthName>(polyrhythmConfig.synthName)
+  const [rhythmConfig, setRhythmConfig] = useRecoilState(rhythmConfigState)
+  const [synthName, setSynthName] = useState<SynthName>(rhythmConfig.synthName)
 
   useEffect(() => {
-    polyrhythmConfig.synthName = synthName
+    setRhythmConfig((currVal) => ({ ...currVal, synthName }))
   }, [synthName])
 
   const handleSynth = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {

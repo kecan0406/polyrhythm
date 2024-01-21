@@ -1,7 +1,8 @@
-import { usePolyrhythmConfig } from '@/hooks/polyrhythm-config-hook'
+import { rhythmConfigState } from '@/recoil/config/atom'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useEffect, useRef, useState } from 'react'
+import { useRecoilState } from 'recoil'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
 
 const WHITE_NOTES: Note[] = ['C5', 'D5', 'E5', 'F5', 'G5', 'A5', 'B5']
@@ -46,12 +47,12 @@ const PianoNotes = styled.div<NoteProps>`
 `
 
 const Piano = () => {
-  const polyrhythmConfig = usePolyrhythmConfig()
-  const [note, setNote] = useState<Note>(polyrhythmConfig.note)
+  const [rhythmConfig, setRhythmConfig] = useRecoilState(rhythmConfigState)
+  const [note, setNote] = useState<Note>(rhythmConfig.note)
   const isPressRef = useRef<boolean>(false)
 
   useEffect(() => {
-    polyrhythmConfig.note = note
+    setRhythmConfig((currVal) => ({ ...currVal, note }))
   }, [note])
 
   const handleNote = ({ currentTarget }: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

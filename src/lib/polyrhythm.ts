@@ -1,4 +1,4 @@
-import { PolyrhythmConfig } from '@/hooks/polyrhythm-config-hook'
+import { PolyrhythmConfig } from '@/recoil/config/atom'
 import { Point } from '@/types/canvas-types'
 import { getTransport } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
