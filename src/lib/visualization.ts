@@ -1,6 +1,6 @@
 import { TWELVE_TONE_COLORS } from '@/constants/chromesthesia'
 import { Point } from '@/types/canvas-types'
-import { OPACITY_REGEX, PI2, QUARTER_NOTE, getDivRatio } from '@/utils/math-util'
+import { OPACITY_REGEX, PI2, PI_DEG, QUARTER_NOTE, getDivRatio } from '@/utils/math-util'
 import { Rhythm } from './polyrhythm'
 
 export class Visualization {
@@ -53,8 +53,7 @@ export class PreviewPolygon implements Visual {
 
   private getArcPoint(i: number): Point {
     const { interval, position } = this
-    const arc = (i * PI2) / interval
-
+    const arc = (i * PI2) / interval + PI_DEG
     return { x: position.x + this.radius * Math.cos(arc), y: position.y + this.radius * Math.sin(arc) }
   }
 }
@@ -117,7 +116,7 @@ export class Polygon implements Visual {
 
   private getArcPoint(i: number): Point {
     const { interval, position } = this.rhythm
-    const arc = (i * PI2) / interval
+    const arc = (i * PI2) / interval + PI_DEG
 
     return { x: position.x + this.radius * Math.cos(arc), y: position.y + this.radius * Math.sin(arc) }
   }

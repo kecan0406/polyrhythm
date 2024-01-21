@@ -2,6 +2,7 @@ import { MouseEvent } from 'react'
 import { Decibels } from 'tone/build/esm/core/type/Units'
 
 export const PI2 = 2 * Math.PI
+export const PI_DEG = 1.5 * Math.PI
 export const QUARTER_NOTE = 768
 export const getDivRatio = (dividend: number, divisor: number): [number, number] => {
   return [Math.trunc(dividend / divisor), (dividend % divisor) / divisor]

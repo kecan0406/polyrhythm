@@ -53,7 +53,7 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   const handleWheel = (e: React.WheelEvent) => {
     const plus = e.deltaY < 0 ? 1 : -1
     setRhythmConfig(({ interval: currInterval, ...currVal }) => {
-      const interval = valueLimit(currInterval + plus, 2, Infinity)
+      const interval = valueLimit(currInterval + plus, 2, 16)
       return { ...currVal, interval }
     })
   }
