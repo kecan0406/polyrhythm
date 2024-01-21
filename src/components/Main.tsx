@@ -1,9 +1,12 @@
 import { useCanvas, useClientWidthHeight } from '@/hooks/canvas-hook'
 import { usePolyrhythmActions } from '@/hooks/polyrhythm-hook'
-import { useAnimate, useVisualization } from '@/hooks/visualization-hook'
+import { getAnimate, useVisualization } from '@/hooks/visualization-hook'
+import { rhythmConfigState } from '@/recoil/config/atom'
 import { CanvasSize } from '@/types/canvas-types'
+import { valueLimit } from '@/utils/math-util'
 import styled from '@emotion/styled'
 import React, { RefObject, useRef } from 'react'
+import { useSetRecoilState } from 'recoil'
 
 const MainContainer = styled.div`
   overflow: hidden;
@@ -30,9 +33,10 @@ const CanvasVisualization = styled.canvas`
 
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
+  const setRhythmConfig = useSetRecoilState(rhythmConfigState)
   const polyrhythmActions = usePolyrhythmActions()
   const visualization = useVisualization()
-  const animate = useAnimate(visualization)
+
   const handleRegister = (e: React.MouseEvent) => {
     polyrhythmActions.register({ x: e.clientX, y: e.clientY })
   }
@@ -42,6 +46,28 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
     e.preventDefault()
   }
 
-  const canvasRef = useCanvas(canvasSize, animate)
-  return <CanvasVisualization ref={canvasRef} onClick={handleRegister} onContextMenu={handleDeregister} />
+  const handlePreview = (e: React.MouseEvent) => {
+    visualization.preview.position = { x: e.clientX, y: e.clientY }
+  }
+
+  const handleWheel = (e: React.WheelEvent) => {
+    const plus = e.deltaY < 0 ? 1 : -1
+    setRhythmConfig(({ interval: currInterval, ...currVal }) => {
+      const interval = valueLimit(currInterval + plus, 2, Infinity)
+      return { ...currVal, interval }
+    })
+  }
+
+  const canvasRef = useCanvas(canvasSize, getAnimate(visualization))
+  return (
+    <CanvasVisualization
+      ref={canvasRef}
+      onClick={handleRegister}
+      onContextMenu={handleDeregister}
+      onMouseMove={handlePreview}
+      onMouseEnter={() => (visualization.preview.isShow = true)}
+      onMouseLeave={() => (visualization.preview.isShow = false)}
+      onWheel={handleWheel}
+    />
+  )
 }

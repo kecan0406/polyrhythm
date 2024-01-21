@@ -17,6 +17,14 @@ export const rhythmConfigPitchState = selector({
   },
 })
 
+export const rhythmConfigIntervalState = selector({
+  key: 'rhythmConfigInterval',
+  get: ({ get }) => {
+    const { interval } = get(rhythmConfigState)
+    return interval
+  },
+})
+
 export const rhythmConfigNoteSymbolState = selector({
   key: 'rhythmConfigNoteSymbol',
   get: ({ get }) => {
