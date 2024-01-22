@@ -1,6 +1,6 @@
 import Keyboard from '@/components/Drawer/Keyboard'
 import PitchController from '@/components/Drawer/PitchController'
-import SynthSelector from '@/components/Drawer/SynthSelector'
+import SynthController from '@/components/Drawer/SynthController'
 import { Instruments } from '@/lib/instruments'
 import { NoteSymbol } from '@/recoil/config/atom'
 import { rhythmConfigPitchState, rhythmConfigSynthNameState } from '@/recoil/config/selector'
@@ -11,16 +11,20 @@ import { getDestination } from 'tone'
 
 const AudioInterfaceContainer = styled.div`
   margin-bottom: 4rem;
-  color: rgb(209, 210, 211);
   display: flex;
   flex-direction: column;
 `
 
 const KeyboardPart = styled.div`
-  flex-grow: 1;
   display: flex;
-  flex-direction: row;
+  align-items: end;
   justify-content: center;
+`
+const KeyboardSynth = styled.div`
+  width: 75%;
+`
+const KeyboardPitch = styled.div`
+  width: 10%;
 `
 
 const AudioInterface = () => {
@@ -43,10 +47,14 @@ const AudioInterface = () => {
 
   return (
     <AudioInterfaceContainer>
-      <SynthSelector />
       <KeyboardPart>
-        <Keyboard onPlay={handlePlayKeyboard} />
-        <PitchController />
+        <KeyboardSynth>
+          <SynthController />
+          <Keyboard onPlay={handlePlayKeyboard} />
+        </KeyboardSynth>
+        <KeyboardPitch>
+          <PitchController />
+        </KeyboardPitch>
       </KeyboardPart>
     </AudioInterfaceContainer>
   )

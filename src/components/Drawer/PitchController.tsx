@@ -6,10 +6,9 @@ import React from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 
 const PitchControllerContainer = styled.div`
-  height: 100%;
-  width: 20px;
-  margin: 0 10px;
   display: flex;
+  margin: 0 20px;
+  height: 100px;
   align-items: center;
   flex-direction: column;
   justify-content: space-around;
@@ -31,7 +30,7 @@ const PitchDot = styled.div<PitchDotProps>`
   border: 0 solid #fff;
   background-color: #aaa;
   border-radius: 9999px;
-  animation: ${({ isActive }) => pitchDotAnimation(isActive)} 0.15s ease-in-out forwards;
+  animation: ${({ isActive }) => pitchDotAnimation(isActive)} 0.1s ease-out forwards;
 `
 const pitchDotAnimation = (isActive: boolean) => keyframes`
     from {
