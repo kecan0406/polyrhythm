@@ -1,4 +1,5 @@
 import AudioInterface from '@/components/Drawer/AudioInterface'
+import RhythmList from '@/components/Drawer/RhythmList'
 import DrawerButton from '@/elements/inputs/DrawerButton'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
@@ -9,7 +10,7 @@ const DrawerContainer = styled.div<DrawerProps>`
   background: #17191d;
   position: absolute;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   justify-content: space-between;
   width: 260px;
   height: 100%;
@@ -35,6 +36,7 @@ const Drawer = () => {
 
   return (
     <DrawerContainer initialRender={initialRender} isOpen={isOpen}>
+      <RhythmList />
       <AudioInterface />
       <DrawerButton onClick={handleDrawer} isOpen={isOpen} />
     </DrawerContainer>
