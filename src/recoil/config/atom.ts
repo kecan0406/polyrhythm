@@ -8,6 +8,7 @@ export type rhythmConfig = {
   noteSymbol: NoteSymbol
   pitch: number
 }
+
 export const rhythmConfigState = atom<rhythmConfig>({
   key: 'rhythmConfig',
   default: {

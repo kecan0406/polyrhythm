@@ -1,11 +1,10 @@
 import { usePolyrhythmValue } from '@/hooks/polyrhythm-hook'
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const RhythmListContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 50%;
   overflow: auto;
 `
 const RhythmLists = styled.ul``
@@ -17,7 +16,7 @@ const RhythmListItem = styled.li<RhythmListItemProps>`
   height: 46px;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.1s ease;
   background-color: ${({ selected }) => selected && '#3e3e3e'};
   :hover {
     background-color: ${({ selected }) => (selected ? '#3e3e3e' : '#282828')};
@@ -31,8 +30,15 @@ const Typography = styled.span`
 `
 
 const RhythmList = () => {
-  const [selectedId, setSelectedId] = useState<number | null>(null)
   const polyrhythmValue = usePolyrhythmValue()
+  const [selectedId, setSelectedId] = useState<number | null>(null)
+
+  useEffect(() => {
+    const rhythm = polyrhythmValue.find(({ id }) => id === selectedId)
+    if (rhythm) {
+      console.log(rhythm)
+    }
+  }, [selectedId])
 
   const handleSelectRhythm = (id: number) => {
     setSelectedId(selectedId === id ? null : id)

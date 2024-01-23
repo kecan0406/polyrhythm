@@ -33,8 +33,7 @@ export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) 
   const actions: PolyrhythmActions = useMemo(
     () => ({
       register: (position: Point) => {
-        const id = polyrhythm.length
-        const rhythm = new Rhythm(id, rhythmConfig, position)
+        const rhythm = new Rhythm(polyrhythm.length, rhythmConfig, position)
         rhythm.instrument.connect(freeVerb)
         setPolyrhythm(polyrhythm.concat(rhythm))
       },
