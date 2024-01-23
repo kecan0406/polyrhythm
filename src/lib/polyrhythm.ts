@@ -1,7 +1,7 @@
 import { rhythmConfig } from '@/recoil/rhythm/atom'
 import { Point } from '@/types/canvas-types'
 import { QUARTER_NOTE } from '@/utils/math-util'
-import { getTransport } from 'tone'
+import { getDestination, getTransport } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
 import { Instruments } from './instruments'
 
@@ -20,6 +20,7 @@ export class Rhythm {
     this.config = rhythmConfig
     this.position = position
     this.instrument = new Instruments(this.config.synthName)
+    this.instrument.connect(getDestination())
     this.scheduleId = this.scheduleRepeat()
   }
 

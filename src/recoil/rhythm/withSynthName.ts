@@ -2,8 +2,8 @@ import { SynthName } from '@/lib/instruments'
 import { DefaultValue, selector } from 'recoil'
 import rhythmConfigAtom from './atom'
 
-const rhythmWIthSynthName = selector<SynthName>({
-  key: 'rhythmWIthSynthName',
+const rhythmWithSynthName = selector<SynthName>({
+  key: 'rhythmWithSynthName',
   get: ({ get }) => get(rhythmConfigAtom).synthName,
   set: ({ set, get }, newValue) => {
     const { ...rhythmConfig } = get(rhythmConfigAtom)
@@ -14,4 +14,4 @@ const rhythmWIthSynthName = selector<SynthName>({
   },
 })
 
-export default rhythmWIthSynthName
+export default rhythmWithSynthName

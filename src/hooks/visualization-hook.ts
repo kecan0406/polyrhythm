@@ -1,13 +1,13 @@
 import { Visualization } from '@/lib/visualization'
+import polyrhythmAtom from '@/recoil/polyrhythm'
 import withInterval from '@/recoil/rhythm/withInterval'
 import { Size } from '@/types/canvas-types'
 import { useEffect, useMemo } from 'react'
 import { useRecoilValue } from 'recoil'
-import { usePolyrhythmValue } from './polyrhythm-hook'
 
 export const useVisualization = () => {
   const visualization = useMemo(() => new Visualization(), [])
-  const polyrhythm = usePolyrhythmValue()
+  const polyrhythm = useRecoilValue(polyrhythmAtom)
   const rhythmInterval = useRecoilValue(withInterval)
 
   useEffect(() => {

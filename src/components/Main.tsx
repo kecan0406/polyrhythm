@@ -1,12 +1,14 @@
 import { useCanvas, useClientWidthHeight } from '@/hooks/canvas-hook'
-import { usePolyrhythmActions } from '@/hooks/polyrhythm-hook'
 import { getAnimate, useVisualization } from '@/hooks/visualization-hook'
-import { withInterval } from '@/recoil/rhythm'
-import { CanvasSize } from '@/types/canvas-types'
+import { Rhythm } from '@/lib/polyrhythm'
+import polyrhythmAtom from '@/recoil/polyrhythm'
+import rhythmConfigAtom, { withInterval } from '@/recoil/rhythm'
+import { CanvasSize, Point } from '@/types/canvas-types'
 import { valueLimit } from '@/utils/math-util'
 import styled from '@emotion/styled'
-import React, { RefObject, useRef } from 'react'
-import { useSetRecoilState } from 'recoil'
+import React, { RefObject, useEffect, useRef } from 'react'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { getTransport } from 'tone'
 
 const MainContainer = styled.div`
   overflow: hidden;
@@ -34,15 +36,27 @@ const CanvasVisualization = styled.canvas`
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   const setRhythmInterval = useSetRecoilState(withInterval)
-  const polyrhythmActions = usePolyrhythmActions()
+  const [polyrhythm, setPolyrhythm] = useRecoilState(polyrhythmAtom)
+  const rhythmConfig = useRecoilValue(rhythmConfigAtom)
   const visualization = useVisualization()
 
+  useEffect(() => {
+    const transport = getTransport()
+    transport.loop = true
+    transport.loopStart = 0
+    transport.loopEnd = '1m'
+    transport.timeSignature = [4, 4]
+  }, [])
+
   const handleRegister = (e: React.MouseEvent) => {
-    polyrhythmActions.register({ x: e.clientX, y: e.clientY })
+    const position: Point = { x: e.clientX, y: e.clientY }
+    setPolyrhythm(polyrhythm.concat(new Rhythm(polyrhythm.length, rhythmConfig, position)))
   }
 
   const handleDeregister = (e: React.MouseEvent) => {
-    polyrhythmActions.deregister()
+    const rhythm = polyrhythm.at(-1)
+    rhythm && rhythm.dispose()
+    setPolyrhythm(polyrhythm.slice(0, -1))
     e.preventDefault()
   }
 
@@ -50,7 +64,7 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
     visualization.preview.position = { x: e.clientX, y: e.clientY }
   }
 
-  const handleWheel = (e: React.WheelEvent) => {
+  const handlePreviewInterval = (e: React.WheelEvent) => {
     const plus = e.deltaY < 0 ? 1 : -1
     setRhythmInterval((currInterval) => valueLimit(currInterval + plus, 2, 16))
   }
@@ -64,7 +78,7 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
       onMouseMove={handlePreview}
       onMouseEnter={() => (visualization.preview.isShow = true)}
       onMouseLeave={() => (visualization.preview.isShow = false)}
-      onWheel={handleWheel}
+      onWheel={handlePreviewInterval}
     />
   )
 }

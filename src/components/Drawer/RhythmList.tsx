@@ -1,6 +1,7 @@
-import { usePolyrhythmValue } from '@/hooks/polyrhythm-hook'
+import polyrhythmAtom from '@/recoil/polyrhythm'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
+import { useRecoilValue } from 'recoil'
 
 const RhythmListContainer = styled.div`
   position: relative;
@@ -30,11 +31,11 @@ const Typography = styled.span`
 `
 
 const RhythmList = () => {
-  const polyrhythmValue = usePolyrhythmValue()
+  const polyrhythm = useRecoilValue(polyrhythmAtom)
   const [selectedId, setSelectedId] = useState<number | null>(null)
 
   useEffect(() => {
-    const rhythm = polyrhythmValue.find(({ id }) => id === selectedId)
+    const rhythm = polyrhythm.find(({ id }) => id === selectedId)
     if (rhythm) {
       console.log(rhythm)
     }
@@ -47,7 +48,7 @@ const RhythmList = () => {
   return (
     <RhythmListContainer>
       <RhythmLists>
-        {polyrhythmValue.map(({ id }) => (
+        {polyrhythm.map(({ id }) => (
           <RhythmListItem key={id} onClick={() => handleSelectRhythm(id)} selected={selectedId === id}>
             <Typography>Rhythm {id}</Typography>
           </RhythmListItem>
