@@ -1,5 +1,5 @@
 import { Rhythm } from '@/lib/polyrhythm'
-import { rhythmConfigState } from '@/recoil/config/atom'
+import rhythmConfigAtom from '@/recoil/rhythm'
 import { Point } from '@/types/canvas-types'
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useRecoilValue } from 'recoil'
@@ -20,7 +20,7 @@ const PolyrhythmActionsContext = createContext<PolyrhythmActions>({
 export const PolyrhythmProvider = ({ children }: { children: React.ReactNode }) => {
   const freeVerb = useMemo(() => new Freeverb().toDestination(), [])
   const [polyrhythm, setPolyrhythm] = useState<Rhythm[]>([])
-  const rhythmConfig = useRecoilValue(rhythmConfigState)
+  const rhythmConfig = useRecoilValue(rhythmConfigAtom)
 
   useEffect(() => {
     const transport = getTransport()

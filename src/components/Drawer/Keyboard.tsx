@@ -1,9 +1,9 @@
-import { NoteSymbol, rhythmConfigState } from '@/recoil/config/atom'
-import { rhythmConfigNoteSymbolState } from '@/recoil/config/selector'
+import { withNoteSymbol } from '@/recoil/rhythm'
+import { NoteSymbol } from '@/recoil/rhythm/atom'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useRef } from 'react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 
 const WHITE_NOTES: NoteSymbol[] = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
 const BLACK_NOTES: NoteSymbol[] = ['B#', 'C#', 'D#', 'E#', 'F#', 'G#', 'A#']
@@ -47,14 +47,13 @@ const KeyboardNoteContainer = styled.div<NoteProps>`
 
 type KeyboardProps = { onPlay: (note: NoteSymbol) => void }
 const Keyboard = ({ onPlay }: KeyboardProps) => {
-  const rhythmConfigNote = useRecoilValue(rhythmConfigNoteSymbolState)
-  const setRhythmConfig = useSetRecoilState(rhythmConfigState)
+  const [rhythmNoteSymbol, setRhythmNoteSymbol] = useRecoilState(withNoteSymbol)
   const isPressRef = useRef<boolean>(false)
 
   const handleNote = ({ currentTarget: { value } }: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    if (!isPressRef.current || value === rhythmConfigNote) return
+    if (!isPressRef.current || value === rhythmNoteSymbol) return
 
-    setRhythmConfig((currVal) => ({ ...currVal, noteSymbol: value as NoteSymbol }))
+    setRhythmNoteSymbol(value as NoteSymbol)
     onPlay(value as NoteSymbol)
   }
 
@@ -71,7 +70,7 @@ const Keyboard = ({ onPlay }: KeyboardProps) => {
             value={noteSymbol}
             key={noteSymbol}
             index={index}
-            isActive={noteSymbol === rhythmConfigNote}
+            isActive={noteSymbol === rhythmNoteSymbol}
             onMouseDown={handlePressNote}
             onMouseUp={() => (isPressRef.current = false)}
             onMouseMove={handleNote}
@@ -87,7 +86,7 @@ const Keyboard = ({ onPlay }: KeyboardProps) => {
               key={noteSymbol}
               none={isNone}
               index={index}
-              isActive={noteSymbol === rhythmConfigNote}
+              isActive={noteSymbol === rhythmNoteSymbol}
               onMouseDown={isNone ? () => {} : handlePressNote}
               onMouseUp={() => (isPressRef.current = false)}
               onMouseMove={isNone ? () => {} : handleNote}

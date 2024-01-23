@@ -1,4 +1,4 @@
-import { rhythmConfig } from '@/recoil/config/atom'
+import { rhythmConfig } from '@/recoil/rhythm/atom'
 import { Point } from '@/types/canvas-types'
 import { QUARTER_NOTE } from '@/utils/math-util'
 import { getTransport } from 'tone'

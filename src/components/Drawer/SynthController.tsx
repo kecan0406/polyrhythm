@@ -1,10 +1,9 @@
 import { SynthName } from '@/lib/instruments'
-import { rhythmConfigState } from '@/recoil/config/atom'
-import { rhythmConfigSynthNameState } from '@/recoil/config/selector'
+import withSynthName from '@/recoil/rhythm/withSynthName'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React from 'react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 
 const SynthControllerContainer = styled.div`
   height: 20px;
@@ -41,18 +40,17 @@ const pitchDotAnimation = (isActive: boolean) => keyframes`
 
 const SYNTH_DOTS: SynthName[] = ['beep', 'membrane', 'amsine']
 const SynthController = () => {
-  const rhythmConfigSynthName = useRecoilValue(rhythmConfigSynthNameState)
-  const setRhythmConfig = useSetRecoilState(rhythmConfigState)
+  const [configSynthName, setConfigSynthName] = useRecoilState(withSynthName)
 
   const handleSynth = ({ currentTarget: { value } }: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    setRhythmConfig((currVal) => ({ ...currVal, synthName: value as SynthName }))
+    setConfigSynthName(value as SynthName)
   }
 
   return (
     <SynthControllerContainer>
       {SYNTH_DOTS.map((synthName) => (
         <SynthDotButton key={synthName} onClick={handleSynth} value={synthName}>
-          <SynthDot isActive={rhythmConfigSynthName === synthName} />
+          <SynthDot isActive={configSynthName === synthName} />
         </SynthDotButton>
       ))}
     </SynthControllerContainer>

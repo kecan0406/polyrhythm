@@ -2,8 +2,9 @@ import Keyboard from '@/components/Drawer/Keyboard'
 import PitchController from '@/components/Drawer/PitchController'
 import SynthController from '@/components/Drawer/SynthController'
 import { Instruments } from '@/lib/instruments'
-import { NoteSymbol } from '@/recoil/config/atom'
-import { rhythmConfigPitchState, rhythmConfigSynthNameState } from '@/recoil/config/selector'
+import { NoteSymbol } from '@/recoil/rhythm/atom'
+import withPitch from '@/recoil/rhythm/withPitch'
+import withSynthName from '@/recoil/rhythm/withSynthName'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
@@ -28,21 +29,22 @@ const KeyboardPitch = styled.div`
 `
 
 const AudioInterface = () => {
-  const rhythmConfigSynthName = useRecoilValue(rhythmConfigSynthNameState)
-  const rhythmConfigPitch = useRecoilValue(rhythmConfigPitchState)
+  const rhythmSynthName = useRecoilValue(withSynthName)
+  const rhythmPitch = useRecoilValue(withPitch)
+
   const [instrument, setInstrument] = useState<Instruments>(() =>
-    new Instruments(rhythmConfigSynthName).connect(getDestination()),
+    new Instruments(rhythmSynthName).connect(getDestination()),
   )
 
   useEffect(() => {
     setInstrument((prevInst) => {
       prevInst.dispose()
-      return new Instruments(rhythmConfigSynthName).connect(getDestination())
+      return new Instruments(rhythmSynthName).connect(getDestination())
     })
-  }, [rhythmConfigSynthName])
+  }, [rhythmSynthName])
 
   const handlePlayKeyboard = (noteSymbol: NoteSymbol) => {
-    instrument.trigger(noteSymbol, rhythmConfigPitch, '8n')
+    instrument.trigger(noteSymbol, rhythmPitch, '8n')
   }
 
   return (

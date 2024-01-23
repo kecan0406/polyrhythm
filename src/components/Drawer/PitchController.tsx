@@ -1,9 +1,8 @@
-import { rhythmConfigState } from '@/recoil/config/atom'
-import { rhythmConfigPitchState } from '@/recoil/config/selector'
+import withPitch from '@/recoil/rhythm/withPitch'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React from 'react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 
 const PitchControllerContainer = styled.div`
   display: flex;
@@ -45,18 +44,17 @@ const pitchDotAnimation = (isActive: boolean) => keyframes`
 
 const PITCH_DOTS = [6, 5, 4, 2, 1]
 const PitchController = () => {
-  const rhythmConfigPitch = useRecoilValue(rhythmConfigPitchState)
-  const setRhythmConfig = useSetRecoilState(rhythmConfigState)
+  const [rhythmPitch, setRhythmPitch] = useRecoilState(withPitch)
 
   const handlePitch = ({ currentTarget: { value } }: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    setRhythmConfig((currVal) => ({ ...currVal, pitch: Number(value) }))
+    setRhythmPitch(Number(value))
   }
 
   return (
     <PitchControllerContainer>
       {PITCH_DOTS.map((value) => (
         <PitchDotButton key={value} onClick={handlePitch} value={value}>
-          <PitchDot isActive={rhythmConfigPitch === value} />
+          <PitchDot isActive={rhythmPitch === value} />
         </PitchDotButton>
       ))}
     </PitchControllerContainer>

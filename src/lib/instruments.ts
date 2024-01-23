@@ -1,4 +1,4 @@
-import { NoteSymbol } from '@/recoil/config/atom'
+import { NoteSymbol } from '@/recoil/rhythm/atom'
 import { AMSynth, InputNode, MembraneSynth, PolySynth, Synth, Volume } from 'tone'
 import { Note } from 'tone/build/esm/core/type/NoteUnits'
 import { Time } from 'tone/build/esm/core/type/Units'
