@@ -1,6 +1,6 @@
 import { SynthName } from '@/lib/instruments'
 import { Point } from '@/types/canvas-types'
-import { atom, atomFamily, selector } from 'recoil'
+import { atom, atomFamily, DefaultValue, selector } from 'recoil'
 
 export type RhythmId = number
 export type NoteSymbol = 'C' | 'D' | 'E' | 'F' | 'G' | 'A' | 'B' | 'B#' | 'C#' | 'D#' | 'E#' | 'F#' | 'G#' | 'A#'
@@ -52,13 +52,13 @@ export const rhythmConfigWithRegister = selector({
 
 export const rhythmConfigWithDeregister = selector({
   key: 'rhythmConfigWithDeregister',
-  get: ({ get }) => get(rhythmIdsAtom).at(-1),
-  set: ({ set, get, reset }) => {
-    const lastRhythmId = get(rhythmIdsAtom).at(-1)
-    if (lastRhythmId !== undefined) {
-      reset(rhythmConfigFamily(lastRhythmId))
-      set(rhythmIdsAtom, (prev) => prev.filter((id) => id !== lastRhythmId))
-    }
+  get: ({ get }) => get(rhythmIdsAtom).at(-1) ?? null,
+  set: ({ set, reset }, selectRhythmId) => {
+    if (selectRhythmId instanceof DefaultValue || selectRhythmId === null) return
+
+    reset(rhythmConfigFamily(selectRhythmId))
+    set(rhythmIdsAtom, (prev) => prev.filter((id) => id !== selectRhythmId))
+    set(rhythmSelectAtom, null)
   },
 })
 
@@ -75,11 +75,8 @@ export const rhythmConfigWithSelect = selector({
   },
   set: ({ set, get }, newValue) => {
     const rhythmId = get(rhythmSelectAtom)
-    if (rhythmId === null) {
-      set(rhythmConfigAtom, newValue)
-    } else {
-      set(rhythmConfigFamily(rhythmId), newValue)
-    }
+    const rhythmAtom = rhythmId === null ? rhythmConfigAtom : rhythmConfigFamily(rhythmId)
+    set(rhythmAtom, newValue)
   },
 })
 

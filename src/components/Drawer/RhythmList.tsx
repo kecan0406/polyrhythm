@@ -3,7 +3,7 @@ import { rhythmConfigFamily, RhythmId, rhythmIdsAtom, rhythmSelectAtom } from '@
 import { QUARTER_NOTE } from '@/utils/math-util'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { getDestination, getTransport } from 'tone'
 
 const RhythmListContainer = styled.div`
@@ -29,14 +29,14 @@ const RhythmListItem = styled.li<RhythmListItemProps>`
 const RhythmList = () => {
   const rhythmIds = useRecoilValue(rhythmIdsAtom)
   const [selectedId, setSelectedId] = useState<RhythmId | null>(null)
-  const setSelectRhythmConfig = useSetRecoilState(rhythmSelectAtom)
+  const [selectRhythmConfig, setSelectRhythmConfig] = useRecoilState(rhythmSelectAtom)
 
   useEffect(() => {
-    setSelectRhythmConfig(selectedId)
-  }, [selectedId])
+    setSelectedId(selectRhythmConfig)
+  }, [selectRhythmConfig])
 
   const handleSelectRhythm = (id: RhythmId) => {
-    setSelectedId(selectedId === id ? null : id)
+    setSelectRhythmConfig(id === selectedId ? null : id)
   }
 
   return (

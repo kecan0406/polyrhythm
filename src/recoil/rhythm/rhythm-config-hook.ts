@@ -1,8 +1,13 @@
-import rhythmConfigAtom, { rhythmConfigWithDeregister, rhythmConfigWithRegister, RhythmId } from '@/recoil/rhythm/atom'
+import rhythmConfigAtom, {
+  rhythmConfigWithDeregister,
+  rhythmConfigWithRegister,
+  rhythmSelectAtom,
+} from '@/recoil/rhythm/atom'
 import { Point } from '@/types/canvas-types'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 
 export const usePolyrhythmAction = () => {
+  const selectRhythmId = useRecoilValue(rhythmSelectAtom)
   const setRhythmConfig = useSetRecoilState(rhythmConfigWithRegister)
   const setDeregister = useSetRecoilState(rhythmConfigWithDeregister)
   const rhythmConfig = useRecoilValue(rhythmConfigAtom)
@@ -11,8 +16,8 @@ export const usePolyrhythmAction = () => {
     setRhythmConfig({ ...rhythmConfig, position })
   }
 
-  const deRegister = (rhythmId?: RhythmId) => {
-    setDeregister(rhythmId)
+  const deRegister = () => {
+    setDeregister(selectRhythmId)
   }
 
   return { register, deRegister }
