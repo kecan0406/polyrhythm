@@ -1,4 +1,4 @@
-import withPitch from '@/recoil/rhythm/withPitch'
+import { rhythmWithPitch } from '@/recoil/rhythm'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React from 'react'
@@ -44,7 +44,7 @@ const pitchDotAnimation = (isActive: boolean) => keyframes`
 
 const PITCH_DOTS = [6, 5, 4, 2, 1]
 const PitchController = () => {
-  const [rhythmPitch, setRhythmPitch] = useRecoilState(withPitch)
+  const [rhythmPitch, setRhythmPitch] = useRecoilState(rhythmWithPitch)
 
   const handlePitch = ({ currentTarget: { value } }: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setRhythmPitch(Number(value))

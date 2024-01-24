@@ -7,6 +7,7 @@ import { Transport } from 'tone/build/esm/core/clock/Transport'
 
 export class Visualization {
   public preview: PreviewPolygon = new PreviewPolygon()
+
   private visuals: Visual[] = []
   private readonly transport: Transport = getTransport()
 

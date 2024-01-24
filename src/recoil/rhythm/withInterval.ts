@@ -1,6 +1,5 @@
-import { DefaultValue, selector } from 'recoil'
-
 import { rhythmWithSelect } from '@/recoil/rhythm/index'
+import { DefaultValue, selector } from 'recoil'
 
 const rhythmWithInterval = selector<number>({
   key: 'rhythmWithInterval',

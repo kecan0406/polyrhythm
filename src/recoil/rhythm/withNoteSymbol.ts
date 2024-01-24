@@ -1,7 +1,6 @@
 import { rhythmWithSelect } from '@/recoil/rhythm/index'
-import { DefaultValue, selector } from 'recoil'
-
 import { NoteSymbol } from '@/types/rhythm-types'
+import { DefaultValue, selector } from 'recoil'
 
 const rhythmWithNoteSymbol = selector<NoteSymbol>({
   key: 'rhythmWithNoteSymbol',

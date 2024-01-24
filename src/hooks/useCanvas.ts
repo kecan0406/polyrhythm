@@ -1,5 +1,5 @@
-import { CanvasSize, Size } from '@/types/canvas-types'
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { CanvasSize } from '@/types/canvas-types'
+import { RefObject, useEffect, useRef } from 'react'
 
 export const useCanvas = (
   { width, height }: CanvasSize,
@@ -33,20 +33,4 @@ export const useCanvas = (
   }, [width, height, animate])
 
   return canvasRef
-}
-
-export const useClientWidthHeight = (ref: RefObject<HTMLElement>): Size => {
-  const [widthHeight, setWidthHeight] = useState<Size>({ width: 0, height: 0 })
-  useEffect(() => {
-    const setClientWidthHeight = () => {
-      const { clientWidth, clientHeight } = ref.current!
-      setWidthHeight({ width: clientWidth, height: clientHeight })
-    }
-    setClientWidthHeight()
-
-    window.addEventListener('resize', setClientWidthHeight)
-    return () => window.removeEventListener('resize', setClientWidthHeight)
-  }, [])
-
-  return widthHeight
 }

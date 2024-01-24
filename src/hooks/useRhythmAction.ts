@@ -1,6 +1,7 @@
-import { rhythmWithDeRegister, rhythmWithRegister } from '@/recoil/rhythm'
+import { rhythmWithDeRegister, rhythmWithInterval, rhythmWithRegister } from '@/recoil/rhythm'
 import rhythmAtom, { selectRhythmIdAtom } from '@/recoil/rhythm/atom'
 import { Point } from '@/types/canvas-types'
+import { valueLimit } from '@/utils/math-util'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 
 export const useRhythmAction = () => {
@@ -8,6 +9,7 @@ export const useRhythmAction = () => {
   const selectRhythmId = useRecoilValue(selectRhythmIdAtom)
   const setRegister = useSetRecoilState(rhythmWithRegister)
   const setDeregister = useSetRecoilState(rhythmWithDeRegister)
+  const setRhythmInterval = useSetRecoilState(rhythmWithInterval)
 
   const register = (position: Point) => {
     setRegister({ ...rhythm, position })
@@ -17,5 +19,9 @@ export const useRhythmAction = () => {
     setDeregister(selectRhythmId)
   }
 
-  return { register, deRegister }
+  const setInterval = (plus: number) => {
+    setRhythmInterval((currInterval) => valueLimit(currInterval + plus, 2, 16))
+  }
+
+  return { register, deRegister, setInterval }
 }
