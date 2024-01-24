@@ -77,8 +77,8 @@ const RhythmItem = ({ rhythmId }: RhythmItemProps) => {
       0,
     )
     return () => {
-      transport.clear(scheduleId)
       instrument.dispose()
+      transport.clear(scheduleId)
     }
   }, [rhythm])
 

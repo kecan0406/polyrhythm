@@ -85,7 +85,13 @@ export class Instruments {
   }
 
   public dispose() {
-    this.volume.dispose()
-    setTimeout(() => this.synth.dispose(), 1000)
+    const safeDispose = setTimeout(
+      () => {
+        this.volume.dispose()
+        this.synth.dispose()
+        clearTimeout(safeDispose)
+      },
+      this.synth.toSeconds('8n') * 1000,
+    )
   }
 }
