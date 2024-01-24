@@ -1,12 +1,10 @@
-import AudioInterface from '@/components/Drawer/AudioInterface'
-import RhythmList from '@/components/Drawer/RhythmList'
 import DrawerButton from '@/elements/inputs/DrawerButton'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
 
-type DrawerProps = { isOpen: boolean; initialRender: boolean }
-const DrawerContainer = styled.div<DrawerProps>`
+type DrawerContainerProps = { isOpen: boolean; initialRender: boolean }
+const DrawerContainer = styled.div<DrawerContainerProps>`
   background: #17191d;
   position: absolute;
   display: flex;
@@ -25,7 +23,8 @@ const slideAnimation = (isShow: boolean) => keyframes`
     }
 `
 
-const Drawer = () => {
+type DrawerProps = { children: React.ReactNode }
+const Drawer = ({ children }: DrawerProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(true)
   const [initialRender, setInitialRender] = useState<boolean>(true)
 
@@ -36,8 +35,7 @@ const Drawer = () => {
 
   return (
     <DrawerContainer initialRender={initialRender} isOpen={isOpen}>
-      <RhythmList />
-      <AudioInterface />
+      {children}
       <DrawerButton onClick={handleDrawer} isOpen={isOpen} />
     </DrawerContainer>
   )

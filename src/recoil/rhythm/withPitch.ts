@@ -1,14 +1,14 @@
 import { DefaultValue, selector } from 'recoil'
-import rhythmConfigAtom from './atom'
+import { rhythmConfigWithSelect } from './atom'
 
 const rhythmWithPitch = selector<number>({
   key: 'rhythmWithPitch',
-  get: ({ get }) => get(rhythmConfigAtom).pitch,
-  set: ({ set, get }, newValue) => {
-    const { ...rhythmConfig } = get(rhythmConfigAtom)
-    set(rhythmConfigAtom, {
+  get: ({ get }) => get(rhythmConfigWithSelect).pitch,
+  set: ({ set, get }, pitch) => {
+    const rhythmConfig = get(rhythmConfigWithSelect)
+    set(rhythmConfigWithSelect, {
       ...rhythmConfig,
-      pitch: newValue instanceof DefaultValue ? rhythmConfig.pitch : newValue,
+      pitch: pitch instanceof DefaultValue ? rhythmConfig.pitch : pitch,
     })
   },
 })

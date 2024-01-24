@@ -1,5 +1,5 @@
 import { Visualization } from '@/lib/visualization'
-import polyrhythmAtom from '@/recoil/polyrhythm'
+import { rhythmConfigWithList } from '@/recoil/rhythm/atom'
 import withInterval from '@/recoil/rhythm/withInterval'
 import { Size } from '@/types/canvas-types'
 import { useEffect, useMemo } from 'react'
@@ -7,7 +7,7 @@ import { useRecoilValue } from 'recoil'
 
 export const useVisualization = () => {
   const visualization = useMemo(() => new Visualization(), [])
-  const polyrhythm = useRecoilValue(polyrhythmAtom)
+  const rhythmVisualConfig = useRecoilValue(rhythmConfigWithList)
   const rhythmInterval = useRecoilValue(withInterval)
 
   useEffect(() => {
@@ -15,11 +15,11 @@ export const useVisualization = () => {
   }, [rhythmInterval])
 
   useEffect(() => {
-    visualization.generateVisual(polyrhythm)
+    visualization.generateVisual(rhythmVisualConfig)
     return () => {
       visualization.clearVisual()
     }
-  }, [polyrhythm])
+  }, [rhythmVisualConfig])
 
   return visualization
 }

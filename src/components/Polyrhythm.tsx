@@ -1,3 +1,5 @@
+import AudioInterface from '@/components/Drawer/AudioInterface'
+import RhythmList from '@/components/Drawer/RhythmList'
 import styled from '@emotion/styled'
 import React from 'react'
 import Drawer from './Drawer/Drawer'
@@ -13,7 +15,10 @@ const PolyrhythmContainer = styled.div`
 const Polyrhythm = () => {
   return (
     <PolyrhythmContainer>
-      <Drawer />
+      <Drawer>
+        <RhythmList />
+        <AudioInterface />
+      </Drawer>
       <Main />
       <Footer />
     </PolyrhythmContainer>

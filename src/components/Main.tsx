@@ -1,13 +1,12 @@
 import { useCanvas, useClientWidthHeight } from '@/hooks/canvas-hook'
 import { getAnimate, useVisualization } from '@/hooks/visualization-hook'
-import { Rhythm } from '@/lib/polyrhythm'
-import polyrhythmAtom from '@/recoil/polyrhythm'
-import rhythmConfigAtom, { withInterval } from '@/recoil/rhythm'
-import { CanvasSize, Point } from '@/types/canvas-types'
+import { withInterval } from '@/recoil/rhythm'
+import { usePolyrhythmAction } from '@/recoil/rhythm/rhythm-config-hook'
+import { CanvasSize } from '@/types/canvas-types'
 import { valueLimit } from '@/utils/math-util'
 import styled from '@emotion/styled'
 import React, { RefObject, useEffect, useRef } from 'react'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useSetRecoilState } from 'recoil'
 import { getTransport } from 'tone'
 
 const MainContainer = styled.div`
@@ -35,10 +34,9 @@ const CanvasVisualization = styled.canvas`
 
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
-  const setRhythmInterval = useSetRecoilState(withInterval)
-  const [polyrhythm, setPolyrhythm] = useRecoilState(polyrhythmAtom)
-  const rhythmConfig = useRecoilValue(rhythmConfigAtom)
   const visualization = useVisualization()
+  const polyrhythmAction = usePolyrhythmAction()
+  const setRhythmInterval = useSetRecoilState(withInterval)
 
   useEffect(() => {
     const transport = getTransport()
@@ -49,14 +47,11 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   }, [])
 
   const handleRegister = (e: React.MouseEvent) => {
-    const position: Point = { x: e.clientX, y: e.clientY }
-    setPolyrhythm(polyrhythm.concat(new Rhythm(polyrhythm.length, rhythmConfig, position)))
+    polyrhythmAction.register({ x: e.clientX, y: e.clientY })
   }
 
   const handleDeregister = (e: React.MouseEvent) => {
-    const rhythm = polyrhythm.at(-1)
-    rhythm && rhythm.dispose()
-    setPolyrhythm(polyrhythm.slice(0, -1))
+    polyrhythmAction.deRegister()
     e.preventDefault()
   }
 

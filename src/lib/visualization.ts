@@ -1,14 +1,17 @@
 import { TWELVE_TONE_COLORS } from '@/constants/chromesthesia'
+import { RhythmConfig } from '@/recoil/rhythm/atom'
 import { Point } from '@/types/canvas-types'
 import { OPACITY_REGEX, PI2, PI_DEG, QUARTER_NOTE, getDivRatio } from '@/utils/math-util'
-import { Rhythm } from './polyrhythm'
+import { getTransport } from 'tone'
+import { Transport } from 'tone/build/esm/core/clock/Transport'
 
 export class Visualization {
   public preview: PreviewPolygon = new PreviewPolygon()
   private visuals: Visual[] = []
+  private readonly transport: Transport = getTransport()
 
-  public generateVisual(polyrhythm: Rhythm[]) {
-    this.visuals = polyrhythm.map((rhythm) => new Polygon(rhythm))
+  public generateVisual(rhythmConfigList: RhythmConfig[]) {
+    this.visuals = rhythmConfigList.map((config) => new Polygon(config))
   }
 
   public clearVisual() {
@@ -16,13 +19,15 @@ export class Visualization {
   }
 
   public drawAll(ctx: CanvasRenderingContext2D) {
-    this.visuals.forEach((visual) => visual.draw(ctx))
+    const currentTick = this.transport.ticks
+    const activeTime = this.transport.toTicks(0.15)
+    this.visuals.forEach((visual) => visual.draw(ctx, currentTick, activeTime))
     this.preview.draw(ctx)
   }
 }
 
 interface Visual {
-  draw(ctx: CanvasRenderingContext2D): void
+  draw(ctx: CanvasRenderingContext2D, currentTick: number, activeTime: number): void
 }
 
 export class PreviewPolygon implements Visual {
@@ -59,19 +64,21 @@ export class PreviewPolygon implements Visual {
 }
 
 export class Polygon implements Visual {
-  private readonly rhythm: Rhythm
+  private readonly rhythmConfig: RhythmConfig
 
   private readonly radius: number = 150
   private color: string = 'rgb(255,255,255,0.7)'
   private currentTick: number = 0
+  private activeTime: number = 0
 
-  constructor(rhythm: Rhythm) {
-    this.rhythm = rhythm
+  constructor(config: RhythmConfig) {
+    this.rhythmConfig = config
   }
 
-  public draw(ctx: CanvasRenderingContext2D) {
-    this.color = TWELVE_TONE_COLORS[this.rhythm.config.noteSymbol].replace(OPACITY_REGEX, '0.7')
-    this.currentTick = this.rhythm.transport.ticks
+  public draw(ctx: CanvasRenderingContext2D, currentTick: number, activeTime: number) {
+    this.color = TWELVE_TONE_COLORS[this.rhythmConfig.noteSymbol].replace(OPACITY_REGEX, '0.7')
+    this.currentTick = currentTick
+    this.activeTime = activeTime
 
     this.drawLines(ctx, 6)
     this.drawDot(ctx, 20, this.color)
@@ -80,19 +87,18 @@ export class Polygon implements Visual {
 
   private drawLines(ctx: CanvasRenderingContext2D, radius: number) {
     ctx.beginPath()
-    const activeTime = this.rhythm.transport.toTicks(0.15)
-    const vertexTick = this.currentTick % (QUARTER_NOTE / this.rhythm.config.interval)
+    const vertexTick = this.currentTick % (QUARTER_NOTE / this.rhythmConfig.interval)
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
     ctx.lineWidth = radius
     ctx.strokeStyle = this.color
-    if (activeTime >= vertexTick) {
-      const opacity = Number((1 - 0.3 * (vertexTick / activeTime)).toFixed(2))
+    if (this.activeTime >= vertexTick) {
+      const opacity = Number((1 - 0.3 * (vertexTick / this.activeTime)).toFixed(2))
       ctx.strokeStyle = this.color.replace(OPACITY_REGEX, `${opacity}`)
       ctx.lineWidth = radius * (1.5 * opacity)
     }
 
-    for (let line = 0; line <= this.rhythm.config.interval; line++) {
+    for (let line = 0; line <= this.rhythmConfig.interval; line++) {
       const { x, y } = this.getArcPoint(line)
       line ? ctx.lineTo(x, y) : ctx.moveTo(x, y)
     }
@@ -111,15 +117,14 @@ export class Polygon implements Visual {
   }
 
   private getArcPoint(i: number): Point {
-    const { interval } = this.rhythm.config
-    const { position } = this.rhythm
+    const { interval, position } = this.rhythmConfig
     const arc = (i * PI2) / interval + PI_DEG
 
     return { x: position.x + this.radius * Math.cos(arc), y: position.y + this.radius * Math.sin(arc) }
   }
 
   private getLinePoint(): Point {
-    const [line, ratio] = getDivRatio(this.currentTick, Math.round(QUARTER_NOTE / this.rhythm.config.interval))
+    const [line, ratio] = getDivRatio(this.currentTick, Math.round(QUARTER_NOTE / this.rhythmConfig.interval))
     const { x: fromX, y: fromY } = this.getArcPoint(line)
     const { x: toX, y: toY } = this.getArcPoint(line + 1)
 

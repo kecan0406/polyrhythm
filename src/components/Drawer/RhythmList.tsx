@@ -1,7 +1,10 @@
-import polyrhythmAtom from '@/recoil/polyrhythm'
+import { Instruments } from '@/lib/instruments'
+import { rhythmConfigFamily, RhythmId, rhythmIdsAtom, rhythmSelectAtom } from '@/recoil/rhythm/atom'
+import { QUARTER_NOTE } from '@/utils/math-util'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { getDestination, getTransport } from 'tone'
 
 const RhythmListContainer = styled.div`
   position: relative;
@@ -23,34 +26,25 @@ const RhythmListItem = styled.li<RhythmListItemProps>`
     background-color: ${({ selected }) => (selected ? '#3e3e3e' : '#282828')};
   }
 `
-const Typography = styled.span`
-  padding: 8px 16px;
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 400;
-`
-
 const RhythmList = () => {
-  const polyrhythm = useRecoilValue(polyrhythmAtom)
-  const [selectedId, setSelectedId] = useState<number | null>(null)
+  const rhythmIds = useRecoilValue(rhythmIdsAtom)
+  const [selectedId, setSelectedId] = useState<RhythmId | null>(null)
+  const setSelectRhythmConfig = useSetRecoilState(rhythmSelectAtom)
 
   useEffect(() => {
-    const rhythm = polyrhythm.find(({ id }) => id === selectedId)
-    if (rhythm) {
-      console.log(rhythm)
-    }
+    setSelectRhythmConfig(selectedId)
   }, [selectedId])
 
-  const handleSelectRhythm = (id: number) => {
+  const handleSelectRhythm = (id: RhythmId) => {
     setSelectedId(selectedId === id ? null : id)
   }
 
   return (
     <RhythmListContainer>
       <RhythmLists>
-        {polyrhythm.map(({ id }) => (
+        {rhythmIds.map((id) => (
           <RhythmListItem key={id} onClick={() => handleSelectRhythm(id)} selected={selectedId === id}>
-            <Typography>Rhythm {id}</Typography>
+            <RhythmItem rhythmId={id} />
           </RhythmListItem>
         ))}
       </RhythmLists>
@@ -58,3 +52,39 @@ const RhythmList = () => {
   )
 }
 export default RhythmList
+
+const RhythmItemContainer = styled.div`
+  display: flex;
+  flex: 1;
+`
+const Typography = styled.span`
+  padding: 8px 16px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 400;
+`
+
+type RhythmItemProps = { rhythmId: number }
+const RhythmItem = ({ rhythmId }: RhythmItemProps) => {
+  const rhythmConfig = useRecoilValue(rhythmConfigFamily(rhythmId))
+
+  useEffect(() => {
+    const transport = getTransport()
+    const instrument = new Instruments(rhythmConfig.synthName).connect(getDestination())
+    const scheduleId = transport.scheduleRepeat(
+      (time) => instrument.trigger(rhythmConfig.noteSymbol, rhythmConfig.pitch, '8n', time),
+      `${Math.round(QUARTER_NOTE / rhythmConfig.interval)}i`,
+      0,
+    )
+    return () => {
+      transport.clear(scheduleId)
+      instrument.dispose()
+    }
+  }, [rhythmConfig])
+
+  return (
+    <RhythmItemContainer>
+      <Typography>Rhythm {rhythmId}</Typography>
+    </RhythmItemContainer>
+  )
+}

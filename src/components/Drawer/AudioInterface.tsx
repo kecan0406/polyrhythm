@@ -6,7 +6,7 @@ import { NoteSymbol } from '@/recoil/rhythm/atom'
 import withPitch from '@/recoil/rhythm/withPitch'
 import withSynthName from '@/recoil/rhythm/withSynthName'
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useRecoilValue } from 'recoil'
 import { getDestination } from 'tone'
 
@@ -32,15 +32,10 @@ const AudioInterface = () => {
   const rhythmSynthName = useRecoilValue(withSynthName)
   const rhythmPitch = useRecoilValue(withPitch)
 
-  const [instrument, setInstrument] = useState<Instruments>(() =>
-    new Instruments(rhythmSynthName).connect(getDestination()),
-  )
+  const instrument = useMemo(() => new Instruments(rhythmSynthName).connect(getDestination()), [])
 
   useEffect(() => {
-    setInstrument((prevInst) => {
-      prevInst.dispose()
-      return new Instruments(rhythmSynthName).connect(getDestination())
-    })
+    instrument.changeSynth(rhythmSynthName)
   }, [rhythmSynthName])
 
   const handlePlayKeyboard = (noteSymbol: NoteSymbol) => {

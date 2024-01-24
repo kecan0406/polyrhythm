@@ -1,14 +1,14 @@
 import { DefaultValue, selector } from 'recoil'
-import rhythmConfigAtom, { NoteSymbol } from './atom'
+import { NoteSymbol, rhythmConfigWithSelect } from './atom'
 
 const rhythmWithNoteSymbol = selector<NoteSymbol>({
   key: 'rhythmWithNoteSymbol',
-  get: ({ get }) => get(rhythmConfigAtom).noteSymbol,
-  set: ({ set, get }, newValue) => {
-    const { ...rhythmConfig } = get(rhythmConfigAtom)
-    set(rhythmConfigAtom, {
+  get: ({ get }) => get(rhythmConfigWithSelect).noteSymbol,
+  set: ({ set, get }, noteSymbol) => {
+    const rhythmConfig = get(rhythmConfigWithSelect)
+    set(rhythmConfigWithSelect, {
       ...rhythmConfig,
-      noteSymbol: newValue instanceof DefaultValue ? rhythmConfig.noteSymbol : newValue,
+      noteSymbol: noteSymbol instanceof DefaultValue ? rhythmConfig.noteSymbol : noteSymbol,
     })
   },
 })

@@ -1,15 +1,15 @@
 import { SynthName } from '@/lib/instruments'
 import { DefaultValue, selector } from 'recoil'
-import rhythmConfigAtom from './atom'
+import { rhythmConfigWithSelect } from './atom'
 
 const rhythmWithSynthName = selector<SynthName>({
   key: 'rhythmWithSynthName',
-  get: ({ get }) => get(rhythmConfigAtom).synthName,
-  set: ({ set, get }, newValue) => {
-    const { ...rhythmConfig } = get(rhythmConfigAtom)
-    set(rhythmConfigAtom, {
+  get: ({ get }) => get(rhythmConfigWithSelect).synthName,
+  set: ({ set, get }, synthName) => {
+    const rhythmConfig = get(rhythmConfigWithSelect)
+    set(rhythmConfigWithSelect, {
       ...rhythmConfig,
-      synthName: newValue instanceof DefaultValue ? rhythmConfig.synthName : newValue,
+      synthName: synthName instanceof DefaultValue ? rhythmConfig.synthName : synthName,
     })
   },
 })
