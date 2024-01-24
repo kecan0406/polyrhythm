@@ -1,9 +1,24 @@
-import rhythmConfigAtom from './atom'
-import withInterval from './withInterval'
-import withNoteSymbol from './withNoteSymbol'
-import withPitch from './withPitch'
-import withSynthName from './withSynthName'
+import rhythmAtom, { rhythmIdsAtom, selectRhythmIdAtom } from './atom'
+import rhythmWithDeRegister from './withDeregister'
+import rhythmWithInterval from './withInterval'
+import rhythmWithList from './withList'
+import rhythmWithNoteSymbol from './withNoteSymbol'
+import rhythmWithPitch from './withPitch'
+import rhythmWithRegister from './withRegister'
+import rhythmWithSelect from './withSelect'
+import rhythmWithSynthName from './withSynthName'
 
-export { withInterval, withNoteSymbol, withPitch, withSynthName }
+export {
+  rhythmIdsAtom,
+  rhythmWithDeRegister,
+  rhythmWithInterval,
+  rhythmWithList,
+  rhythmWithNoteSymbol,
+  rhythmWithPitch,
+  rhythmWithRegister,
+  rhythmWithSelect,
+  rhythmWithSynthName,
+  selectRhythmIdAtom,
+}
 
-export default rhythmConfigAtom
+export default rhythmAtom

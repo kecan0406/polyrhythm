@@ -1,8 +1,7 @@
 import { useCanvas, useClientWidthHeight } from '@/hooks/canvas-hook'
+import { useRhythmAction } from '@/hooks/rhythm-config-hook'
 import { getAnimate, useVisualization } from '@/hooks/visualization-hook'
-import { withInterval } from '@/recoil/rhythm'
-import { rhythmSelectAtom } from '@/recoil/rhythm/atom'
-import { usePolyrhythmAction } from '@/recoil/rhythm/rhythm-config-hook'
+import { rhythmWithInterval, selectRhythmIdAtom } from '@/recoil/rhythm'
 import { CanvasSize } from '@/types/canvas-types'
 import { valueLimit } from '@/utils/math-util'
 import styled from '@emotion/styled'
@@ -36,10 +35,10 @@ const CanvasVisualization = styled.canvas`
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   const visualization = useVisualization()
-  const polyrhythmAction = usePolyrhythmAction()
-  const isSelect = useRecoilValue(rhythmSelectAtom) !== null
+  const polyrhythmAction = useRhythmAction()
+  const isSelect = useRecoilValue(selectRhythmIdAtom) !== null
 
-  const setRhythmInterval = useSetRecoilState(withInterval)
+  const setRhythmInterval = useSetRecoilState(rhythmWithInterval)
 
   useEffect(() => {
     const transport = getTransport()

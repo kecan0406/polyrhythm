@@ -1,5 +1,5 @@
 import { Instruments } from '@/lib/instruments'
-import { rhythmConfigFamily, RhythmId, rhythmIdsAtom, rhythmSelectAtom } from '@/recoil/rhythm/atom'
+import { rhythmAtomFamily, RhythmId, rhythmIdsAtom, selectRhythmIdAtom } from '@/recoil/rhythm/atom'
 import { QUARTER_NOTE } from '@/utils/math-util'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
@@ -29,14 +29,14 @@ const RhythmListItem = styled.li<RhythmListItemProps>`
 const RhythmList = () => {
   const rhythmIds = useRecoilValue(rhythmIdsAtom)
   const [selectedId, setSelectedId] = useState<RhythmId | null>(null)
-  const [selectRhythmConfig, setSelectRhythmConfig] = useRecoilState(rhythmSelectAtom)
+  const [rhythmId, setRhythmId] = useRecoilState(selectRhythmIdAtom)
 
   useEffect(() => {
-    setSelectedId(selectRhythmConfig)
-  }, [selectRhythmConfig])
+    setSelectedId(rhythmId)
+  }, [rhythmId])
 
   const handleSelectRhythm = (id: RhythmId) => {
-    setSelectRhythmConfig(id === selectedId ? null : id)
+    setRhythmId(id === selectedId ? null : id)
   }
 
   return (
@@ -66,21 +66,21 @@ const Typography = styled.span`
 
 type RhythmItemProps = { rhythmId: number }
 const RhythmItem = ({ rhythmId }: RhythmItemProps) => {
-  const rhythmConfig = useRecoilValue(rhythmConfigFamily(rhythmId))
+  const rhythm = useRecoilValue(rhythmAtomFamily(rhythmId))
 
   useEffect(() => {
     const transport = getTransport()
-    const instrument = new Instruments(rhythmConfig.synthName).connect(getDestination())
+    const instrument = new Instruments(rhythm.synthName).connect(getDestination())
     const scheduleId = transport.scheduleRepeat(
-      (time) => instrument.trigger(rhythmConfig.noteSymbol, rhythmConfig.pitch, '8n', time),
-      `${Math.round(QUARTER_NOTE / rhythmConfig.interval)}i`,
+      (time) => instrument.trigger(rhythm.noteSymbol, rhythm.pitch, '8n', time),
+      `${Math.round(QUARTER_NOTE / rhythm.interval)}i`,
       0,
     )
     return () => {
       transport.clear(scheduleId)
       instrument.dispose()
     }
-  }, [rhythmConfig])
+  }, [rhythm])
 
   return (
     <RhythmItemContainer>

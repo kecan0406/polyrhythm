@@ -1,5 +1,5 @@
-import { withNoteSymbol } from '@/recoil/rhythm'
-import { NoteSymbol } from '@/recoil/rhythm/atom'
+import { rhythmWithNoteSymbol } from '@/recoil/rhythm'
+import { NoteSymbol } from '@/types/rhythm-types'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useRef } from 'react'
@@ -47,7 +47,7 @@ const KeyboardNoteContainer = styled.div<NoteProps>`
 
 type KeyboardProps = { onPlay: (note: NoteSymbol) => void }
 const Keyboard = ({ onPlay }: KeyboardProps) => {
-  const [rhythmNoteSymbol, setRhythmNoteSymbol] = useRecoilState(withNoteSymbol)
+  const [rhythmNoteSymbol, setRhythmNoteSymbol] = useRecoilState(rhythmWithNoteSymbol)
   const isPressRef = useRef<boolean>(false)
 
   const handleNote = ({ currentTarget: { value } }: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

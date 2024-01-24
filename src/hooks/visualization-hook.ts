@@ -1,25 +1,24 @@
 import { Visualization } from '@/lib/visualization'
-import { rhythmConfigWithList } from '@/recoil/rhythm/atom'
-import withInterval from '@/recoil/rhythm/withInterval'
+import { rhythmWithInterval, rhythmWithList } from '@/recoil/rhythm'
 import { Size } from '@/types/canvas-types'
 import { useEffect, useMemo } from 'react'
 import { useRecoilValue } from 'recoil'
 
 export const useVisualization = () => {
   const visualization = useMemo(() => new Visualization(), [])
-  const rhythmVisualConfig = useRecoilValue(rhythmConfigWithList)
-  const rhythmInterval = useRecoilValue(withInterval)
+  const rhythms = useRecoilValue(rhythmWithList)
 
+  const rhythmInterval = useRecoilValue(rhythmWithInterval)
   useEffect(() => {
     visualization.preview.interval = rhythmInterval
   }, [rhythmInterval])
 
   useEffect(() => {
-    visualization.generateVisual(rhythmVisualConfig)
+    visualization.generateVisual(rhythms)
     return () => {
       visualization.clearVisual()
     }
-  }, [rhythmVisualConfig])
+  }, [rhythms])
 
   return visualization
 }
