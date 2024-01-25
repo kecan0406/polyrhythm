@@ -2,7 +2,7 @@ import { rhythmWithNoteSymbol } from '@/recoil/rhythm'
 import { NoteSymbol } from '@/types/rhythm-types'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { useRef } from 'react'
+import React, { useState } from 'react'
 import { useRecoilState } from 'recoil'
 
 const WHITE_NOTES: NoteSymbol[] = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
@@ -28,7 +28,7 @@ const keyboardAnimation = (range: number) => keyframes`
     } 
 `
 
-type NoteProps = { isBlack: boolean }
+type NoteProps = { isBlack?: boolean }
 const KeyboardNoteContainer = styled.div<NoteProps>`
   position: absolute;
   display: flex;
@@ -48,48 +48,42 @@ const KeyboardNoteContainer = styled.div<NoteProps>`
 type KeyboardProps = { onPlay: (note: NoteSymbol) => void }
 const Keyboard = ({ onPlay }: KeyboardProps) => {
   const [rhythmNoteSymbol, setRhythmNoteSymbol] = useRecoilState(rhythmWithNoteSymbol)
-  const isPressRef = useRef<boolean>(false)
+  const [press, setPress] = useState<boolean>(false)
 
-  const handleNote = ({ currentTarget: { value } }: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    if (!isPressRef.current || value === rhythmNoteSymbol) return
+  const handleNote = (noteSymbol: NoteSymbol, press: boolean, none?: boolean) => () => {
+    setPress(press)
+    if (!press || noteSymbol === rhythmNoteSymbol || none) return
 
-    setRhythmNoteSymbol(value as NoteSymbol)
-    onPlay(value as NoteSymbol)
-  }
-
-  const handlePressNote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    isPressRef.current = true
-    handleNote(e)
+    setRhythmNoteSymbol(noteSymbol)
+    onPlay(noteSymbol)
   }
 
   return (
     <KeyboardContainer>
-      <KeyboardNoteContainer isBlack={false}>
+      <KeyboardNoteContainer>
         {WHITE_NOTES.map((noteSymbol, index) => (
           <KeyboardNote
-            value={noteSymbol}
             key={noteSymbol}
             index={index}
-            isActive={noteSymbol === rhythmNoteSymbol}
-            onMouseDown={handlePressNote}
-            onMouseUp={() => (isPressRef.current = false)}
-            onMouseMove={handleNote}
+            isActive={rhythmNoteSymbol === noteSymbol}
+            onMouseDown={handleNote(noteSymbol, true)}
+            onMouseUp={handleNote(noteSymbol, false)}
+            onMouseMove={handleNote(noteSymbol, press)}
           />
         ))}
       </KeyboardNoteContainer>
-      <KeyboardNoteContainer isBlack={true}>
+      <KeyboardNoteContainer isBlack>
         {BLACK_NOTES.map((noteSymbol, index) => {
-          const isNone = index === 0 || index === 3
+          const none = index === 0 || index === 3
           return (
             <KeyboardNote
-              value={noteSymbol}
               key={noteSymbol}
-              none={isNone}
+              none={none}
               index={index}
-              isActive={noteSymbol === rhythmNoteSymbol}
-              onMouseDown={isNone ? () => {} : handlePressNote}
-              onMouseUp={() => (isPressRef.current = false)}
-              onMouseMove={isNone ? () => {} : handleNote}
+              isActive={rhythmNoteSymbol === noteSymbol}
+              onMouseDown={handleNote(noteSymbol, true, none)}
+              onMouseUp={handleNote(noteSymbol, false)}
+              onMouseMove={handleNote(noteSymbol, press, none)}
             />
           )
         })}

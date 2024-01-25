@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import React, { useState } from 'react'
 import * as Tone from 'tone'
 
-type StarterContainerProps = { isClicked: boolean }
+type StarterContainerProps = { clicked: boolean }
 const StarterContainer = styled.div<StarterContainerProps>`
   width: 100%;
   height: 100%;
@@ -21,7 +21,7 @@ const StarterContainer = styled.div<StarterContainerProps>`
     text-align: center;
     user-select: none;
   }
-  animation: ${({ isClicked }) => isClicked && fadeoutAnimation()} 1.5s forwards;
+  animation: ${({ clicked }) => clicked && fadeoutAnimation()} 1.5s forwards;
 `
 const fadeoutAnimation = () => keyframes`
     from {
@@ -39,22 +39,22 @@ const fadeoutAnimation = () => keyframes`
 
 type StarterProps = { onClick: () => void }
 const Starter = ({ onClick: close }: StarterProps) => {
-  const [isClicked, setIsClicked] = useState<boolean>(false)
+  const [clicked, setClicked] = useState<boolean>(false)
 
   const handleTransportStart = async () => {
-    if (isClicked) return
+    if (clicked) return
 
     Tone.setContext(new Tone.Context({ latencyHint: 'interactive' }))
     await Tone.start()
     const transport = Tone.getTransport()
     transport.start(0)
 
-    setIsClicked(true)
+    setClicked(true)
     close()
   }
 
   return (
-    <StarterContainer onClick={handleTransportStart} isClicked={isClicked}>
+    <StarterContainer onClick={handleTransportStart} clicked={clicked}>
       <h1>POLY RHYTHM</h1>
     </StarterContainer>
   )

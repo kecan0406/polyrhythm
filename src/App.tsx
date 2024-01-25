@@ -16,7 +16,10 @@ const App = () => {
   const [isMountMain, setIsMountMain] = useState<boolean>(false)
   const handlePolyrhythmReady = () => {
     setIsMountMain(true)
-    setTimeout(() => setIsMountStarter(false), 1500)
+    const fadeout = setTimeout(() => {
+      setIsMountStarter(false)
+      clearTimeout(fadeout)
+    }, 1500)
   }
 
   return (

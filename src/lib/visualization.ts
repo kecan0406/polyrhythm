@@ -34,12 +34,12 @@ interface Visual {
 export class PreviewPolygon implements Visual {
   private readonly radius: number = 150
   private readonly color: string = 'rgb(255,255,255,0.2)'
-  public isShow: boolean = false
+  public show: boolean = false
   public interval: number = 3
   public position: Point = { x: 0, y: 0 }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    this.isShow && this.drawLines(ctx, 6)
+    this.show && this.drawLines(ctx, 6)
   }
 
   private drawLines(ctx: CanvasRenderingContext2D, radius: number) {

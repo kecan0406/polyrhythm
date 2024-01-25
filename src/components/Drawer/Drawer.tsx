@@ -25,18 +25,18 @@ const slideAnimation = (isShow: boolean) => keyframes`
 
 type DrawerProps = { children: React.ReactNode }
 const Drawer = ({ children }: DrawerProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(true)
+  const [open, setOpen] = useState<boolean>(true)
   const [initialRender, setInitialRender] = useState<boolean>(true)
 
   const handleDrawer = () => {
-    setIsOpen(!isOpen)
+    setOpen(!open)
     setInitialRender(false)
   }
 
   return (
-    <DrawerContainer initialRender={initialRender} isOpen={isOpen}>
+    <DrawerContainer initialRender={initialRender} isOpen={open}>
       {children}
-      <DrawerButton onClick={handleDrawer} isOpen={isOpen} />
+      <DrawerButton onClick={handleDrawer} open={open} />
     </DrawerContainer>
   )
 }

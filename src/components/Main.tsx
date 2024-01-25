@@ -5,7 +5,7 @@ import { getAnimate, useVisualization } from '@/hooks/useVisualization'
 import { selectRhythmIdAtom } from '@/recoil/rhythm'
 import { CanvasSize } from '@/types/canvas-types'
 import styled from '@emotion/styled'
-import React, { RefObject, useRef } from 'react'
+import React, { MouseEvent, RefObject, WheelEvent, useRef } from 'react'
 import { useRecoilValue } from 'recoil'
 
 const MainContainer = styled.div`
@@ -19,6 +19,7 @@ const MainContainer = styled.div`
 const Main = () => {
   const mainRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null)
   const playgroundSize = useClientWidthHeight(mainRef)
+
   return (
     <MainContainer ref={mainRef}>
       <PolyrhythmCanvas canvasSize={playgroundSize} />
@@ -37,22 +38,22 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   const rhythmAction = useRhythmAction()
   const isSelect = useRecoilValue(selectRhythmIdAtom) !== null
 
-  const handleRegister = (e: React.MouseEvent) => {
+  const handleRegister = (e: MouseEvent) => {
     rhythmAction.register({ x: e.clientX, y: e.clientY })
   }
 
-  const handleDeregister = (e: React.MouseEvent) => {
+  const handleDeregister = (e: MouseEvent) => {
     rhythmAction.deRegister()
     e.preventDefault()
   }
 
-  const handlePreviewPosition = (e: React.MouseEvent) => {
-    visualization.preview.isShow = !isSelect
-    visualization.preview.position = { x: e.clientX, y: e.clientY }
+  const handleInterval = (e: WheelEvent) => {
+    rhythmAction.setInterval(e.deltaY < 0 ? 1 : -1)
   }
 
-  const handleInterval = (e: React.WheelEvent) => {
-    rhythmAction.setInterval(e.deltaY < 0 ? 1 : -1)
+  const handlePreview = (isShow: boolean) => (e: MouseEvent) => {
+    visualization.preview.show = isShow
+    visualization.preview.position = { x: e.clientX, y: e.clientY }
   }
 
   const canvasRef = useCanvas(canvasSize, getAnimate(visualization))
@@ -61,10 +62,10 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
       ref={canvasRef}
       onClick={handleRegister}
       onContextMenu={handleDeregister}
-      onMouseMove={handlePreviewPosition}
       onWheel={handleInterval}
-      onMouseEnter={() => (visualization.preview.isShow = true)}
-      onMouseLeave={() => (visualization.preview.isShow = false)}
+      onMouseEnter={handlePreview(true)}
+      onMouseLeave={handlePreview(false)}
+      onMouseMove={handlePreview(!isSelect)}
     />
   )
 }

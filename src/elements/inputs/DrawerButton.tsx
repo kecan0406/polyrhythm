@@ -25,27 +25,32 @@ const BarWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `
-type BarProps = { isPlus: boolean; isOpen: boolean; isHover: boolean }
+type BarProps = { isPlus: boolean; open: boolean; hover: boolean }
 const Bar = styled.div<BarProps>`
   background: white;
   border-radius: 9999px;
   width: 0.25rem;
   height: 0.75rem;
   transition: transform 0.25s;
-  transform: ${({ isPlus, isOpen, isHover }) => {
+  transform: ${({ isPlus, open, hover }) => {
     const translateY = `translateY(${isPlus ? 0.15 : -0.15}rem)`
-    const rotate = `rotate(${isOpen ? (isHover ? (isPlus ? 15 : -15) : 0) : isPlus ? -15 : 15}deg)`
+    const rotate = `rotate(${open ? (hover ? (isPlus ? 15 : -15) : 0) : isPlus ? -15 : 15}deg)`
     return `${translateY} ${rotate}`
   }};
 `
 
-const DrawerButton = ({ onClick, isOpen }: { onClick: () => void; isOpen: boolean }) => {
-  const [isHover, setIsHover] = useState<boolean>(false)
+const DrawerButton = ({ onClick, open }: { onClick: () => void; open: boolean }) => {
+  const [hover, setHover] = useState<boolean>(false)
+
+  const handleHover = (hover: boolean) => () => {
+    setHover(hover)
+  }
+
   return (
-    <DrawerHandler onClick={onClick} onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
+    <DrawerHandler onClick={onClick} onMouseEnter={handleHover(true)} onMouseLeave={handleHover(false)}>
       <BarWrapper>
-        <Bar isPlus={true} isOpen={isOpen} isHover={isHover} />
-        <Bar isPlus={false} isOpen={isOpen} isHover={isHover} />
+        <Bar isPlus={true} open={open} hover={hover} />
+        <Bar isPlus={false} open={open} hover={hover} />
       </BarWrapper>
     </DrawerHandler>
   )

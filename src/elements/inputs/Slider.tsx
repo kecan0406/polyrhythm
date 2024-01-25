@@ -14,18 +14,18 @@ const ProgressBarBackground = styled.div`
 const ProgressBarContainer = styled.div`
   position: relative;
 `
-type ProgressBarActiveProps = { percent: number; isHover: boolean; direction: 'horizontal' | 'vertical' }
+type ProgressBarActiveProps = { progress: number; hover: boolean; direction: 'horizontal' | 'vertical' }
 const ProgressBarActive = styled.div<ProgressBarActiveProps>`
   width: 100%;
-  transform: ${({ percent, direction }) => {
+  transform: ${({ progress, direction }) => {
     switch (direction) {
       case 'horizontal':
-        return `translateX(${(percent - 1) * 100}%)`
+        return `translateX(${(progress - 1) * 100}%)`
       case 'vertical':
-        return `translateY(${(1 - percent) * 100}%)`
+        return `translateY(${(1 - progress) * 100}%)`
     }
   }};
-  background: ${({ isHover }) => (isHover ? 'rgb(29, 185, 84)' : 'white')};
+  background: ${({ hover }) => (hover ? 'rgb(29, 185, 84)' : 'white')};
   touch-action: none;
 `
 
@@ -51,9 +51,13 @@ type ProgressBarProps = {
   direction: 'horizontal' | 'vertical'
 }
 const Slider = ({ progress, onDrag, direction }: ProgressBarProps) => {
-  const [isHover, setIsHover] = useState<boolean>(false)
+  const [hover, setHover] = useState<boolean>(false)
   const progressBarRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null)
   const isDraggingRef = useRef<boolean>(false)
+
+  const handleHover = (hover: boolean) => () => {
+    setHover(hover)
+  }
 
   const handleDrag = (e: MouseEvent<HTMLDivElement>) => {
     isDraggingRef.current = !isDraggingRef.current
@@ -66,7 +70,7 @@ const Slider = ({ progress, onDrag, direction }: ProgressBarProps) => {
   }
 
   return (
-    <SliderContainer onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} direction={direction}>
+    <SliderContainer onMouseEnter={handleHover(true)} onMouseLeave={handleHover(false)} direction={direction}>
       <ProgressBarContainer
         onMouseUp={handleDrag}
         onMouseDown={handleDrag}
@@ -75,7 +79,7 @@ const Slider = ({ progress, onDrag, direction }: ProgressBarProps) => {
         ref={progressBarRef}
       >
         <ProgressBarBackground>
-          <ProgressBarActive percent={progress} isHover={isHover} direction={direction} />
+          <ProgressBarActive {...{ progress, hover, direction }} />
         </ProgressBarBackground>
       </ProgressBarContainer>
     </SliderContainer>

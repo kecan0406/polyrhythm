@@ -35,7 +35,7 @@ const RhythmList = () => {
     setSelectedId(rhythmId)
   }, [rhythmId])
 
-  const handleSelectRhythm = (id: RhythmId) => {
+  const handleSelectRhythm = (id: RhythmId) => () => {
     setRhythmId(id === selectedId ? null : id)
   }
 
@@ -43,7 +43,7 @@ const RhythmList = () => {
     <RhythmListContainer>
       <RhythmLists>
         {rhythmIds.map((id) => (
-          <RhythmListItem key={id} onClick={() => handleSelectRhythm(id)} selected={selectedId === id}>
+          <RhythmListItem key={id} onClick={handleSelectRhythm(id)} selected={selectedId === id}>
             <RhythmItem rhythmId={id} />
           </RhythmListItem>
         ))}
