@@ -28,7 +28,7 @@ const RhythmListItem = styled.li<RhythmListItemProps>`
 `
 const RhythmList = () => {
   const rhythmIds = useRecoilValue(rhythmIdsAtom)
-  const [selectedId, setSelectedId] = useState<RhythmId | null>(null)
+  const [selectedId, setSelectedId] = useState<RhythmId>(0)
   const [rhythmId, setRhythmId] = useRecoilState(selectRhythmIdAtom)
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const RhythmList = () => {
   }, [rhythmId])
 
   const handleSelectRhythm = (id: RhythmId) => () => {
-    setRhythmId(id === selectedId ? null : id)
+    setRhythmId(id === selectedId ? 0 : id)
   }
 
   return (

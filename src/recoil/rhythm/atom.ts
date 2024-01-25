@@ -13,9 +13,9 @@ export type Rhythm = {
 
 export type RhythmId = number
 
-export const selectRhythmIdAtom = atom<RhythmId | null>({
+export const selectRhythmIdAtom = atom<RhythmId>({
   key: 'selectRhythmIdAtom',
-  default: null,
+  default: 0,
 })
 
 export const rhythmIdsAtom = atom<RhythmId[]>({

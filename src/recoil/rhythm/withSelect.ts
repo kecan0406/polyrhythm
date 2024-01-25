@@ -5,11 +5,11 @@ const rhythmWithSelect = selector({
   key: 'rhythmWithSelect',
   get: ({ get }) => {
     const rhythmId = get(selectRhythmIdAtom)
-    return rhythmId === null ? get(rhythmAtom) : get(rhythmAtomFamily(rhythmId))
+    return rhythmId ? get(rhythmAtomFamily(rhythmId)) : get(rhythmAtom)
   },
   set: ({ set, get }, newValue) => {
     const rhythmId = get(selectRhythmIdAtom)
-    set(rhythmId === null ? rhythmAtom : rhythmAtomFamily(rhythmId), newValue)
+    set(rhythmId ? rhythmAtomFamily(rhythmId) : rhythmAtom, newValue)
   },
 })
 export default rhythmWithSelect
