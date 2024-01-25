@@ -9,6 +9,7 @@ export type Rhythm = {
   noteSymbol: NoteSymbol
   pitch: number
   position: Point
+  selected: boolean
 }
 
 export type RhythmId = number
@@ -39,6 +40,7 @@ const rhythmAtom = atom<Rhythm>({
     noteSymbol: 'C',
     pitch: 5,
     position: { x: 0, y: 0 },
+    selected: false,
   },
 })
 

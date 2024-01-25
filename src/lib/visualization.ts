@@ -44,7 +44,9 @@ export class Polygon implements Visual {
   }
 
   public draw(ctx: CanvasRenderingContext2D, currentTick: number, activeTime: number) {
-    this.color = TWELVE_TONE_COLORS[this.rhythm.noteSymbol].replace(OPACITY_REGEX, '0.7')
+    this.color = this.rhythm.selected
+      ? 'rgb(255,255,255,1)'
+      : TWELVE_TONE_COLORS[this.rhythm.noteSymbol].replace(OPACITY_REGEX, '0.7')
     this.currentTick = currentTick
     this.activeTime = activeTime
 

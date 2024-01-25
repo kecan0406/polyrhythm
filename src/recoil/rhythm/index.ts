@@ -6,6 +6,7 @@ import rhythmWithNoteSymbol from './withNoteSymbol'
 import rhythmWithPitch from './withPitch'
 import rhythmWithRegister from './withRegister'
 import rhythmWithSelect from './withSelect'
+import rhythmWithSelected from './withSelected'
 import rhythmWithSynthName from './withSynthName'
 
 export {
@@ -17,6 +18,7 @@ export {
   rhythmWithPitch,
   rhythmWithRegister,
   rhythmWithSelect,
+  rhythmWithSelected,
   rhythmWithSynthName,
   selectRhythmIdAtom,
 }

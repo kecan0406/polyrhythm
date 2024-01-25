@@ -1,9 +1,10 @@
 import { Instruments } from '@/lib/instruments'
+import { rhythmWithSelected } from '@/recoil/rhythm'
 import { rhythmAtomFamily, RhythmId, rhythmIdsAtom, selectRhythmIdAtom } from '@/recoil/rhythm/atom'
 import { QUARTER_NOTE } from '@/utils/math-util'
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import React, { useEffect } from 'react'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { getDestination, getTransport } from 'tone'
 
 const RhythmListContainer = styled.div`
@@ -28,22 +29,23 @@ const RhythmListItem = styled.li<RhythmListItemProps>`
 `
 const RhythmList = () => {
   const rhythmIds = useRecoilValue(rhythmIdsAtom)
-  const [selectedId, setSelectedId] = useState<RhythmId>(0)
   const [rhythmId, setRhythmId] = useRecoilState(selectRhythmIdAtom)
+  const setSelected = useSetRecoilState(rhythmWithSelected)
 
   useEffect(() => {
-    setSelectedId(rhythmId)
+    rhythmId && setSelected(true)
   }, [rhythmId])
 
   const handleSelectRhythm = (id: RhythmId) => () => {
-    setRhythmId(id === selectedId ? 0 : id)
+    setSelected(false)
+    setRhythmId(id === rhythmId ? 0 : id)
   }
 
   return (
     <RhythmListContainer>
       <RhythmLists>
         {rhythmIds.map((id) => (
-          <RhythmListItem key={id} onClick={handleSelectRhythm(id)} selected={selectedId === id}>
+          <RhythmListItem key={id} onClick={handleSelectRhythm(id)} selected={rhythmId === id}>
             <RhythmItem rhythmId={id} />
           </RhythmListItem>
         ))}
