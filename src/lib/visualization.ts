@@ -31,39 +31,6 @@ interface Visual {
   draw(ctx: CanvasRenderingContext2D, currentTick: number, activeTime: number): void
 }
 
-export class PreviewPolygon implements Visual {
-  private readonly radius: number = 150
-  private readonly color: string = 'rgb(255,255,255,0.2)'
-  public show: boolean = false
-  public interval: number = 3
-  public position: Point = { x: 0, y: 0 }
-
-  public draw(ctx: CanvasRenderingContext2D) {
-    this.show && this.drawLines(ctx, 6)
-  }
-
-  private drawLines(ctx: CanvasRenderingContext2D, radius: number) {
-    ctx.beginPath()
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-    ctx.lineWidth = radius
-    ctx.strokeStyle = this.color
-
-    for (let line = 0; line <= this.interval; line++) {
-      const { x, y } = this.getArcPoint(line)
-      line ? ctx.lineTo(x, y) : ctx.moveTo(x, y)
-    }
-    ctx.stroke()
-    ctx.closePath()
-  }
-
-  private getArcPoint(i: number): Point {
-    const { interval, position } = this
-    const arc = (i * PI2) / interval + PI_DEG
-    return { x: position.x + this.radius * Math.cos(arc), y: position.y + this.radius * Math.sin(arc) }
-  }
-}
-
 export class Polygon implements Visual {
   private readonly rhythm: Rhythm
 
@@ -130,5 +97,38 @@ export class Polygon implements Visual {
     const { x: toX, y: toY } = this.getArcPoint(line + 1)
 
     return { x: fromX + (toX - fromX) * ratio, y: fromY + (toY - fromY) * ratio }
+  }
+}
+
+export class PreviewPolygon implements Visual {
+  private readonly radius: number = 150
+  private readonly color: string = 'rgb(255,255,255,0.2)'
+  public active: boolean = false
+  public interval: number = 3
+  public position: Point = { x: 0, y: 0 }
+
+  public draw(ctx: CanvasRenderingContext2D) {
+    this.active && this.drawLines(ctx, 6)
+  }
+
+  private drawLines(ctx: CanvasRenderingContext2D, radius: number) {
+    ctx.beginPath()
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    ctx.lineWidth = radius
+    ctx.strokeStyle = this.color
+
+    for (let line = 0; line <= this.interval; line++) {
+      const { x, y } = this.getArcPoint(line)
+      line ? ctx.lineTo(x, y) : ctx.moveTo(x, y)
+    }
+    ctx.stroke()
+    ctx.closePath()
+  }
+
+  private getArcPoint(i: number): Point {
+    const { interval, position } = this
+    const arc = (i * PI2) / interval + PI_DEG
+    return { x: position.x + this.radius * Math.cos(arc), y: position.y + this.radius * Math.sin(arc) }
   }
 }

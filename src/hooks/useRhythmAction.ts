@@ -19,8 +19,8 @@ export const useRhythmAction = () => {
     setDeregister(selectRhythmId)
   }
 
-  const setInterval = (plus: number) => {
-    setRhythmInterval((currInterval) => valueLimit(currInterval + plus, 2, 16))
+  const setInterval = (plus: boolean) => {
+    setRhythmInterval((interval) => valueLimit(interval + (plus ? 1 : -1), 2, 16))
   }
 
   return { register, deRegister, setInterval }

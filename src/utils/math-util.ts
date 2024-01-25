@@ -28,3 +28,6 @@ export const getProgressPercent = (
 
 export const valueLimit = (value: number, min: number = 0, max: number = 1) =>
   value <= min ? min : value >= max ? max : value
+
+export const asc = (a: number, b: number) => a - b
+export const desc = (a: number, b: number) => b - a

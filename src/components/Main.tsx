@@ -2,10 +2,10 @@ import { useCanvas } from '@/hooks/useCanvas'
 import { useClientWidthHeight } from '@/hooks/useClientWithHeight'
 import { useRhythmAction } from '@/hooks/useRhythmAction'
 import { getAnimate, useVisualization } from '@/hooks/useVisualization'
-import { selectRhythmIdAtom } from '@/recoil/rhythm'
-import { CanvasSize } from '@/types/canvas-types'
+import { rhythmWithInterval, selectRhythmIdAtom } from '@/recoil/rhythm'
+import { CanvasSize, Point } from '@/types/canvas-types'
 import styled from '@emotion/styled'
-import React, { MouseEvent, RefObject, WheelEvent, useRef } from 'react'
+import React, { MouseEvent, RefObject, WheelEvent, useEffect, useRef } from 'react'
 import { useRecoilValue } from 'recoil'
 
 const MainContainer = styled.div`
@@ -36,10 +36,16 @@ type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   const visualization = useVisualization()
   const rhythmAction = useRhythmAction()
-  const isSelect = useRecoilValue(selectRhythmIdAtom) !== null
+  const rhythmInterval = useRecoilValue(rhythmWithInterval)
+  const previewActive = useRecoilValue(selectRhythmIdAtom) === null
+
+  useEffect(() => {
+    visualization.preview.interval = rhythmInterval
+  }, [rhythmInterval])
 
   const handleRegister = (e: MouseEvent) => {
-    rhythmAction.register({ x: e.clientX, y: e.clientY })
+    const position: Point = { x: e.clientX, y: e.clientY }
+    rhythmAction.register(position)
   }
 
   const handleDeregister = (e: MouseEvent) => {
@@ -48,11 +54,12 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
   }
 
   const handleInterval = (e: WheelEvent) => {
-    rhythmAction.setInterval(e.deltaY < 0 ? 1 : -1)
+    const plus = e.deltaY < 0
+    rhythmAction.setInterval(plus)
   }
 
-  const handlePreview = (isShow: boolean) => (e: MouseEvent) => {
-    visualization.preview.show = isShow
+  const handlePreview = (active: boolean) => (e: MouseEvent) => {
+    visualization.preview.active = active
     visualization.preview.position = { x: e.clientX, y: e.clientY }
   }
 
@@ -63,9 +70,9 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
       onClick={handleRegister}
       onContextMenu={handleDeregister}
       onWheel={handleInterval}
-      onMouseEnter={handlePreview(true)}
+      onMouseMove={handlePreview(previewActive)}
+      onMouseEnter={handlePreview(previewActive)}
       onMouseLeave={handlePreview(false)}
-      onMouseMove={handlePreview(!isSelect)}
     />
   )
 }
