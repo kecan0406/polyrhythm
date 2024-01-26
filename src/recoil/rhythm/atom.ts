@@ -8,7 +8,7 @@ export type Rhythm = {
   synthName: SynthName
   noteSymbol: NoteSymbol
   pitch: number
-  position: Point
+  point: Point
   selected: boolean
 }
 
@@ -39,7 +39,7 @@ const rhythmAtom = atom<Rhythm>({
     synthName: 'beep',
     noteSymbol: 'C',
     pitch: 5,
-    position: { x: 0, y: 0 },
+    point: { x: 0, y: 0 },
     selected: false,
   },
 })

@@ -1,7 +1,15 @@
-import { TWELVE_TONE_COLORS } from '@/constants/chromesthesia'
 import { Rhythm } from '@/recoil/rhythm/atom'
 import { Point, Size } from '@/types/canvas-types'
-import { PI2, PI_DEG, QUARTER_NOTE, RGB_OPACITY_REGEX, getDivRatio } from '@/utils/math-util'
+import { getTwelveToneRGBA } from '@/utils/color-util'
+import {
+  PI2,
+  PI_DEG,
+  QUARTER_NOTE,
+  RGB_OPACITY_REGEX,
+  getArcPoint,
+  getCurrentArcPoint,
+  getDivision,
+} from '@/utils/math-util'
 import { getTransport } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
 
@@ -19,100 +27,83 @@ export class Visualization {
   }
 
   public animate(canvasSize: Size) {
-    this.drawBackground(canvasSize)
+    this.clearBackground(canvasSize)
     this.drawVisual()
   }
 
-  private drawBackground({ width, height }: Size) {
+  private clearBackground({ width, height }: Size) {
     this.ctx.fillStyle = 'rgb(0,0,0)'
     this.ctx.clearRect(0, 0, width, height)
     this.ctx.fillRect(0, 0, width, height)
   }
 
   private drawVisual() {
-    this.visuals.forEach((visual) => visual.draw(this.transport.ticks, this.transport.toTicks(0.15)))
+    this.visuals.forEach((visual) => visual.draw(this.transport.ticks))
   }
 }
 
 interface Visual {
-  draw(currentTick: number, activeTime: number): void
+  draw(currentTick: number): void
 }
 
-export class Polygon implements Visual {
+class Polygon implements Visual {
   private readonly ctx: CanvasRenderingContext2D
   private readonly rhythm: Rhythm
 
   private readonly radius: number = 150
   private color: string = 'rgb(255,255,255,0.7)'
   private currentTick: number = 0
-  private activeTime: number = 0
 
   constructor(ctx: CanvasRenderingContext2D, rhythm: Rhythm) {
     this.ctx = ctx
     this.rhythm = rhythm
   }
 
-  public draw(currentTick: number, activeTime: number) {
-    this.color = TWELVE_TONE_COLORS[this.rhythm.noteSymbol].replace(RGB_OPACITY_REGEX, '0.7')
+  public draw(currentTick: number) {
     this.currentTick = currentTick
-    this.activeTime = activeTime
+    this.color = getTwelveToneRGBA(this.rhythm.noteSymbol, 0.7)
 
+    this.rhythm.selected && this.drawLines(8, 'rgb(255,255,255,1)')
     this.drawLines(6, this.color)
     this.drawDot(20, this.color)
     this.drawDot(12, 'rgb(255,255,255,0.7)')
   }
 
-  private drawLines(radius: number, color: string) {
+  private drawLines(size: number, color: string) {
     this.ctx.beginPath()
     this.ctx.lineCap = 'round'
     this.ctx.lineJoin = 'round'
-    this.ctx.lineWidth = radius
+    this.ctx.lineWidth = size
     this.ctx.strokeStyle = color
-    this.lineAnimation(radius, color)
+    this.lineAnimation(size, color)
     this.drawLine()
     this.ctx.stroke()
     this.ctx.closePath()
   }
 
-  private lineAnimation(radius: number, color: string) {
-    const intervalTick = this.currentTick % (QUARTER_NOTE / this.rhythm.interval)
-    if (this.activeTime >= intervalTick) {
-      const opacity = Number((1 - 0.3 * (intervalTick / this.activeTime)).toFixed(2))
-      this.ctx.strokeStyle = color.replace(RGB_OPACITY_REGEX, `${opacity}`)
-      this.ctx.lineWidth = radius * (1.5 * opacity)
-    }
-  }
-
-  private drawLine() {
-    for (let line = 0; line <= this.rhythm.interval; line++) {
-      const { x, y } = this.getArcPoint(line)
-      line ? this.ctx.lineTo(x, y) : this.ctx.moveTo(x, y)
-    }
-  }
-
-  private drawDot(radius: number, color: string) {
+  private drawDot(size: number, color: string) {
     this.ctx.beginPath()
     this.ctx.fillStyle = color
-
-    const { x, y } = this.getLinePoint()
-    this.ctx.arc(x, y, radius, 0, PI2)
+    const { x, y } = getCurrentArcPoint(this.currentTick, this.rhythm.interval, this.rhythm.point, this.radius)
+    this.ctx.arc(x, y, size, 0, PI2)
     this.ctx.fill()
     this.ctx.closePath()
   }
 
-  private getArcPoint(i: number): Point {
-    const { interval, position } = this.rhythm
-    const arc = (i * PI2) / interval + PI_DEG
-
-    return { x: position.x + this.radius * Math.cos(arc), y: position.y + this.radius * Math.sin(arc) }
+  private lineAnimation(size: number, color: string) {
+    const { remainRate: activeRate } = getDivision(this.currentTick, QUARTER_NOTE / this.rhythm.interval)
+    if (activeRate <= 0.25) {
+      const opacity = Number((1 - activeRate).toFixed(2))
+      this.ctx.strokeStyle = color.replace(RGB_OPACITY_REGEX, `${opacity}`)
+      this.ctx.lineWidth = size * (1.5 * opacity)
+    }
   }
 
-  private getLinePoint(): Point {
-    const [line, ratio] = getDivRatio(this.currentTick, Math.round(QUARTER_NOTE / this.rhythm.interval))
-    const { x: fromX, y: fromY } = this.getArcPoint(line)
-    const { x: toX, y: toY } = this.getArcPoint(line + 1)
-
-    return { x: fromX + (toX - fromX) * ratio, y: fromY + (toY - fromY) * ratio }
+  private drawLine() {
+    for (let currentLine = 0; currentLine <= this.rhythm.interval; currentLine++) {
+      const { x, y } = getArcPoint(currentLine, this.rhythm.interval, this.rhythm.point, this.radius)
+      currentLine ? this.ctx.lineTo(x, y) : this.ctx.moveTo(x, y)
+    }
   }
 }
 
@@ -122,7 +113,8 @@ export class PreviewPolygon implements Visual {
   private readonly color: string = 'rgb(255,255,255,0.2)'
   public active: boolean = false
   public interval: number = 3
-  public position: Point = { x: 0, y: 0 }
+  public point: Point = { x: 0, y: 0 }
+
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx
   }
@@ -147,8 +139,8 @@ export class PreviewPolygon implements Visual {
   }
 
   private getArcPoint(i: number): Point {
-    const { interval, position } = this
+    const { interval, point } = this
     const arc = (i * PI2) / interval + PI_DEG
-    return { x: position.x + this.radius * Math.cos(arc), y: position.y + this.radius * Math.sin(arc) }
+    return { x: point.x + this.radius * Math.cos(arc), y: point.y + this.radius * Math.sin(arc) }
   }
 }

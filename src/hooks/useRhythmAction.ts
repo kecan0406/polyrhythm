@@ -10,8 +10,8 @@ export const useRhythmAction = () => {
   const setDeregister = useSetRecoilState(rhythmWithDeRegister)
   const setRhythmInterval = useSetRecoilState(rhythmWithInterval)
 
-  const register = (position: Point) => {
-    setRegister({ ...rhythm, position })
+  const register = (point: Point) => {
+    setRegister({ ...rhythm, point })
   }
 
   const deRegister = (rhythmId: RhythmId) => {
