@@ -1,12 +1,10 @@
 import { useCanvas } from '@/hooks/useCanvas'
 import { useClientWidthHeight } from '@/hooks/useClientWithHeight'
 import { useRhythmAction } from '@/hooks/useRhythmAction'
-import { getAnimate, useVisualization } from '@/hooks/useVisualization'
-import { rhythmWithInterval, selectRhythmIdAtom } from '@/recoil/rhythm'
-import { CanvasSize, Point } from '@/types/canvas-types'
+import { useRhythmValue } from '@/hooks/useRhythmValue'
+import { CanvasSize } from '@/types/canvas-types'
 import styled from '@emotion/styled'
 import React, { MouseEvent, RefObject, WheelEvent, useEffect, useRef } from 'react'
-import { useRecoilValue } from 'recoil'
 
 const MainContainer = styled.div`
   overflow: hidden;
@@ -34,42 +32,39 @@ const CanvasVisualization = styled.canvas`
 
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
-  const visualization = useVisualization()
+  const { selectId, interval } = useRhythmValue()
   const rhythmAction = useRhythmAction()
-  const rhythmInterval = useRecoilValue(rhythmWithInterval)
-  const rhythmId = useRecoilValue(selectRhythmIdAtom)
+  const canvasRef = useCanvas(canvasSize)
 
   useEffect(() => {
-    visualization.preview.interval = rhythmInterval
-  }, [rhythmInterval])
+    // visualization.preview.interval = interval
+  }, [interval])
 
   const handleRegister = (e: MouseEvent) => {
-    if (rhythmId) return
+    if (selectId) return
 
-    const position: Point = { x: e.clientX, y: e.clientY }
-    rhythmAction.register(position)
+    rhythmAction.register({ x: e.clientX, y: e.clientY })
   }
 
   const handleDeregister = (e: MouseEvent) => {
-    rhythmAction.deRegister(rhythmId)
+    rhythmAction.deRegister(selectId)
     e.preventDefault()
   }
 
   const handleInterval = (e: WheelEvent) => {
-    const plus = e.deltaY < 0
-    rhythmAction.setInterval(plus)
+    rhythmAction.setInterval(e.deltaY < 0)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handlePreview = (e: MouseEvent) => {
-    visualization.preview.active = !rhythmId
-    visualization.preview.position = { x: e.clientX, y: e.clientY }
+    // visualization.preview.active = !selectId
+    // visualization.preview.position = { x: e.clientX, y: e.clientY }
   }
 
   const handlePreviewLeave = () => {
-    visualization.preview.active = false
+    // visualization.preview.active = false
   }
 
-  const canvasRef = useCanvas(canvasSize, getAnimate(visualization))
   return (
     <CanvasVisualization
       ref={canvasRef}

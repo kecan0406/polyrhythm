@@ -1,37 +1,45 @@
 import { TWELVE_TONE_COLORS } from '@/constants/chromesthesia'
 import { Rhythm } from '@/recoil/rhythm/atom'
-import { Point } from '@/types/canvas-types'
-import { OPACITY_REGEX, PI2, PI_DEG, QUARTER_NOTE, getDivRatio } from '@/utils/math-util'
+import { Point, Size } from '@/types/canvas-types'
+import { PI2, PI_DEG, QUARTER_NOTE, RGB_OPACITY_REGEX, getDivRatio } from '@/utils/math-util'
 import { getTransport } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
 
 export class Visualization {
-  public preview: PreviewPolygon = new PreviewPolygon()
-
-  private visuals: Visual[] = []
+  private readonly ctx: CanvasRenderingContext2D
   private readonly transport: Transport = getTransport()
+  private visuals: Visual[] = []
+
+  constructor(ctx: CanvasRenderingContext2D) {
+    this.ctx = ctx
+  }
 
   public generateVisual(rhythms: Rhythm[]) {
-    this.visuals = rhythms.map((rhythm) => new Polygon(rhythm))
+    this.visuals = rhythms.map((rhythm) => new Polygon(this.ctx, rhythm))
   }
 
-  public clearVisual() {
-    this.visuals = []
+  public animate(canvasSize: Size) {
+    this.drawBackground(canvasSize)
+    this.drawVisual()
   }
 
-  public drawAll(ctx: CanvasRenderingContext2D) {
-    const currentTick = this.transport.ticks
-    const activeTime = this.transport.toTicks(0.15)
-    this.visuals.forEach((visual) => visual.draw(ctx, currentTick, activeTime))
-    this.preview.draw(ctx)
+  private drawBackground({ width, height }: Size) {
+    this.ctx.fillStyle = 'rgb(0,0,0)'
+    this.ctx.clearRect(0, 0, width, height)
+    this.ctx.fillRect(0, 0, width, height)
+  }
+
+  private drawVisual() {
+    this.visuals.forEach((visual) => visual.draw(this.transport.ticks, this.transport.toTicks(0.15)))
   }
 }
 
 interface Visual {
-  draw(ctx: CanvasRenderingContext2D, currentTick: number, activeTime: number): void
+  draw(currentTick: number, activeTime: number): void
 }
 
 export class Polygon implements Visual {
+  private readonly ctx: CanvasRenderingContext2D
   private readonly rhythm: Rhythm
 
   private readonly radius: number = 150
@@ -39,49 +47,57 @@ export class Polygon implements Visual {
   private currentTick: number = 0
   private activeTime: number = 0
 
-  constructor(rhythm: Rhythm) {
+  constructor(ctx: CanvasRenderingContext2D, rhythm: Rhythm) {
+    this.ctx = ctx
     this.rhythm = rhythm
   }
 
-  public draw(ctx: CanvasRenderingContext2D, currentTick: number, activeTime: number) {
-    this.color = TWELVE_TONE_COLORS[this.rhythm.noteSymbol].replace(OPACITY_REGEX, '0.7')
+  public draw(currentTick: number, activeTime: number) {
+    this.color = TWELVE_TONE_COLORS[this.rhythm.noteSymbol].replace(RGB_OPACITY_REGEX, '0.7')
     this.currentTick = currentTick
     this.activeTime = activeTime
 
-    this.drawLines(ctx, this.rhythm.selected ? 10 : 5)
-    this.drawDot(ctx, 20, this.color)
-    this.drawDot(ctx, 12, 'rgb(255,255,255,0.7)')
+    this.drawLines(6, this.color)
+    this.drawDot(20, this.color)
+    this.drawDot(12, 'rgb(255,255,255,0.7)')
   }
 
-  private drawLines(ctx: CanvasRenderingContext2D, radius: number) {
-    ctx.beginPath()
-    const vertexTick = this.currentTick % (QUARTER_NOTE / this.rhythm.interval)
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-    ctx.lineWidth = radius
-    ctx.strokeStyle = this.color
-    if (this.activeTime >= vertexTick) {
-      const opacity = Number((1 - 0.3 * (vertexTick / this.activeTime)).toFixed(2))
-      ctx.strokeStyle = this.color.replace(OPACITY_REGEX, `${opacity}`)
-      ctx.lineWidth = radius * (1.5 * opacity)
-    }
+  private drawLines(radius: number, color: string) {
+    this.ctx.beginPath()
+    this.ctx.lineCap = 'round'
+    this.ctx.lineJoin = 'round'
+    this.ctx.lineWidth = radius
+    this.ctx.strokeStyle = color
+    this.lineAnimation(radius, color)
+    this.drawLine()
+    this.ctx.stroke()
+    this.ctx.closePath()
+  }
 
+  private lineAnimation(radius: number, color: string) {
+    const intervalTick = this.currentTick % (QUARTER_NOTE / this.rhythm.interval)
+    if (this.activeTime >= intervalTick) {
+      const opacity = Number((1 - 0.3 * (intervalTick / this.activeTime)).toFixed(2))
+      this.ctx.strokeStyle = color.replace(RGB_OPACITY_REGEX, `${opacity}`)
+      this.ctx.lineWidth = radius * (1.5 * opacity)
+    }
+  }
+
+  private drawLine() {
     for (let line = 0; line <= this.rhythm.interval; line++) {
       const { x, y } = this.getArcPoint(line)
-      line ? ctx.lineTo(x, y) : ctx.moveTo(x, y)
+      line ? this.ctx.lineTo(x, y) : this.ctx.moveTo(x, y)
     }
-    ctx.stroke()
-    ctx.closePath()
   }
 
-  private drawDot(ctx: CanvasRenderingContext2D, radius: number, color: string) {
-    ctx.beginPath()
-    ctx.fillStyle = color
+  private drawDot(radius: number, color: string) {
+    this.ctx.beginPath()
+    this.ctx.fillStyle = color
 
     const { x, y } = this.getLinePoint()
-    ctx.arc(x, y, radius, 0, PI2)
-    ctx.fill()
-    ctx.closePath()
+    this.ctx.arc(x, y, radius, 0, PI2)
+    this.ctx.fill()
+    this.ctx.closePath()
   }
 
   private getArcPoint(i: number): Point {
@@ -101,29 +117,33 @@ export class Polygon implements Visual {
 }
 
 export class PreviewPolygon implements Visual {
+  private readonly ctx: CanvasRenderingContext2D
   private readonly radius: number = 150
   private readonly color: string = 'rgb(255,255,255,0.2)'
   public active: boolean = false
   public interval: number = 3
   public position: Point = { x: 0, y: 0 }
-
-  public draw(ctx: CanvasRenderingContext2D) {
-    this.active && this.drawLines(ctx, 6)
+  constructor(ctx: CanvasRenderingContext2D) {
+    this.ctx = ctx
   }
 
-  private drawLines(ctx: CanvasRenderingContext2D, radius: number) {
-    ctx.beginPath()
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-    ctx.lineWidth = radius
-    ctx.strokeStyle = this.color
+  public draw() {
+    this.active && this.drawLines(6)
+  }
+
+  private drawLines(radius: number) {
+    this.ctx.beginPath()
+    this.ctx.lineCap = 'round'
+    this.ctx.lineJoin = 'round'
+    this.ctx.lineWidth = radius
+    this.ctx.strokeStyle = this.color
 
     for (let line = 0; line <= this.interval; line++) {
       const { x, y } = this.getArcPoint(line)
-      line ? ctx.lineTo(x, y) : ctx.moveTo(x, y)
+      line ? this.ctx.lineTo(x, y) : this.ctx.moveTo(x, y)
     }
-    ctx.stroke()
-    ctx.closePath()
+    this.ctx.stroke()
+    this.ctx.closePath()
   }
 
   private getArcPoint(i: number): Point {

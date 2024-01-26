@@ -91,7 +91,7 @@ export class Instruments {
         this.synth.dispose()
         clearTimeout(safeDispose)
       },
-      this.synth.toSeconds('8n') * 1000,
+      this.synth.toSeconds('1m') * 1000,
     )
   }
 }
