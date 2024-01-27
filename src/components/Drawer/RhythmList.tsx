@@ -1,11 +1,12 @@
 import { Instruments } from '@/lib/instruments'
-import { rhythmWithSelected } from '@/recoil/rhythm'
-import { rhythmAtomFamily, RhythmId, rhythmIdsAtom, selectRhythmIdAtom } from '@/recoil/rhythm/atom'
+import { rhythmWithIsSelect } from '@/recoil/rhythm'
+import { rhythmAtomFamily, RhythmId, selectRhythmIdAtom } from '@/recoil/rhythm/atom'
 import { QUARTER_NOTE } from '@/utils/math-util'
 import styled from '@emotion/styled'
 import React, { useEffect } from 'react'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { getDestination, getTransport } from 'tone'
+import rhythmWithIds from '../../recoil/rhythm/withIds'
 
 const RhythmListContainer = styled.div`
   position: relative;
@@ -14,7 +15,7 @@ const RhythmListContainer = styled.div`
 `
 const RhythmLists = styled.ul``
 
-type RhythmListItemProps = { selected: boolean }
+type RhythmListItemProps = { isSelect: boolean }
 const RhythmListItem = styled.li<RhythmListItemProps>`
   display: flex;
   width: 100%;
@@ -22,22 +23,22 @@ const RhythmListItem = styled.li<RhythmListItemProps>`
   align-items: center;
   cursor: pointer;
   transition: background-color 0.1s ease;
-  background-color: ${({ selected }) => selected && '#3e3e3e'};
+  background-color: ${({ isSelect }) => isSelect && '#3e3e3e'};
   :hover {
-    background-color: ${({ selected }) => (selected ? '#3e3e3e' : '#282828')};
+    background-color: ${({ isSelect }) => (isSelect ? '#3e3e3e' : '#282828')};
   }
 `
 const RhythmList = () => {
-  const rhythmIds = useRecoilValue(rhythmIdsAtom)
+  const rhythmIds = useRecoilValue(rhythmWithIds)
   const [rhythmId, setRhythmId] = useRecoilState(selectRhythmIdAtom)
-  const setSelected = useSetRecoilState(rhythmWithSelected)
+  const setIsSelect = useSetRecoilState(rhythmWithIsSelect)
 
   useEffect(() => {
-    rhythmId && setSelected(true)
+    rhythmId && setIsSelect(true)
   }, [rhythmId])
 
   const handleSelectRhythm = (id: RhythmId) => () => {
-    setSelected(false)
+    setIsSelect(false)
     setRhythmId(id === rhythmId ? 0 : id)
   }
 
@@ -45,7 +46,7 @@ const RhythmList = () => {
     <RhythmListContainer>
       <RhythmLists>
         {rhythmIds.map((id) => (
-          <RhythmListItem key={id} onClick={handleSelectRhythm(id)} selected={rhythmId === id}>
+          <RhythmListItem key={id} onClick={handleSelectRhythm(id)} isSelect={rhythmId === id}>
             <RhythmItem rhythmId={id} />
           </RhythmListItem>
         ))}

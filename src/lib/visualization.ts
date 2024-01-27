@@ -1,15 +1,7 @@
 import { Rhythm } from '@/recoil/rhythm/atom'
-import { Point, Size } from '@/types/canvas-types'
+import { Size } from '@/types/canvas-types'
 import { getTwelveToneRGBA } from '@/utils/color-util'
-import {
-  PI2,
-  PI_DEG,
-  QUARTER_NOTE,
-  RGB_OPACITY_REGEX,
-  getArcPoint,
-  getCurrentArcPoint,
-  getDivision,
-} from '@/utils/math-util'
+import { PI2, QUARTER_NOTE, RGB_OPACITY_REGEX, getArcPoint, getCurrentArcPoint, getDivision } from '@/utils/math-util'
 import { getTransport } from 'tone'
 import { Transport } from 'tone/build/esm/core/clock/Transport'
 
@@ -51,7 +43,7 @@ class Polygon implements Visual {
   private readonly rhythm: Rhythm
 
   private readonly radius: number = 150
-  private color: string = 'rgb(255,255,255,0.7)'
+  private color: string = 'rgb(255,255,255,0.2)'
   private currentTick: number = 0
 
   constructor(ctx: CanvasRenderingContext2D, rhythm: Rhythm) {
@@ -61,12 +53,14 @@ class Polygon implements Visual {
 
   public draw(currentTick: number) {
     this.currentTick = currentTick
-    this.color = getTwelveToneRGBA(this.rhythm.noteSymbol, 0.7)
+    this.rhythm.isActive && (this.color = getTwelveToneRGBA(this.rhythm.noteSymbol, 0.7))
 
-    this.rhythm.selected && this.drawLines(8, 'rgb(255,255,255,1)')
+    this.rhythm.isSelect && this.drawLines(8, 'rgb(255,255,255,1)')
     this.drawLines(6, this.color)
-    this.drawDot(20, this.color)
-    this.drawDot(12, 'rgb(255,255,255,0.7)')
+    if (this.rhythm.isActive) {
+      this.drawDot(20, this.color)
+      this.drawDot(12, 'rgb(255,255,255,0.7)')
+    }
   }
 
   private drawLines(size: number, color: string) {
@@ -75,7 +69,7 @@ class Polygon implements Visual {
     this.ctx.lineJoin = 'round'
     this.ctx.lineWidth = size
     this.ctx.strokeStyle = color
-    this.lineAnimation(size, color)
+    this.rhythm.isActive && this.lineAnimation(size, color)
     this.drawLine()
     this.ctx.stroke()
     this.ctx.closePath()
@@ -104,43 +98,5 @@ class Polygon implements Visual {
       const { x, y } = getArcPoint(currentLine, this.rhythm.interval, this.rhythm.point, this.radius)
       currentLine ? this.ctx.lineTo(x, y) : this.ctx.moveTo(x, y)
     }
-  }
-}
-
-export class PreviewPolygon implements Visual {
-  private readonly ctx: CanvasRenderingContext2D
-  private readonly radius: number = 150
-  private readonly color: string = 'rgb(255,255,255,0.2)'
-  public active: boolean = false
-  public interval: number = 3
-  public point: Point = { x: 0, y: 0 }
-
-  constructor(ctx: CanvasRenderingContext2D) {
-    this.ctx = ctx
-  }
-
-  public draw() {
-    this.active && this.drawLines(6)
-  }
-
-  private drawLines(radius: number) {
-    this.ctx.beginPath()
-    this.ctx.lineCap = 'round'
-    this.ctx.lineJoin = 'round'
-    this.ctx.lineWidth = radius
-    this.ctx.strokeStyle = this.color
-
-    for (let line = 0; line <= this.interval; line++) {
-      const { x, y } = this.getArcPoint(line)
-      line ? this.ctx.lineTo(x, y) : this.ctx.moveTo(x, y)
-    }
-    this.ctx.stroke()
-    this.ctx.closePath()
-  }
-
-  private getArcPoint(i: number): Point {
-    const { interval, point } = this
-    const arc = (i * PI2) / interval + PI_DEG
-    return { x: point.x + this.radius * Math.cos(arc), y: point.y + this.radius * Math.sin(arc) }
   }
 }

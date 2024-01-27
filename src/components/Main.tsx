@@ -4,7 +4,7 @@ import { useRhythmAction } from '@/hooks/useRhythmAction'
 import { useRhythmValue } from '@/hooks/useRhythmValue'
 import { CanvasSize } from '@/types/canvas-types'
 import styled from '@emotion/styled'
-import React, { MouseEvent, RefObject, WheelEvent, useEffect, useRef } from 'react'
+import React, { MouseEvent, RefObject, WheelEvent, useRef } from 'react'
 
 const MainContainer = styled.div`
   overflow: hidden;
@@ -32,13 +32,9 @@ const CanvasVisualization = styled.canvas`
 
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
-  const { selectId, interval } = useRhythmValue()
+  const { selectId } = useRhythmValue()
   const rhythmAction = useRhythmAction()
   const canvasRef = useCanvas(canvasSize)
-
-  useEffect(() => {
-    // visualization.preview.interval = interval
-  }, [interval])
 
   const handleRegister = (e: MouseEvent) => {
     if (selectId) return
@@ -55,14 +51,12 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
     rhythmAction.setInterval(e.deltaY < 0)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handlePreview = (e: MouseEvent) => {
-    // visualization.preview.active = !selectId
-    // visualization.preview.position = { x: e.clientX, y: e.clientY }
+    rhythmAction.setPreviewPoint({ x: e.clientX, y: e.clientY })
   }
 
   const handlePreviewLeave = () => {
-    // visualization.preview.active = false
+    rhythmAction.setPreviewPoint({ x: Infinity, y: Infinity })
   }
 
   return (

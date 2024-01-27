@@ -9,7 +9,8 @@ export type Rhythm = {
   noteSymbol: NoteSymbol
   pitch: number
   point: Point
-  selected: boolean
+  isSelect: boolean
+  isActive: boolean
 }
 
 export type RhythmId = number
@@ -21,7 +22,7 @@ export const selectRhythmIdAtom = atom<RhythmId>({
 
 export const rhythmIdsAtom = atom<RhythmId[]>({
   key: 'rhythmIdsAtom',
-  default: [],
+  default: [0],
 })
 
 export const rhythmAtomFamily = atomFamily<Rhythm, RhythmId>({
@@ -40,7 +41,8 @@ const rhythmAtom = atom<Rhythm>({
     noteSymbol: 'C',
     pitch: 5,
     point: { x: 0, y: 0 },
-    selected: false,
+    isSelect: false,
+    isActive: false,
   },
 })
 
