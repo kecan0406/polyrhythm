@@ -1,5 +1,5 @@
-import { ReactComponent as VolumeUpIcon } from '@/assets/icon/volume-up.svg'
-import { ReactComponent as VolumeXIcon } from '@/assets/icon/volume-x.svg'
+import { ReactComponent as VolumeUp } from '@/assets/icon/volume-up.svg'
+import { ReactComponent as VolumeX } from '@/assets/icon/volume-x.svg'
 import ActiveButton from '@/elements/inputs/ActiveButton'
 import Slider from '@/elements/inputs/Slider'
 import { linear2db, valueLimit } from '@/utils/math-util'
@@ -11,7 +11,6 @@ const MasterVolumeSliderContainer = styled.div`
   display: flex;
   width: 30%;
   justify-content: flex-end;
-  flex-grow: 1;
   margin-right: 12px;
 `
 const MasterVolumeSlider = () => {
@@ -29,12 +28,12 @@ const MasterVolumeSlider = () => {
 
   const handleVolume = (percent: number) => {
     setIsMute(isMute ? false : percent <= 0)
-    setMasterVolume(valueLimit(percent))
+    setMasterVolume(valueLimit(percent, 0, 1))
   }
 
   return (
     <MasterVolumeSliderContainer>
-      <ActiveButton onClick={handleMute}>{isMute ? <VolumeXIcon /> : <VolumeUpIcon />}</ActiveButton>
+      <ActiveButton onClick={handleMute} icon={isMute ? <VolumeX /> : <VolumeUp />} />
       <Slider progress={isMute ? 0 : masterVolume} onDrag={handleVolume} direction="horizontal" />
     </MasterVolumeSliderContainer>
   )

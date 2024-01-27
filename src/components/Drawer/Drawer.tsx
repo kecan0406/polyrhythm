@@ -5,7 +5,9 @@ import React, { useState } from 'react'
 
 type DrawerContainerProps = { isOpen: boolean; initialRender: boolean }
 const DrawerContainer = styled.div<DrawerContainerProps>`
-  background: #17191d;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: saturate(50%) blur(5px);
+  border-right: solid 1px #333;
   position: absolute;
   display: flex;
   flex-direction: column;
