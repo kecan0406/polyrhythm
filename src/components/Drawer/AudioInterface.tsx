@@ -1,11 +1,12 @@
 import Keyboard from '@/components/Drawer/Keyboard'
 import PitchController from '@/components/Drawer/PitchController'
 import SynthController from '@/components/Drawer/SynthController'
-import { useRhythmValue } from '@/hooks/useRhythmValue'
 import { Instruments } from '@/lib/instruments'
+import { rhythmWithPitch, rhythmWithSynthName } from '@/recoil/rhythm'
 import { NoteSymbol } from '@/types/rhythm-types'
 import styled from '@emotion/styled'
 import React, { useEffect, useMemo } from 'react'
+import { useRecoilValue } from 'recoil'
 import { getDestination } from 'tone'
 
 const AudioInterfaceContainer = styled.div`
@@ -27,7 +28,8 @@ const KeyboardPitch = styled.div`
 `
 
 const AudioInterface = () => {
-  const { synthName, pitch } = useRhythmValue()
+  const pitch = useRecoilValue(rhythmWithPitch)
+  const synthName = useRecoilValue(rhythmWithSynthName)
 
   const instrument = useMemo(() => new Instruments(synthName).connect(getDestination()), [])
 

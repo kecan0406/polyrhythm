@@ -1,14 +1,13 @@
 import { rhythmAtomFamily, rhythmIdsAtom } from '@/recoil/rhythm/atom'
-import rhythmWithIds from '@/recoil/rhythm/withIds'
 import { asc } from '@/utils/math-util'
 import { DefaultValue, selector } from 'recoil'
 
 const rhythmWithRegister = selector({
   key: 'rhythmWithRegister',
-  get: ({ get }) => rhythmAtomFamily(getNextId(get(rhythmWithIds))),
+  get: ({ get }) => rhythmAtomFamily(getNextId(get(rhythmIdsAtom))),
   set: ({ set, get }, rhythm) => {
     if (rhythm instanceof DefaultValue) return
-    const rhythmId = getNextId(get(rhythmWithIds))
+    const rhythmId = getNextId(get(rhythmIdsAtom))
     set(rhythmAtomFamily(rhythmId), { ...rhythm, isActive: true })
     set(rhythmIdsAtom, (prev) => [...prev, rhythmId])
   },

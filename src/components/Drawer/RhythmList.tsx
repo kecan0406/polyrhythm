@@ -1,12 +1,11 @@
 import { Instruments } from '@/lib/instruments'
-import { rhythmWithIsSelect } from '@/recoil/rhythm'
-import { rhythmAtomFamily, RhythmId, selectRhythmIdAtom } from '@/recoil/rhythm/atom'
+import { rhythmIdsAtom, rhythmWithIsSelect } from '@/recoil/rhythm'
+import { RhythmId, rhythmAtomFamily, selectRhythmIdAtom } from '@/recoil/rhythm/atom'
 import { QUARTER_NOTE } from '@/utils/math-util'
 import styled from '@emotion/styled'
 import React, { useEffect } from 'react'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { getDestination, getTransport } from 'tone'
-import rhythmWithIds from '../../recoil/rhythm/withIds'
 
 const RhythmListContainer = styled.div`
   position: relative;
@@ -29,7 +28,7 @@ const RhythmListItem = styled.li<RhythmListItemProps>`
   }
 `
 const RhythmList = () => {
-  const rhythmIds = useRecoilValue(rhythmWithIds)
+  const rhythmIds = useRecoilValue(rhythmIdsAtom)
   const [rhythmId, setRhythmId] = useRecoilState(selectRhythmIdAtom)
   const setIsSelect = useSetRecoilState(rhythmWithIsSelect)
 

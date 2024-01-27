@@ -22,7 +22,7 @@ export const selectRhythmIdAtom = atom<RhythmId>({
 
 export const rhythmIdsAtom = atom<RhythmId[]>({
   key: 'rhythmIdsAtom',
-  default: [0],
+  default: [],
 })
 
 export const rhythmAtomFamily = atomFamily<Rhythm, RhythmId>({

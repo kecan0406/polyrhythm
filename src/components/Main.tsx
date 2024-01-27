@@ -1,10 +1,12 @@
 import { useCanvas } from '@/hooks/useCanvas'
 import { useClientWidthHeight } from '@/hooks/useClientWithHeight'
 import { useRhythmAction } from '@/hooks/useRhythmAction'
-import { useRhythmValue } from '@/hooks/useRhythmValue'
+import { useVisualization } from '@/hooks/useVisualization'
+import { selectRhythmIdAtom } from '@/recoil/rhythm'
 import { CanvasSize } from '@/types/canvas-types'
 import styled from '@emotion/styled'
 import React, { MouseEvent, RefObject, WheelEvent, useRef } from 'react'
+import { useRecoilValue } from 'recoil'
 
 const MainContainer = styled.div`
   overflow: hidden;
@@ -32,14 +34,14 @@ const CanvasVisualization = styled.canvas`
 
 type PolyrhythmCanvasProps = { canvasSize: CanvasSize }
 const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
-  const { selectId } = useRhythmValue()
+  const { visualizationRef, handlePreview } = useVisualization()
+  const canvasRef = useCanvas(canvasSize, visualizationRef)
+
   const rhythmAction = useRhythmAction()
-  const canvasRef = useCanvas(canvasSize)
+  const selectId = useRecoilValue(selectRhythmIdAtom)
 
   const handleRegister = (e: MouseEvent) => {
-    if (selectId) return
-
-    rhythmAction.register({ x: e.clientX, y: e.clientY })
+    !selectId && rhythmAction.register({ x: e.clientX, y: e.clientY })
   }
 
   const handleDeregister = (e: MouseEvent) => {
@@ -51,22 +53,14 @@ const PolyrhythmCanvas = ({ canvasSize }: PolyrhythmCanvasProps) => {
     rhythmAction.setInterval(e.deltaY < 0)
   }
 
-  const handlePreview = (e: MouseEvent) => {
-    rhythmAction.setPreviewPoint({ x: e.clientX, y: e.clientY })
-  }
-
-  const handlePreviewLeave = () => {
-    rhythmAction.setPreviewPoint({ x: Infinity, y: Infinity })
-  }
-
   return (
     <CanvasVisualization
       ref={canvasRef}
       onClick={handleRegister}
       onContextMenu={handleDeregister}
       onWheel={handleInterval}
-      onMouseMove={handlePreview}
-      onMouseLeave={handlePreviewLeave}
+      onMouseMove={handlePreview(!selectId)}
+      onMouseLeave={handlePreview(false)}
     />
   )
 }
