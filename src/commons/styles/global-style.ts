@@ -1,7 +1,15 @@
+import Raleway from '@/assets/font/Raleway.woff'
 import { css } from '@emotion/react'
-
 export const globalStyle = css`
-  @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100&display=swap');
+  @font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: normal;
+    font-display: swap;
+    src:
+      local('Raleway'),
+      url(${Raleway}) format('woff');
+  }
 
   * {
     margin: 0;
