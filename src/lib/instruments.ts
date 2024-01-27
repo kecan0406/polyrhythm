@@ -1,7 +1,5 @@
-import { NoteSymbol } from '@/types/rhythm-types'
 import { AMSynth, InputNode, MembraneSynth, PolySynth, Synth, Volume } from 'tone'
-import { Note } from 'tone/build/esm/core/type/NoteUnits'
-import { Time } from 'tone/build/esm/core/type/Units'
+import { Frequency, Time } from 'tone/build/esm/core/type/Units'
 
 export type SynthName = keyof typeof SYNTH
 const SYNTH = {
@@ -16,6 +14,9 @@ const SYNTH = {
         },
       }),
     pitch: [1, 2, 3, 4],
+  },
+  tryAmSynth: {
+    get: () => new PolySynth(AMSynth).set({ oscillator: { type: 'triangle' } }),
   },
   membrane: {
     get: () =>
@@ -71,8 +72,7 @@ export class Instruments {
     return SYNTH[this.synthName].get().connect(this.volume)
   }
 
-  public trigger(noteSymbol: NoteSymbol, pitch: number, duration: Time, time?: Time) {
-    const note = `${noteSymbol}${pitch}` as Note
+  public trigger(note: Frequency, duration: Time, time?: Time) {
     this.synth.triggerAttackRelease(note, duration, time)
   }
 

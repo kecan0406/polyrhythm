@@ -5,7 +5,8 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 const FooterContainer = styled.footer`
-  background: #212428;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: saturate(50%) blur(5px);
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -15,7 +16,7 @@ const FooterContainer = styled.footer`
   align-items: center;
   justify-content: space-between;
   z-index: 98;
-  border-top: 1px solid #797c814d;
+  box-shadow: inset 0 1px 0 0 #333;
 `
 
 const Footer = () => {

@@ -21,17 +21,17 @@ const ActiveButtonContainer = styled.button<ActiveButtonContainerProps>`
   }
 `
 const ActiveButton = ({
-  children,
   onClick,
   size = 32,
+  icon,
 }: {
-  children: React.ReactNode
   onClick?: () => void
-  size?: number
+  size?: number | string
+  icon: React.ReactNode
 }) => {
   return (
-    <ActiveButtonContainer size={size} onClick={onClick}>
-      {children}
+    <ActiveButtonContainer size={Number(size)} onClick={onClick}>
+      {icon}
     </ActiveButtonContainer>
   )
 }

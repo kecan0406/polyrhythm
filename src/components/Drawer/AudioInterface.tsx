@@ -1,13 +1,12 @@
 import Keyboard from '@/components/Drawer/Keyboard'
 import PitchController from '@/components/Drawer/PitchController'
 import SynthController from '@/components/Drawer/SynthController'
-import { Instruments } from '@/lib/instruments'
+import { useInstrument } from '@/hooks/useInstrument'
 import { rhythmWithPitch, rhythmWithSynthName } from '@/recoil/rhythm'
 import { NoteSymbol } from '@/types/rhythm-types'
 import styled from '@emotion/styled'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { useRecoilValue } from 'recoil'
-import { getDestination } from 'tone'
 
 const AudioInterfaceContainer = styled.div`
   margin-bottom: 4rem;
@@ -28,17 +27,18 @@ const KeyboardPitch = styled.div`
 `
 
 const AudioInterface = () => {
-  const pitch = useRecoilValue(rhythmWithPitch)
   const synthName = useRecoilValue(rhythmWithSynthName)
-
-  const instrument = useMemo(() => new Instruments(synthName).connect(getDestination()), [])
+  const pitch = useRecoilValue(rhythmWithPitch)
+  const instrumentRef = useInstrument(synthName)
 
   useEffect(() => {
+    const instrument = instrumentRef.current!
     instrument.changeSynth(synthName)
   }, [synthName])
 
   const handlePlayKeyboard = (noteSymbol: NoteSymbol) => {
-    instrument.trigger(noteSymbol, pitch, '8n')
+    const instrument = instrumentRef.current!
+    instrument.trigger(`${noteSymbol}${pitch}`, '8n')
   }
 
   return (

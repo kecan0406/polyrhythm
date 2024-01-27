@@ -74,7 +74,7 @@ const RhythmItem = ({ rhythmId }: RhythmItemProps) => {
     const transport = getTransport()
     const instrument = new Instruments(rhythm.synthName).connect(getDestination())
     const scheduleId = transport.scheduleRepeat(
-      (time) => instrument.trigger(rhythm.noteSymbol, rhythm.pitch, '8n', time),
+      (time) => instrument.trigger(`${rhythm.noteSymbol}${rhythm.pitch}`, '8n', time),
       `${Math.round(QUARTER_NOTE / rhythm.interval)}i`,
       0,
     )
