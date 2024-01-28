@@ -1,7 +1,7 @@
-# Polyrhythm
+# Polyrhythm ♪
 ![Sample Image](./Polyrhythm.png)
 
-[**Demo**](https://kecan0406.github.io/polyrhythm/)
+[**Demo ♪**](https://kecan0406.github.io/polyrhythm/)
 
 이 프로젝트는 음(pitch)과 음정(interval)의 공감각(synesthesia)을 시각적으로 구현한 프로젝트입니다.
 
