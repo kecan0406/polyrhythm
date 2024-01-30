@@ -76,14 +76,6 @@ export class Instruments {
     this.synth.triggerAttackRelease(note, duration, time)
   }
 
-  public getVolume() {
-    return Math.round(this.volume.volume.value)
-  }
-
-  public setVolume(volume: number) {
-    this.volume.volume.value = volume
-  }
-
   public dispose() {
     const safeDispose = setTimeout(
       () => {
