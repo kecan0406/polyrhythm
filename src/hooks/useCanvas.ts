@@ -29,7 +29,7 @@ export const useCanvas = (
     setCanvas(canvas, ctx, canvasSize)
 
     const visualization = visualizationRef.current!
-    visualization.generateVisual(ctx, rhythms)
+    visualization.generateVisual(rhythms)
 
     let requestId: number
     const requestAnimation = () => {
