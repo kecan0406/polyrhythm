@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.js": "/polyrhythm/static/js/main.5d69990b.js",
+    "static/media/Raleway.woff": "/polyrhythm/static/media/Raleway.d5542d0d80ad817450cb.woff",
+    "static/media/github.svg": "/polyrhythm/static/media/github.7dacb33764eb96196aa4bdcafeca7946.svg",
+    "index.html": "/polyrhythm/index.html",
+    "static/media/volume-up.svg": "/polyrhythm/static/media/volume-up.d6012d1726ab17102a061c160adc5309.svg",
+    "static/media/volume-x.svg": "/polyrhythm/static/media/volume-x.4721095b7897013dc0613e6c407b8cf7.svg",
+    "static/media/fast-forward.svg": "/polyrhythm/static/media/fast-forward.5b90c42b8e9dcca0364def72ab9ed468.svg",
+    "static/media/fast-rewind.svg": "/polyrhythm/static/media/fast-rewind.6d885fad4ddd253d85e5c83700ecb926.svg",
+    "static/media/pause.svg": "/polyrhythm/static/media/pause.847f9e573b210c171f23b48aa2177946.svg",
+    "static/media/play-arrow.svg": "/polyrhythm/static/media/play-arrow.baa0b1cad8aac48dcca637601f46bf2b.svg",
+    "main.5d69990b.js.map": "/polyrhythm/static/js/main.5d69990b.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.5d69990b.js"
+  ]
+}
